@@ -1,1 +1,4 @@
 Stavros Argyrou
+- AM: 2962
+- email: csd2962@csd.uoc.gr
+- Year: 2017
