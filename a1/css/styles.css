@@ -14,6 +14,7 @@ Colore Scheme:
 #242582 - Darker blue - nav
 #2C3531 - Metalic Grey
 #D1E8E2 - light blue - nav links hover
+rgb(211, 178, 68); Active link
 */
 body {
     margin: 0;
@@ -48,7 +49,7 @@ body {
 }
 
 h2 , h3 {
-    
+    text-align: center;
     color: #fff;
     font: 1.8em arial, sans-serif;
     padding: 5px;
@@ -58,6 +59,7 @@ p {
     color: #fff;
     font: 1.4em arial, sans-serif;
     padding: 10px;
+    text-align: center;
 }
 
 .uppercase {
@@ -80,8 +82,7 @@ p {
     margin: 0;   
     float: left;
     list-style: none;
-    
-
+    position: fixed;
     background-color: #242582;
     width: 100%;    
 }
@@ -104,10 +105,71 @@ p {
 }
 
 /*---------------*/
+.list-wrapper {
+    text-align: center;
+}
+#interestsList {
+    
+   display: inline-block;
+   margin: auto;
+   
+   
+}
 
-.interests li a{
+#interestsList li{
+ 
+   
+   
+}
+
+#interestsList li a{
     color: #fff;
     text-decoration: none;
     font-size: 1.2em;
     padding: 5px 5px 10px 0;
+}
+
+#interestsList li a:visited{
+    color: orange;
+   
+}
+
+#interestsList li a:hover{
+    color: #D1E8E2;
+   
+}
+
+#interestsList li a:active{
+    color: rgb(211, 178, 68);
+   
+}
+
+#tvshowList {
+    display: inline-block;
+    margin: auto;
+}
+
+#tvshowList li{
+    padding: 2px 5px;
+}
+
+#tvshowList li a{
+    text-decoration: none;
+    color: #fff;
+    padding: 5px;
+}
+
+#tvshowList li a:visited{
+    color: orange;
+   
+}
+
+#tvshowList li a:hover{
+    color: #D1E8E2;
+   
+}
+
+#tvshowList li a:active{
+    color: rgb(211, 178, 68);
+   
 }
