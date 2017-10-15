@@ -1,0 +1,53 @@
+/*
+HTML5 element support for older browsers - according to w3 schools 
+*Older browsers will treat unknown elements like <span> which is not a block element.
+*/
+article, section, aside, hgroup, nav, header, footer, figure, figcaption {
+    display: block;
+}
+
+/*
+Main CSS styling
+Colore Scheme: 
+
+#2F2FA2 - Dark Blue
+#242582 - Darker blue
+#553D67 = Purple
+#99738E - PurpleTwo
+#F64C72 - PurpleThree
+
+Scheme 2:
+
+#2C3531 - Metalic Grey
+#116466 - BlueGreen
+#D9B08C - light Brown
+#FFCB9A - Skin Tone
+#D1E8E2 - light blue
+*/
+body {
+    background-color: #242582;
+    color: #ffffff;
+    font: 1.2em arial, sans-serif;
+}
+
+#title {
+    color: #fff;
+    font: 3em arial, sans-serif;
+    text-align: center;
+}
+
+h2 , h3 {
+    color: #fff;
+    font: 1.8em arial, sans-serif;
+    padding: 5px;
+
+}
+p {
+    color: #fff;
+    font: 1.4em arial, sans-serif;
+    padding: 10px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
