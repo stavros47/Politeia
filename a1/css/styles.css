@@ -10,33 +10,45 @@ article, section, aside, hgroup, nav, header, footer, figure, figcaption {
 Main CSS styling
 Colore Scheme: 
 
-#2F2FA2 - Dark Blue
-#242582 - Darker blue
-#553D67 = Purple
-#99738E - PurpleTwo
-#F64C72 - PurpleThree
-
-Scheme 2:
-
+#2F2FA2 - Dark Blue - body
+#242582 - Darker blue - nav
 #2C3531 - Metalic Grey
-#116466 - BlueGreen
-#D9B08C - light Brown
-#FFCB9A - Skin Tone
-#D1E8E2 - light blue
+#D1E8E2 - light blue - nav links hover
 */
 body {
-    background-color: #242582;
+    margin: 0;
+    background-color: #2F2FA2;
     color: #ffffff;
     font: 1.2em arial, sans-serif;
+}
+
+.content {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+}
+
+.main {
+    float: left;
+}
+
+.secondary {
+    float: left;
 }
 
 #title {
     color: #fff;
     font: 3em arial, sans-serif;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
     text-align: center;
+    
 }
 
 h2 , h3 {
+    
     color: #fff;
     font: 1.8em arial, sans-serif;
     padding: 5px;
@@ -50,4 +62,52 @@ p {
 
 .uppercase {
     text-transform: uppercase;
+}
+
+#main-header {
+    margin: 0 0 10px 0;
+    width: 100%;
+    height: 300px;
+    float: left;
+    position: relative;
+    
+}
+
+/*Navigation*/
+
+.navigation {
+    padding: 0;
+    margin: 0;   
+    float: left;
+    list-style: none;
+    
+
+    background-color: #242582;
+    width: 100%;    
+}
+
+.navigation li{
+    margin: 10px 10px;
+    float: left;    
+    padding: 5px 5px 15px 5px;     
+}
+
+.navigation li a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5em;
+    padding: 5px 5px 10px 0;
+}
+
+.navigation a:hover {
+    color: #D1E8E2; 
+}
+
+/*---------------*/
+
+.interests li a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2em;
+    padding: 5px 5px 10px 0;
 }
