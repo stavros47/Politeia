@@ -100,9 +100,21 @@ p {
     padding: 5px 5px 10px 0;
 }
 
-.navigation a:hover {
+
+.navigation li a:visited{
+    color: orange;
+   
+}
+
+.navigation li a:hover {
     color: #D1E8E2; 
 }
+
+.navigation li a:active{
+    color: rgb(211, 178, 68);
+   
+}
+
 
 /*---------------*/
 .list-wrapper {
