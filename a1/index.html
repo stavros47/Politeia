@@ -14,12 +14,13 @@
 <body>
     <div class="content">
             <header id="main-header">
-                <h1 id="title" class="uppercase">Welcome to my personal Website</h1>
+                <h1 id="title" class="uppercase">Stavros Argyrou</h1>
                 <nav>
                         <ul class="navigation">
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Interests</a></li>
-                            <li><a href="#">Skills</a></li>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#interests">Interests</a></li>
+                            
                         </ul>
         
                     </nav>
@@ -28,7 +29,7 @@
            
 
             <section class="main">
-                <article class="about">
+                <article id="about">
                     <h2 class="articleTitle uppercase">About Me</h2>
                     <p>This is a temporary placeholder paragraph that will contain some brief information about me. This is for testing purposes only, instead of lorem ipsum
                     text I needed something to test fonts etc later on.</p>
@@ -36,44 +37,51 @@
             </section>
 
             <section class="secondary">
-                <article class="interests">
+                <article id="interests">
                         <h2 class="articleTitle uppercase">Interests</h2>
 
                         <p>My interests are things I like to do for fun. The following are things I do most often, and a few words on why I like to do these. Feel free to use the 
                         links to jump to the specific interest to read more.
                         </p>
-
-                        <ul class="interestsList">
-                            <li><a href="#">Football</a></li>
-                            <li><a href="#">TV Shows</a></li>
-                            <li><a href="#">Fishing</a></li>
-                        </ul>
-                        <h3>Football</h3>
+                        
+                        <div class="list-wrapper">
+                            <ul id="interestsList">
+                                <li><a href="#football">Football</a></li>
+                                <li><a href="#tvshows">TV Shows</a></li>
+                                <li><a href="#fishing">Fishing</a></li>
+                            </ul>
+                        </div>
+                        
+                        
+                        <h3 id="football">Football</h3>
                         <p>This is a temporary placeholder paragraph that will contain my interests and passions and more. This is for testing purposes only, instead of lorem ipsum
                         text I needed something to test fonts etc later on.</p> 
 
-                        <h3>TV Shows</h3>
+                        <h3 id="tvshows">TV Shows</h3>
                         <p>I am a TV show Fanatic! I really love quality tv, so on my free time I will watch my favourite tv show to unwind. Some tv shows can immerse the viewer
                                 making them a part of their world, good writing and a great cast is a recipe for success. These are my personal Top 3 TV Shows of all time, and of course I highly
                                 suggest them. I love shows with deep plots, that you can talk about for hours on end! 
                                 </p>
-                        <ol>
-                            <li><a href="">Game of Thrones</a></li>
-                            <li><a href="">Mad Men</a></li>
-                            <li><a href="">Rick and Morty</a></li>
-                        </ol>
+                        <div class="list-wrapper">
+                            <ol id="tvshowList">
+                                <li><a href="http://www.imdb.com/title/tt2861424/" target="_blank">Rick and Morty</a></li>
+                                <li><a href="http://www.imdb.com/title/tt0944947/" target="_blank">Game of Thrones</a></li>
+                                <li><a href="http://www.imdb.com/title/tt0804503/" target="_blank">Mad Men</a></li>                                        
+                            </ol>
+                        </div>
+
                       
 
-                        <h3>Fishing</h3>
+                        <h3 id="fishing">Fishing</h3>
                         <p>Fishing is an activity I love to do to relax and put my mind at ease. It's my way of meditating and clearing my thoughts. Although I don't really catch many
                         many fish, just being by the sea and the calmness that brings is enough for me to have a great time. 
                         </p>
                 </article>
             </section>
 
-            <aside class="contact uppercase"><h3>Contact Me</h3></aside>
+            <aside id="contact" class="uppercase"><h3>Contact Me</h3></aside>
             <footer>
-                Copyright &copy; Stavros Argyrou 2017 - All rights reserved
+                Copyright &copy; Stavros Argyrou - AM: 2962
             </footer>
     </div>
     
