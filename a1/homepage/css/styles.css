@@ -48,10 +48,10 @@ body {
     
 }
 
-h2 , h3 {
+h2 , h3, h4 {
     text-align: center;
     color: #fff;
-    font: 1.8em arial, sans-serif;
+    font-family: arial, sans-serif;
     padding: 5px;
 
 }
@@ -184,4 +184,24 @@ p {
 #tvshowList li a:active{
     color: rgb(211, 178, 68);
    
+}
+
+/*TABLE(s)*/
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-weight: 700;
+}
+
+td, th {
+    border: 2px solid #D1E8E2;
+    text-align: center;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #D1E8E2;
+    color: #000;
 }
