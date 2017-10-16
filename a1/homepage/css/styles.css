@@ -18,11 +18,19 @@ rgb(211, 178, 68); Active link
 */
 body {
     margin: 0;
-    background-color: #2F2FA2;
+    background-color: #2f2fa2;
     color: #ffffff;
     font: 1.2em arial, sans-serif;
 }
 
+#profilePic {
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+    width: 350px;
+    height: 350px;
+    border-radius: 175px;
+}
 .content {
     margin: 0;
     padding: 0;
@@ -37,14 +45,9 @@ body {
     float: left;
 }
 
-#title {
-    color: #fff;
-    font: 3em arial, sans-serif;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    text-align: center;
+
+blockquote {
+    font-weight: 500;
     
 }
 
@@ -58,7 +61,8 @@ h2 , h3, h4 {
 p {
     color: #fff;
     font: 1.4em arial, sans-serif;
-    padding: 10px;
+   padding: 0 45px;
+    margin: 50px auto;
     text-align: center;
 }
 
@@ -67,33 +71,40 @@ p {
 }
 
 #main-header {
+    background: url(../resources/images/earth.jpg);
+    background-size: cover;
     margin: 0 0 10px 0;
     width: 100%;
-    height: 300px;
+    height: 550px;
     float: left;
     position: relative;
     
 }
 
 /*Navigation*/
-
+nav {
+    
+}
 .navigation {
+    border: 1px solid black;
     padding: 0;
     margin: 0;   
     float: left;
     list-style: none;
     position: fixed;
-    background-color: #242582;
+    background-color: #0c0d52;
     width: 100%;    
 }
 
 .navigation li{
     margin: 10px 10px;
-    float: left;    
+    float: right;    
     padding: 5px 5px 15px 5px;     
+    
 }
 
 .navigation li a{
+    
     color: #fff;
     text-decoration: none;
     font-size: 1.5em;
@@ -113,6 +124,26 @@ p {
 .navigation li a:active{
     color: rgb(211, 178, 68);
    
+}
+
+
+#title {
+    color: #fff;
+    font: 72px arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black;
+    text-align: center;
+    margin: 30px 10px 10px 10px;
+    padding-top: 180px;
+    
+    
+}
+
+#title span {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border: white solid 10px;
 }
 
 
