@@ -246,3 +246,8 @@ tr:nth-child(even) {
     background-color: #D1E8E2;
     color: #000;
 }
+
+#videoClip {
+    text-align: center;
+    
+}
