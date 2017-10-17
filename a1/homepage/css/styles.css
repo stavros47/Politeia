@@ -8,11 +8,10 @@ article, section, aside, hgroup, nav, header, footer, figure, figcaption {
 
 /*
 Main CSS styling
-Colore Scheme: 
+Color Scheme: 
 
 #2F2FA2 - Dark Blue - body
 #242582 - Darker blue - nav
-#2C3531 - Metalic Grey
 #D1E8E2 - light blue - nav links hover
 rgb(211, 178, 68); Active link
 */
@@ -25,11 +24,11 @@ body {
 
 #profilePic {
     display: block;
-  margin-left: auto;
-  margin-right: auto;
-    width: 350px;
-    height: 350px;
-    border-radius: 175px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    width: 30%;
+    height: 30%;
 }
 
 #picComment {
@@ -88,13 +87,15 @@ p {
     height: 550px;
     float: left;
     position: relative;
-    
+    overflow: hidden;
+}
+
+footer {
+    text-align: center;
 }
 
 /*Navigation*/
-nav {
-    
-}
+
 .navigation {
     border: 1px solid black;
     padding: 0;
@@ -139,13 +140,14 @@ nav {
 
 #title {
     color: #fff;
-    font: 72px arial, sans-serif;
+    font: 4.5em arial, sans-serif;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black;
     text-align: center;
     margin: 30px 10px 10px 10px;
-    padding-top: 180px;
+    padding-top: 2.5em;
+    
     
     
 }
@@ -169,16 +171,10 @@ nav {
    
 }
 
-#interestsList li{
- 
-   
-   
-}
-
 #interestsList li a{
     color: orange;
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 1.5em;
     padding: 5px 5px 10px 0;
 }
 
@@ -210,6 +206,7 @@ nav {
     text-decoration: none;
     color: orange;
     padding: 5px;
+    font-size: 1.5em;
 }
 
 #tvshowList li a:visited{
@@ -250,4 +247,34 @@ tr:nth-child(even) {
 #videoClip {
     text-align: center;
     
+}
+@media (max-width: 1024px) {
+    p {
+        font-size: 1.8em;
+    }
+
+    h2, h3, h4 ,.navigation li a{
+        font-size: 1.7em;
+    }
+}
+    
+    
+@media (max-width: 480px) {
+    #title {
+        font-size: 3.5em;
+    }
+}
+    
+        
+@media (max-width: 320px) {
+    .navigation {
+        padding-right: 10px;
+    }
+
+    #tvshowList li a{
+        font-size: 1.6em;
+    }
+    #interestsList li a{
+        font-size: 1.6em;
+    }
 }
