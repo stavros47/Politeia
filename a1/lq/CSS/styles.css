@@ -1,0 +1,16 @@
+/*
+    Simple CSS rule to make my Text areas non-resizable
+*/
+
+textarea {
+    resize: none;
+}
+
+/*
+And some Label formating
+*/
+
+label {
+    font-size: 1.1em;
+    font-weight: 700;
+}
