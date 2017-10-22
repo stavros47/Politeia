@@ -1,3 +1,11 @@
+h1 {
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    
+}
+
+
 /*
     Simple CSS rule to make my Text areas non-resizable
 */
@@ -13,4 +21,9 @@ And some Label formating
 label {
     font-size: 1.1em;
     font-weight: 700;
+}
+
+.moreSpacing{
+    margin-top: 20px;
+    padding-top: 20px;
 }
