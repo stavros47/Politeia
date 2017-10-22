@@ -27,12 +27,12 @@
                         
                         <div class="form-group">
                                 <label for=" InputUsername">Username</label>
-                                <input type="text" class="form-control" id="InputUsername" aria-describedby="UsernameHelp" placeholder="Username">
+                                <input required type="text" class="form-control" id="InputUsername" pattern=".{8,}" title="Must be atleast 8 characters long" aria-describedby="UsernameHelp" placeholder="Username">
                         </div>
                         <div class="form-group">
 
                           <label for=" InputEmail">Email address</label>
-                          <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                          <input required type="email" class="form-control" id="InputEmail" pattern="(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)" title="Must be a Valid email. e.x: example@example.com or example@example.example.com etc" aria-describedby="emailHelp" placeholder="Enter email">
                           <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                         </div>
 
