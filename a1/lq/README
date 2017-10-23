@@ -3,8 +3,8 @@
 #AM: 2962
 #csd2962@csd.uoc.gr
 -------------------
-A2
+Assignment 1 Askisi 2
 
-
+Regarding input type date.
 Added a fallback pattern regex validation because browsers that do not support type="date" will convert it to type="text" 
 This patern enforces a dd/mm/yyyy format in type text. If date is supported though the format will depend on the user's date format setting in his OS
