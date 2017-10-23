@@ -3,13 +3,19 @@
 #AM: 2962
 #csd2962@csd.uoc.gr
 -------------------
+A1
 
 
-Den eixa kapio thema ektos apo kapote me to inspect sto chrome kai to responsiveness alla to teliko apotelesma mou
-fenete kalo twra.
+I misspelled the git-tag once and as a result I now have two tags for homepage-responsive. One called homepage=responsive and the right one homepage-responsive.
 
-- Ta media Queries deixnoun na leitourgoun an kai den xreiastikan polles allages logo tou oti xrisimopiousa 
-pososta (%) kai em gia diastaseis klp. 
-  To mono thema pou eixa einai oti kapote otan ekana inspect itan mia xara responsive
-eno kapies random fores eixe horizontal scroll bar. Ekleina to inspect kai to aniga kai itan kai pali ok.
+I came back to this A1 to check and do some minor adjustments where I could but I couldn't update the git tags to point to this last commit. 
+So the final version of this website works great and I also used some bootstrap stuff, I just couldn't figure out a way to remove and add the tags again.
+
+The page was tested to be responsive in all resolutions that were requested, although sometimes I had to close inspect (chrome) and reopen and everything looked to be 
+responsive as intended. 
+
+The hardest part was figuring out the idea, what to write a website about, so I made it all about myself so the content is as much as I could think to use a variety of tags. 
+
+
+
 
