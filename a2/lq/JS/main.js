@@ -2,11 +2,18 @@
 
 window.addEventListener('load', function () {
 
-    var passwordError = false;
     //TODO: Maybe refactor this to an implementation without using globals
+    var LocationEmpty = true;
+    var passwordError = false;   
     var passwordElement = document.getElementById('InputPassword');
     var retypePasswordElement = document.getElementById('InputPassword2');
+    var toggleMapButton = document.getElementById('toggleMapBtn');    
+    toggleMapButton.style.visibility = 'hidden';
+    var mapElement = document.getElementById('map');
+    mapElement.style.visibility = 'hidden';
+    var mapHiddenFlag = true;
 
+    //Assigns the appropreate bootstrap classes to show (make visible) feedback/warning when needed.
     function showPasswordFeedback(passError) {
         if (passError) {
             /*
@@ -49,18 +56,29 @@ window.addEventListener('load', function () {
         return false;
     }
 
-    var addressElement = document.getElementById('InputAddress')
-    addressElement.onblur = function () {
+    var addressElement = document.getElementById('InputAddress');
+
+    function getLocation(){
         var address = addressElement.value;
         var CityValue = document.getElementById('InputCity').value;
         var CountryValue = document.getElementById('countries').value
         var location;
         if (address != "") {
+            LocationEmpty = false;
             location = address + ', ' + CityValue + ', ' + CountryValue;
         } else {
-            location = CityValue + ', ' + CountryValue;
+            LocationEmpty = true;
+            location = CityValue + ', ' + CountryValue;            
         }
+        return location;
+    }
 
+   
+    addressElement.onblur = function () {
+       var location = getLocation();
+        if(!LocationEmpty) {
+            toggleMapButton.style.visibility = 'visible';
+        }
         MakeReq(location);
 
     }
@@ -103,5 +121,6 @@ window.addEventListener('load', function () {
         xhttp.open('GET', url, true);
         xhttp.send();
     }
+
 
 });
