@@ -62,3 +62,7 @@ footer {
 .footerLink:hover {
     color: darkblue;
 }
+
+.map-container {
+    margin-top: 25px;
+}
