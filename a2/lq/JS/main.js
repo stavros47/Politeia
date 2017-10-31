@@ -78,8 +78,13 @@ window.addEventListener('load', function () {
        var location = getLocation();
         if(!addressEmpty) {
             toggleMapButton.style.visibility = 'visible';
+            MakeReq(location);
+        }else{
+            toggleMapButton.style.visibility = 'hidden';
+            mapElement.style.visibility = 'hidden';
+            mapHiddenFlag = true;
         }
-        MakeReq(location);
+        
 
     }
 
