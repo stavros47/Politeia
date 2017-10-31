@@ -3,7 +3,7 @@
 window.addEventListener('load', function () {
 
     //TODO: Maybe refactor this to an implementation without using globals
-    var LocationEmpty = true;
+    var addressEmpty = true;
     var passwordError = false;   
     var passwordElement = document.getElementById('InputPassword');
     var retypePasswordElement = document.getElementById('InputPassword2');
@@ -64,10 +64,10 @@ window.addEventListener('load', function () {
         var CountryValue = document.getElementById('countries').value
         var location;
         if (address != "") {
-            LocationEmpty = false;
+            addressEmpty = false;
             location = address + ', ' + CityValue + ', ' + CountryValue;
         } else {
-            LocationEmpty = true;
+            addressEmpty = true;
             location = CityValue + ', ' + CountryValue;            
         }
         return location;
@@ -76,7 +76,7 @@ window.addEventListener('load', function () {
    
     addressElement.onblur = function () {
        var location = getLocation();
-        if(!LocationEmpty) {
+        if(!addressEmpty) {
             toggleMapButton.style.visibility = 'visible';
         }
         MakeReq(location);
