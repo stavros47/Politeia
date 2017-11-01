@@ -368,10 +368,14 @@
 
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group has-success has-feedback">
                                 <label for="InputCity">City</label>
                                 <input required type="text" class="form-control" id="InputCity" pattern=".{2,20}" title="Must be between 2 - 20 characters long."
                                         placeholder="City">
+                                        <div class="invalid-feedback">
+                                                This City input is invalid!
+                                              </div>
+                                        
                         </div>
 
                         <div class="form-group has-success has-feedback">

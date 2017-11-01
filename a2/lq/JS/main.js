@@ -8,9 +8,9 @@ window.addEventListener('load', function () {
     var passwordElement = document.getElementById('InputPassword');
     var retypePasswordElement = document.getElementById('InputPassword2');
     var toggleMapButton = document.getElementById('toggleMapBtn');    
-    toggleMapButton.style.visibility = 'hidden';
+    toggleMapButton.style.display = 'none';
     var mapElement = document.getElementById('map');
-    mapElement.style.visibility = 'hidden';
+    mapElement.style.display = 'none';
     var mapHiddenFlag = true;
 
     //Assigns the appropreate bootstrap classes to show (make visible) feedback/warning when needed.
@@ -57,6 +57,7 @@ window.addEventListener('load', function () {
     }
 
     var addressElement = document.getElementById('InputAddress');
+    var CityElement = document.getElementById('InputCity');
 
     function getLocation(){
         var address = addressElement.value;
@@ -73,33 +74,68 @@ window.addEventListener('load', function () {
         return location;
     }
 
+
+    function getCityCountry() {
+       
+        var CityValue = document.getElementById('InputCity').value;
+        var CountryValue = document.getElementById('countries').value
+        var location;
+            location = CityValue + ', ' + CountryValue;            
+        
+        return location;
+    }
+
+    CityElement.onblur = function () {
+
+        var location = getLocation();
+       
+        MakeReq(location);
+    }
    
     addressElement.onblur = function () {
+  
        var location = getLocation();
-        if(!addressEmpty) {
-            toggleMapButton.style.visibility = 'visible';
+       console.log(location);
+        if(!addressEmpty) {           
             MakeReq(location);
         }else{
-            toggleMapButton.style.visibility = 'hidden';
-            mapElement.style.visibility = 'hidden';
+            toggleMapButton.style.display = 'none';
+            mapElement.style.display = 'none';
             mapHiddenFlag = true;
         }
-        
-
     }
+
+
 
     //Optional todo: move the warning bootstrap classes functionality to the showPasswordFeedback and make that universal
     function checkAddress(response) {
         console.log(response);
         if (response.status == "ZERO_RESULTS") {
-            addressElement.classList.add('is-invalid');
-            addressElement.classList.remove('is-valid');
+            toggleMapButton.style.display = 'none';
+           mapElement.style.display = 'none';
+           mapHiddenFlag = true;
+
+            if (addressElement.value != "") {
+                addressElement.classList.add('is-invalid');
+                addressElement.classList.remove('is-valid');
+
+            }else {
+                if (CityElement.value != "") {
+                    CityElement.classList.add('is-invalid');
+                    CityElement.classList.remove('is-valid');
+                }
+            }
 
         } else if (response.status == "OK") {
-            if (document.getElementById('InputAddress').value != "") {
+            if (addressElement.value != "") {
                 addressElement.classList.add('is-valid');
             }
+            if (CityElement.value != "") {
+                CityElement.classList.add('is-valid');               
+            }
+            toggleMapButton.style.display = '';
             addressElement.classList.remove('is-invalid');
+            CityElement.classList.remove('is-invalid');
         } else {
             console.log('Error occurred!');
         }
@@ -129,10 +165,10 @@ window.addEventListener('load', function () {
 
     toggleMapButton.addEventListener('click', function (){
         if(mapHiddenFlag){
-            mapElement.style.visibility = 'visible';
+            mapElement.style.display = '';
             mapHiddenFlag = false;
         }else{
-            mapElement.style.visibility = 'hidden';
+            mapElement.style.display = 'none';
             mapHiddenFlag = true;
         }
         initMap();
@@ -148,13 +184,13 @@ window.addEventListener('load', function () {
         });
         var geocoder = new google.maps.Geocoder();
 
-        
-          geocodeAddress(geocoder, map);
+        var fullLocation = getLocation();
+          geocodeAddress(geocoder, map, fullLocation);
         
       }
 
-      function geocodeAddress(geocoder, resultsMap) {
-        var addressLocation = getLocation();
+      function geocodeAddress(geocoder, resultsMap, addressLocation) {
+       
         geocoder.geocode({'address': addressLocation}, function(results, status) {
           if (status === 'OK') {
             resultsMap.setCenter(results[0].geometry.location);
@@ -163,7 +199,7 @@ window.addEventListener('load', function () {
               position: results[0].geometry.location
             });
           } else {
-            alert('Geocode was not successful for the following reason: ' + status);
+            console.log('Geocode was not successful for the following reason: ' + status);
           }
         });
       }
