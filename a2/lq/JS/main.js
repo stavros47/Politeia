@@ -95,14 +95,13 @@ window.addEventListener('load', function () {
     addressElement.onblur = function () {
   
        var location = getLocation();
-       console.log(location);
+
+         mapElement.style.display = 'none';
+        mapHiddenFlag = true;
         if(!addressEmpty) {           
             MakeReq(location);
-        }else{
-            toggleMapButton.style.display = 'none';
-            mapElement.style.display = 'none';
-            mapHiddenFlag = true;
         }
+ 
     }
 
 
