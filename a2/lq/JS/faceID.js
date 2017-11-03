@@ -169,7 +169,18 @@ var faceRec = (function () {
   // !!!!!!!!!!! ================ TODO  ADD YOUR CODE HERE  ====================
   // From here on there is code that should not be given....
 
-  
+  function faceDetectHandler(response, data) {
+    var UsernameElement = document.getElementById('InputUsername');
+    //Append token to data(FormData)
+    data.append('face_token', response.faces[0].face_token);
+    var username = UsernameElement.value;
+    if (username != '') {
+      data.append('user_id', username);
+      ajaxRequestSet('POST', faceAPI.setuserId, data);
+    }
+
+  }
+
   //Request Implementation(s):
 
   //Detect
@@ -190,7 +201,21 @@ var faceRec = (function () {
     xhttp.send(data);
   }
 
+  //SetUserID
+  function ajaxRequestSet(typeOfRequest, url, data) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var responseResult = JSON.parse(this.response);
+        console.log('got the response');
+        console.log(responseResult);
 
+      }
+    };
+
+    xhttp.open(typeOfRequest, url, true);
+    xhttp.send(data);
+  }
 
   // You have to implement the ajaxRequest function!!!!
 
