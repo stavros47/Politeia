@@ -4,14 +4,28 @@ window.addEventListener('load', function () {
 
     //TODO: Maybe refactor this to an implementation without using globals
     var addressEmpty = true;
-    var passwordError = false;   
+    var passwordError = false;
+    var UsernameElement = document.getElementById('InputUsername');
     var passwordElement = document.getElementById('InputPassword');
     var retypePasswordElement = document.getElementById('InputPassword2');
-    var toggleMapButton = document.getElementById('toggleMapBtn');    
+    var toggleMapButton = document.getElementById('toggleMapBtn');
     toggleMapButton.style.display = 'none';
     var mapElement = document.getElementById('map');
     mapElement.style.display = 'none';
     var mapHiddenFlag = true;
+    var takePhotoContainer = document.getElementById('video-container');
+    //hide the container
+    takePhotoContainer.style.display = 'none';
+    //Face Recognition is enabled only when we check the checkbox.
+    var faceCheckbox = document.getElementById('faceIDcheck');
+    faceCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+            faceRec.init();
+            takePhotoContainer.style.display = '';
+        } else {
+            takePhotoContainer.style.display = 'none';
+        }
+    });
 
     //Assigns the appropreate bootstrap classes to show (make visible) feedback/warning when needed.
     function showPasswordFeedback(passError) {
@@ -59,7 +73,7 @@ window.addEventListener('load', function () {
     var addressElement = document.getElementById('InputAddress');
     var CityElement = document.getElementById('InputCity');
 
-    function getLocation(){
+    function getLocation() {
         var address = addressElement.value;
         var CityValue = document.getElementById('InputCity').value;
         var CountryValue = document.getElementById('countries').value
@@ -69,56 +83,63 @@ window.addEventListener('load', function () {
             location = address + ', ' + CityValue + ', ' + CountryValue;
         } else {
             addressEmpty = true;
-            location = CityValue + ', ' + CountryValue;            
+            location = CityValue + ', ' + CountryValue;
         }
         return location;
     }
 
 
     function getCityCountry() {
-       
+
         var CityValue = document.getElementById('InputCity').value;
         var CountryValue = document.getElementById('countries').value
         var location;
-            location = CityValue + ', ' + CountryValue;            
-        
+        location = CityValue + ', ' + CountryValue;
+
         return location;
     }
 
     CityElement.onblur = function () {
 
         var location = getLocation();
-       
+
         MakeReq(location);
     }
-   
-    addressElement.onblur = function () {
-  
-       var location = getLocation();
 
-         mapElement.style.display = 'none';
+    addressElement.onblur = function () {
+
+        var location = getLocation();
+
+        mapElement.style.display = 'none';
         mapHiddenFlag = true;
-        if(!addressEmpty) {           
+        if (!addressEmpty) {
             MakeReq(location);
         }
- 
+
     }
 
-
+    UsernameElement.onblur = function () {
+        var checkbox = document.getElementById('checkbox-container');
+        if (this.value != '') {
+            checkbox.style.display = '';
+        } else {
+            checkbox.style.display = 'none';
+        }
+    }
 
     //Optional todo: move the warning bootstrap classes functionality to the showPasswordFeedback and make that universal
     function checkAddress(response) {
         console.log(response);
         if (response.status == "ZERO_RESULTS") {
             toggleMapButton.style.display = 'none';
-           mapElement.style.display = 'none';
-           mapHiddenFlag = true;
+            mapElement.style.display = 'none';
+            mapHiddenFlag = true;
 
             if (addressElement.value != "") {
                 addressElement.classList.add('is-invalid');
                 addressElement.classList.remove('is-valid');
 
-            }else {
+            } else {
                 if (CityElement.value != "") {
                     CityElement.classList.add('is-invalid');
                     CityElement.classList.remove('is-valid');
@@ -130,7 +151,7 @@ window.addEventListener('load', function () {
                 addressElement.classList.add('is-valid');
             }
             if (CityElement.value != "") {
-                CityElement.classList.add('is-valid');               
+                CityElement.classList.add('is-valid');
             }
             toggleMapButton.style.display = '';
             addressElement.classList.remove('is-invalid');
@@ -162,11 +183,11 @@ window.addEventListener('load', function () {
         xhttp.send();
     }
 
-    toggleMapButton.addEventListener('click', function (){
-        if(mapHiddenFlag){
+    toggleMapButton.addEventListener('click', function () {
+        if (mapHiddenFlag) {
             mapElement.style.display = '';
             mapHiddenFlag = false;
-        }else{
+        } else {
             mapElement.style.display = 'none';
             mapHiddenFlag = true;
         }
@@ -178,29 +199,34 @@ window.addEventListener('load', function () {
 
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 14,
-          center: {lat: -34.397, lng: 150.644}
+            zoom: 14,
+            center: {
+                lat: -34.397,
+                lng: 150.644
+            }
         });
         var geocoder = new google.maps.Geocoder();
 
         var fullLocation = getLocation();
-          geocodeAddress(geocoder, map, fullLocation);
-        
-      }
+        geocodeAddress(geocoder, map, fullLocation);
 
-      function geocodeAddress(geocoder, resultsMap, addressLocation) {
-       
-        geocoder.geocode({'address': addressLocation}, function(results, status) {
-          if (status === 'OK') {
-            resultsMap.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-              map: resultsMap,
-              position: results[0].geometry.location
-            });
-          } else {
-            console.log('Geocode was not successful for the following reason: ' + status);
-          }
+    }
+
+    function geocodeAddress(geocoder, resultsMap, addressLocation) {
+
+        geocoder.geocode({
+            'address': addressLocation
+        }, function (results, status) {
+            if (status === 'OK') {
+                resultsMap.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: resultsMap,
+                    position: results[0].geometry.location
+                });
+            } else {
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
         });
-      }
+    }
 
 });
