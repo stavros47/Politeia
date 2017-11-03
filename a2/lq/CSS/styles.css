@@ -4,14 +4,12 @@ header {
     margin-bottom: 25px;
 }
 
-
 h1 {
     padding: 20px;
     text-align: center;
     margin-bottom: 25px;
     color: white;
     font-size: 3em;
-    
 }
 
 
@@ -23,6 +21,7 @@ textarea {
     resize: none;
 }
 
+
 /*
 And some Label formating
 */
@@ -32,7 +31,7 @@ label {
     font-weight: 700;
 }
 
-.moreSpacing{
+.moreSpacing {
     margin-top: 20px;
     padding-top: 20px;
 }
@@ -50,7 +49,6 @@ footer {
     color: orange;
     font-weight: 700;
     font-size: 1.5em;
-
 }
 
 .copyright {
@@ -71,4 +69,4 @@ footer {
     width: 100%;
     height: 400px;
     background-color: grey;
-  }
+}
