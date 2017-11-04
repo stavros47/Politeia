@@ -170,13 +170,25 @@ var faceRec = (function () {
   // From here on there is code that should not be given....
 
   function faceDetectHandler(response, data) {
+
     var UsernameElement = document.getElementById('InputUsername');
     //Append token to data(FormData)
     data.append('face_token', response.faces[0].face_token);
     var username = UsernameElement.value;
     if (username != '') {
       data.append('user_id', username);
-      ajaxRequestSet('POST', faceAPI.setuserId, data);
+      ajaxRequest('POST', faceAPI.setuserId, data);
+    }
+
+  }
+
+  function handleResponses(response, url, data) {
+
+    if (url == faceAPI.detect) {
+      console.log('Detected');
+      faceDetectHandler(response, data);
+    } else if (url == faceAPI.setuserId) {
+      console.log('Set User ID');
     }
 
   }
@@ -185,19 +197,13 @@ var faceRec = (function () {
 
   //Detect
   function ajaxRequest(typeOfRequest, url, data) {
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         var responseResult = JSON.parse(this.response);
-
-        if(url == faceRec.detect){
-          console.log('Detect Request:');
-          console.log(responseResult);
-          faceDetectHandler(responseResult, data);
-        }else if(url == faceRec.setuserId){
-          console.log('Set User ID:');
-          console.log(responseResult);
-        }
+        console.log(responseResult);
+        handleResponses(responseResult, url, data);
       }
     };
 
