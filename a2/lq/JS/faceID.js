@@ -189,36 +189,21 @@ var faceRec = (function () {
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         var responseResult = JSON.parse(this.response);
-        console.log('got the response');
-        console.log(responseResult);
-        faceDetectHandler(responseResult, data);
-        //test
-        console.log('Isolated Token: ' + responseResult.faces[0].face_token);
+
+        if(url == faceRec.detect){
+          console.log('Detect Request:');
+          console.log(responseResult);
+          faceDetectHandler(responseResult, data);
+        }else if(url == faceRec.setuserId){
+          console.log('Set User ID:');
+          console.log(responseResult);
+        }
       }
     };
 
     xhttp.open(typeOfRequest, url, true);
     xhttp.send(data);
   }
-
-  //SetUserID
-  function ajaxRequestSet(typeOfRequest, url, data) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        var responseResult = JSON.parse(this.response);
-        console.log('got the response');
-        console.log(responseResult);
-
-      }
-    };
-
-    xhttp.open(typeOfRequest, url, true);
-    xhttp.send(data);
-  }
-
-  // You have to implement the ajaxRequest function!!!!
-
   // !!!!!!!!!!! =========== END OF TODO  ===============================
 
   // Public API of function for facet recognition
