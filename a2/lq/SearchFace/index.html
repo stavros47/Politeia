@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta name="Author" content="Stavros Argyrou">
+        <meta name="AM" content="2962">
+        <meta name="Description" content="This is a webform for Assignment 2">
+        <meta name="keywords" content="Web programming, Computer Science, University of Crete">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+                crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <script src="JS/faceID.js" type="text/javascript"></script>     
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Face Recognition Login</title>
+</head>
+
+<body>
+        <header>
+                <div class="container">
+                        <div class="row">
+                                <div class="col-md-12">
+                                        <h1 id="headerTitle">Face Detection Login</h1>
+                                </div>
+
+                        </div>
+                </div>
+        </header>
+
+
+
+        <div class="container">
+
+                <form>
+
+                        <div class="form-group row">
+                            <label for="InputUsername">Username</label>
+                            <input autofocus required type="text" class="form-control" id="InputUsername" pattern=".{8,}" title="Must be atleast 8 characters long"
+                                    placeholder="Username">
+                            <div class="checkbox" id="checkbox-container">
+                                    <label>
+                                            <input type="checkbox" id="faceIDcheck">Face Recognition</label>
+                            </div>
+                        </div>
+                        <div class="container" id="video-container">
+                                
+                                                <video id='video' width='640' height='480' autoplay></video>
+                                                <input type='button' id="snap" value='Take Photo'>
+                                                <input type='button' id="upload" value='Upload Image'>
+                                                <canvas id='canvas' width='640' height='480'></canvas>
+                                
+                                        </div>
+                        <div class="form-group row has-success has-feedback">
+                            <label for="InputPassword">Password</label>
+                            <input required type="password" class="form-control" id="InputPassword" placeholder="Password" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,10}$"
+                            title="Make sure it's between 8-10 characters. You must use at least ONE letter, ONE number and ONE symbol (e.x: #,!,$,% etc)">                           
+                        </div>
+
+
+
+                        <input id="submit" type="submit" class="btn btn-primary btn-block" value="Subscribe" />
+                </form>
+
+        </div>
+    
+
+        
+
+        <footer>
+
+                <a class="footerLink" href="#headerTitle">Back To Top</a>
+                <p class="copyright">
+                        Copyright &copy; Stavros Argyrou - AM: 2962
+                </p>
+
+
+        </footer>
+
+
+
+
+
+</body>
+
+</html>
