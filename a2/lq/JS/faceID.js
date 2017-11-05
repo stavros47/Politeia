@@ -114,6 +114,7 @@ var faceRec = (function () {
       // Second argument: the URI where we are sending our request
       // Third argument: the data (the parameters of the request)
 
+
       ajaxRequest('POST', faceAPI.detect, data);
 
     } else {
@@ -130,10 +131,6 @@ var faceRec = (function () {
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     var video = document.getElementById('video');
-
-
-
-
 
     var mediaConfig = {
       video: true,
@@ -169,7 +166,14 @@ var faceRec = (function () {
   // !!!!!!!!!!! ================ TODO  ADD YOUR CODE HERE  ====================
   // From here on there is code that should not be given....
 
-  function faceDetectHandler(response, data) {
+  function AddFaceToFaceset(response, data) {
+    data.append('face_tokens', response.face_token);
+    data.append('outer_id', 'hy359');
+    ajaxRequest('POST', faceAPI.addFace, data);
+
+  }
+
+  function setUserID(response, data) {
 
     var UsernameElement = document.getElementById('InputUsername');
     //Append token to data(FormData)
@@ -182,13 +186,18 @@ var faceRec = (function () {
 
   }
 
+ 
+
   function handleResponses(response, url, data) {
 
     if (url == faceAPI.detect) {
-      console.log('Detected');
-      faceDetectHandler(response, data);
+      console.log('Detection Done - setting user ID');
+      setUserID(response, data);
     } else if (url == faceAPI.setuserId) {
-      console.log('Set User ID');
+      console.log('Set User ID Done - Adding Face to Faceset');
+      AddFaceToFaceset(response, data);
+    } else {
+      console.log('Operations all done!');
     }
 
   }
