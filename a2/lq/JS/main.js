@@ -104,10 +104,10 @@ window.addEventListener('load', function () {
 
     addressElement.onblur = function () {
         var location = getLocation();
-        
-        if(this.value != ""){
+
+        if (this.value != "") {
             var map = document.getElementById('map');
-            if(map){
+            if (map) {
                 map.style.display = 'none';
                 mapHiddenFlag = true;
             }
@@ -148,7 +148,7 @@ window.addEventListener('load', function () {
             MapElement.style.display = 'none';
             document.getElementById('map-container').appendChild(btnMap);
             document.getElementById('map-container').appendChild(MapElement);
-           
+
         }
 
     }

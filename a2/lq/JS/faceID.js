@@ -186,7 +186,7 @@ var faceRec = (function () {
 
   }
 
- 
+
 
   function handleResponses(response, url, data) {
 
