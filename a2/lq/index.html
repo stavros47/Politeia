@@ -33,7 +33,7 @@
 
         <div class="container">
 
-                <form onSubmit="return ValidateInputs()">
+                <form id='lqForm' onSubmit="return ValidateInputs()">
 
                         <div class="form-group row">
                                 <div class="col-md-6">
@@ -394,10 +394,10 @@
                                         This address does not exist!
                                 </div>
                         </div>
-                        <div id="map-container" class="container">
+                        <!-- <div id="map-container" class="container">
                                 <button id="toggleMapBtn" class="btn btn-primary">Toggle Map</button>
                                 <div id="map"></div>
-                        </div>
+                        </div> -->
                 
                         <div class="form-group">
                                 <label for="InputProffession">Profession</label>
@@ -427,8 +427,7 @@
                 <canvas id='canvas' width='640' height='480'></canvas>
 
         </div>
-        <script>
-        </script>
+
         <footer>
 
                 <a class="footerLink" href="#headerTitle">Back To Top</a>

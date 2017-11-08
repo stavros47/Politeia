@@ -8,10 +8,12 @@ window.addEventListener('load', function () {
     var UsernameElement = document.getElementById('InputUsername');
     var passwordElement = document.getElementById('InputPassword');
     var retypePasswordElement = document.getElementById('InputPassword2');
+
     var toggleMapButton = document.getElementById('toggleMapBtn');
-    toggleMapButton.style.display = 'none';
+    // toggleMapButton.style.display = 'none';
+
     var mapElement = document.getElementById('map');
-    mapElement.style.display = 'none';
+    // mapElement.style.display = 'none';
     var mapHiddenFlag = true;
     var takePhotoContainer = document.getElementById('video-container');
     //hide the container
@@ -78,42 +80,41 @@ window.addEventListener('load', function () {
         var CityValue = document.getElementById('InputCity').value;
         var CountryValue = document.getElementById('countries').value
         var location;
-        if (address != "") {
-            addressEmpty = false;
-            location = address + ', ' + CityValue + ', ' + CountryValue;
+        if ((address == "") && (CityValue == "")) {
+            return false;
         } else {
-            addressEmpty = true;
-            location = CityValue + ', ' + CountryValue;
+            if (address != "") {
+                addressEmpty = false;
+                location = address + ', ' + CityValue + ', ' + CountryValue;
+            } else {
+                addressEmpty = true;
+                location = CityValue + ', ' + CountryValue;
+            }
+            return location;
         }
-        return location;
-    }
 
-
-    function getCityCountry() {
-
-        var CityValue = document.getElementById('InputCity').value;
-        var CountryValue = document.getElementById('countries').value
-        var location;
-        location = CityValue + ', ' + CountryValue;
-
-        return location;
     }
 
     CityElement.onblur = function () {
-
         var location = getLocation();
-
-        MakeReq(location);
+        if (location) {
+            MakeReq(location);
+        }
     }
 
     addressElement.onblur = function () {
-
         var location = getLocation();
-
-        mapElement.style.display = 'none';
-        mapHiddenFlag = true;
-        MakeReq(location);
-
+        
+        if(this.value != ""){
+            var map = document.getElementById('map');
+            if(map){
+                map.style.display = 'none';
+                mapHiddenFlag = true;
+            }
+        }
+        if (location) {
+            MakeReq(location);
+        }
     }
 
     UsernameElement.onblur = function () {
@@ -125,12 +126,51 @@ window.addEventListener('load', function () {
         }
     }
 
+
+    function createMapElements() {
+        if (!document.getElementById('map-container')) {
+            //Map Container
+            var MapContainer = document.createElement('div');
+            MapContainer.className = 'container';
+            MapContainer.setAttribute('id', 'map-container');
+            document.getElementById('InputAddress').insertAdjacentElement('afterend', MapContainer);
+            //button
+            var btnMap = document.createElement('button');
+            btnMap.className = 'btn';
+            btnMap.classList.add('btn-primary');
+            btnMap.setAttribute('id', 'toggleMapBtn');
+            btnMap.setAttribute('type', 'button');
+            btnMap.innerHTML = 'Toggle Map';
+
+            //Map
+            var MapElement = document.createElement('div');
+            MapElement.setAttribute('id', 'map');
+            MapElement.style.display = 'none';
+            document.getElementById('map-container').appendChild(btnMap);
+            document.getElementById('map-container').appendChild(MapElement);
+           
+        }
+
+    }
+
+    function removeMapElements() {
+        //remove button
+        var element = document.getElementById('toggleMapBtn');
+        element.parentNode.removeChild(element);
+        //remove map
+        element = document.getElementById('map');
+        element.parentNode.removeChild(element);
+        //remove map container
+        element = document.getElementById('map-container');
+        element.parentNode.removeChild(element);
+
+    }
+
     //Optional todo: move the warning bootstrap classes functionality to the showPasswordFeedback and make that universal
     function checkAddress(response) {
         console.log(response);
         if (response.status == "ZERO_RESULTS") {
-            toggleMapButton.style.display = 'none';
-            mapElement.style.display = 'none';
+            removeMapElements();
             mapHiddenFlag = true;
 
             if (addressElement.value != "") {
@@ -151,7 +191,7 @@ window.addEventListener('load', function () {
             if (CityElement.value != "") {
                 CityElement.classList.add('is-valid');
             }
-            toggleMapButton.style.display = '';
+            createMapElements();
             addressElement.classList.remove('is-invalid');
             CityElement.classList.remove('is-invalid');
         } else {
@@ -159,7 +199,7 @@ window.addEventListener('load', function () {
         }
     }
 
-  
+
     //Create and send a request to Google Geocode API
     function MakeReq(location) {
         var xhttp = new XMLHttpRequest();
@@ -178,15 +218,18 @@ window.addEventListener('load', function () {
         xhttp.send();
     }
 
-    toggleMapButton.addEventListener('click', function () {
-        if (mapHiddenFlag) {
-            mapElement.style.display = '';
-            mapHiddenFlag = false;
-        } else {
-            mapElement.style.display = 'none';
-            mapHiddenFlag = true;
+    document.addEventListener('click', function (e) {
+        if (e.target.id == 'toggleMapBtn') {
+            if (mapHiddenFlag) {
+                document.getElementById('map').style.display = '';
+                mapHiddenFlag = false;
+            } else {
+                document.getElementById('map').style.display = 'none';
+                mapHiddenFlag = true;
+            }
+            initMap();
         }
-        initMap();
+
     });
 
 
