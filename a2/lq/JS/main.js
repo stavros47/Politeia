@@ -112,9 +112,7 @@ window.addEventListener('load', function () {
 
         mapElement.style.display = 'none';
         mapHiddenFlag = true;
-        if (!addressEmpty) {
-            MakeReq(location);
-        }
+        MakeReq(location);
 
     }
 
@@ -161,10 +159,7 @@ window.addEventListener('load', function () {
         }
     }
 
-    //Optional: Call request function on submit
-    var btn = document.getElementById('submit');
-    btn.addEventListener('click', MakeReq);
-
+  
     //Create and send a request to Google Geocode API
     function MakeReq(location) {
         var xhttp = new XMLHttpRequest();

@@ -118,7 +118,7 @@ var faceRec = (function () {
       //console.log('Base64:' + base64_img);
       data.append('image_base64', base64_img);
       data.append('outer_id', faceAPI.app);
-
+      data.append('return_result_count', 5);
       // add also other query parameters based on the request
       // you have to send
 
@@ -188,6 +188,7 @@ var faceRec = (function () {
 
   function handleResponses(response, url, data) {
     //get the username from the response
+    //Results Array is automatically sorted from the highest condifence to the lowest, so the first result is always the one we want
     var userValue = response.results[0].user_id;
     console.log(userValue);
     
