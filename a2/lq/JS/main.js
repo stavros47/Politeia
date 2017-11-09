@@ -24,6 +24,7 @@ window.addEventListener('load', function () {
         if (this.checked) {
             faceRec.init();
             takePhotoContainer.style.display = '';
+            document.getElementById('snap').focus();
         } else {
             takePhotoContainer.style.display = 'none';
         }
