@@ -182,7 +182,7 @@ var faceRec = (function () {
   // !!!!!!!!!!! ================ TODO  ADD YOUR CODE HERE  ====================
   // From here on there is code that should not be given....
 
-  
+
 
 
 
@@ -191,11 +191,11 @@ var faceRec = (function () {
     //Results Array is automatically sorted from the highest condifence to the lowest, so the first result is always the one we want
     var userValue = response.results[0].user_id;
     console.log(userValue);
-    
+
     //hide the container
     document.getElementById('video-container').style.display = 'none';
     //Face Recognition is enabled only when we check the checkbox.
-    document.getElementById('faceIDcheck').checked = false;  
+    document.getElementById('faceIDcheck').checked = false;
     document.getElementById('InputUsername').focus();
     document.getElementById('InputUsername').value = userValue;
   }
