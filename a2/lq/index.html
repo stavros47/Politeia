@@ -41,14 +41,16 @@
                                         <input autofocus required type="text" class="form-control" id="InputUsername" pattern=".{8,}" title="Must be atleast 8 characters long"
                                                 placeholder="Username">
                                         <div class="checkbox" id="checkbox-container">
-                                                
+
                                                 <!-- Rounded switch -->
                                                 <label class="switch">
                                                         <input type="checkbox" id="faceIDcheck">
                                                         <span class="slider round"></span>
-                                                        
+
                                                 </label>
-                                                <div class="faceIDlbl"><strong>Face ID</strong> </div>
+                                                <div class="faceIDlbl">
+                                                        <strong>Face ID</strong>
+                                                </div>
                                         </div>
                                 </div>
                                 <div class="col-md-6">
@@ -57,6 +59,27 @@
                                                 title="Must be a Valid email. e.x: example@example.com or example@example.example.com etc"
                                                 placeholder="Enter email">
                                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                                <div class="container" id="video-container">
+                                        <div class="row">
+                                                <div class="col-md-6">
+                                                        <video id='video' width='640' height='480' autoplay></video>
+                                                </div>
+                                                <div class="col-md-6">
+                                                        <canvas id='canvas' width='640' height='480'></canvas>
+                                                </div>
+                                                <div class="row col-md-12">
+                                                        <div class="col-md-6 text-center">
+                                                                <input type='button' id="snap" value='Take Photo' class="btn btn-primary">
+                                                        </div>
+                                                        <div class="col-md-6 text-center">
+                                                                <input type='button' id="upload" value='Upload Image' class="btn btn-primary">
+                                                        </div>
+                                                </div>
+
+
+                                        </div>
+
                                 </div>
                         </div>
 
@@ -422,14 +445,6 @@
 
         </div>
 
-        <div class="container" id="video-container">
-
-                <video id='video' width='640' height='480' autoplay></video>
-                <input type='button' id="snap" value='Take Photo'>
-                <input type='button' id="upload" value='Upload Image'>
-                <canvas id='canvas' width='640' height='480'></canvas>
-
-        </div>
 
         <footer>
 
