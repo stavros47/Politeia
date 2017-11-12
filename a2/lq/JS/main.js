@@ -12,16 +12,15 @@ window.addEventListener('load', function () {
     var retypePasswordElement = document.getElementById('InputPassword2');
     var addressElement = document.getElementById('InputAddress');
     var CityElement = document.getElementById('InputCity');
-    var takePhotoContainer = document.getElementById('video-container');
 
     //hide the video container
-    takePhotoContainer.style.display = 'none';
     //Face Recognition is enabled only when we check the checkbox.
     var faceCheckbox = document.getElementById('faceIDcheck');
     faceCheckbox.addEventListener('change', function () {
+        var takePhotoContainer = document.getElementById('video-container');        
         if (this.checked) {
             faceRec.init();
-            takePhotoContainer.style.display = '';
+            takePhotoContainer.style.display = 'block';
             document.getElementById('snap').focus();
         } else {
             takePhotoContainer.style.display = 'none';
@@ -37,8 +36,12 @@ window.addEventListener('load', function () {
             retypePasswordElement.classList.add('is-invalid');
             retypePasswordElement.classList.remove('is-valid');
             // Clear the fields and set focus to the password field
-            retypePasswordElement.value = '';
-            retypePasswordElement.focus();
+            //Checking if the value is not empty, because we might want to leave the input field blank for testing purposes
+            if(retypePasswordElement.value != ''){
+                retypePasswordElement.value = '';
+                retypePasswordElement.focus();
+            }
+
         } else {
             retypePasswordElement.classList.add('is-valid');
             retypePasswordElement.classList.remove('is-invalid');
