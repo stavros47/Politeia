@@ -71,7 +71,9 @@ footer {
     background-color: grey;
 }
 
-
+#video-container{
+    display: none;
+}
 /*Slider Checkbox CSS*/
 #checkbox-container {
     display: none;
