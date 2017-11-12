@@ -7,7 +7,7 @@ function ourMap(array) {
         if (!(fn instanceof Function)) {
             return current;        }
         // map fn to array and save result to current array
-        TO COMPLETE!
+        current = current.map(fn);
         // If callback is a function, execute callback
         TO COMPLETE TOGETHER!
         TO COMPLETE TOGETHER!
