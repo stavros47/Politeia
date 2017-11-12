@@ -1,24 +1,22 @@
 "use strict";
-/*jslint browser:true */
 
 window.addEventListener('load', function () {
 
-    //TODO: Maybe refactor this to an implementation without using globals
-    var addressEmpty = true;
+    //Flag to use in checking errors
     var passwordError = false;
+    var mapHiddenFlag = true;
+    var addressEmpty = true;
+    //Commonly used elements
     var UsernameElement = document.getElementById('InputUsername');
     var passwordElement = document.getElementById('InputPassword');
     var retypePasswordElement = document.getElementById('InputPassword2');
-
-    var toggleMapButton = document.getElementById('toggleMapBtn');
-    // toggleMapButton.style.display = 'none';
-
-    var mapElement = document.getElementById('map');
-    // mapElement.style.display = 'none';
-    var mapHiddenFlag = true;
+    var addressElement = document.getElementById('InputAddress');
+    var CityElement = document.getElementById('InputCity');
     var takePhotoContainer = document.getElementById('video-container');
-    //hide the container
+
+    //hide the video container
     takePhotoContainer.style.display = 'none';
+
     //Face Recognition is enabled only when we check the checkbox.
     var faceCheckbox = document.getElementById('faceIDcheck');
     faceCheckbox.addEventListener('change', function () {
@@ -74,9 +72,6 @@ window.addEventListener('load', function () {
         return false;
     }
 
-
-    var addressElement = document.getElementById('InputAddress');
-    var CityElement = document.getElementById('InputCity');
 
     function getLocation() {
         var address = addressElement.value;
@@ -159,7 +154,7 @@ window.addEventListener('load', function () {
     function removeMapElements() {
         //remove button
         var element = document.getElementById('toggleMapBtn');
-        if(element){
+        if (element) {
             element.parentNode.removeChild(element);
             //remove map
             element = document.getElementById('map');
@@ -172,28 +167,7 @@ window.addEventListener('load', function () {
 
     }
 
-    
-
-    //Create and send a request to Google Geocode API
-    function MakeReq(location) {
-        var xhttp = new XMLHttpRequest();
-        console.log('Response Object created!');
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var responseResult = JSON.parse(this.response);
-
-                checkAddress(responseResult);
-            }
-        };
-        var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyB3pGH041-hdat_tpiZtGwK24hfhySA-n4';
-
-        xhttp.open('GET', url, true);
-        xhttp.send();
-    }
-
-
-    //Optional todo: move the warning bootstrap classes functionality to the showPasswordFeedback and make that universal
+    //Check the response status and show/hide the appropreate warnings using the Bootstrap classes
     function checkAddress(response) {
         console.log(response);
         if (response.status == "ZERO_RESULTS") {
@@ -226,37 +200,22 @@ window.addEventListener('load', function () {
         }
     }
 
+    //Create and send a request to Google Geocode API
+    function MakeReq(location) {
+        var xhttp = new XMLHttpRequest();
+        console.log('Response Object created!');
 
-    document.addEventListener('click', function (e) {
-        if (e.target.id == 'toggleMapBtn') {
-            if (mapHiddenFlag) {
-                document.getElementById('map').style.display = '';
-                mapHiddenFlag = false;
-            } else {
-                document.getElementById('map').style.display = 'none';
-                mapHiddenFlag = true;
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseResult = JSON.parse(this.response);
+
+                checkAddress(responseResult);
             }
-            initMap();
-        }
+        };
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyB3pGH041-hdat_tpiZtGwK24hfhySA-n4';
 
-    });
-
-
-
-
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 14,
-            center: {
-                lat: -34.397,
-                lng: 150.644
-            }
-        });
-        var geocoder = new google.maps.Geocoder();
-
-        var fullLocation = getLocation();
-        geocodeAddress(geocoder, map, fullLocation);
-
+        xhttp.open('GET', url, true);
+        xhttp.send();
     }
 
     function geocodeAddress(geocoder, resultsMap, addressLocation) {
@@ -275,5 +234,36 @@ window.addEventListener('load', function () {
             }
         });
     }
+
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: {
+                lat: -34.397,
+                lng: 150.644
+            }
+        });
+        var geocoder = new google.maps.Geocoder();
+        //Get the location so we can pass it to geocodeAddress to place the marker
+        var fullLocation = getLocation();
+        geocodeAddress(geocoder, map, fullLocation);
+
+    }
+
+
+
+    document.addEventListener('click', function (e) {
+        if (e.target.id == 'toggleMapBtn') {
+            if (mapHiddenFlag) {
+                document.getElementById('map').style.display = '';
+                mapHiddenFlag = false;
+            } else {
+                document.getElementById('map').style.display = 'none';
+                mapHiddenFlag = true;
+            }
+            initMap();
+        }
+
+    });
 
 });
