@@ -16,7 +16,6 @@ window.addEventListener('load', function () {
 
     //hide the video container
     takePhotoContainer.style.display = 'none';
-
     //Face Recognition is enabled only when we check the checkbox.
     var faceCheckbox = document.getElementById('faceIDcheck');
     faceCheckbox.addEventListener('change', function () {
@@ -38,9 +37,8 @@ window.addEventListener('load', function () {
             retypePasswordElement.classList.add('is-invalid');
             retypePasswordElement.classList.remove('is-valid');
             // Clear the fields and set focus to the password field
-            passwordElement.value = '';
             retypePasswordElement.value = '';
-            passwordElement.focus();
+            retypePasswordElement.focus();
         } else {
             retypePasswordElement.classList.add('is-valid');
             retypePasswordElement.classList.remove('is-invalid');
@@ -114,11 +112,11 @@ window.addEventListener('load', function () {
             MakeReq(location);
         }
     }
-
-    UsernameElement.onblur = function () {
+    
+    UsernameElement.onkeyup = function () {
         var checkbox = document.getElementById('checkbox-container');
         if (this.value != '') {
-            checkbox.style.display = '';
+            checkbox.style.display = 'block';
         } else {
             checkbox.style.display = 'none';
         }
