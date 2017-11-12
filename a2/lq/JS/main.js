@@ -75,26 +75,6 @@ window.addEventListener('load', function () {
     }
 
 
-
-    //Create and send a request to Google Geocode API
-    function MakeReq(location) {
-        var xhttp = new XMLHttpRequest();
-        console.log('Response Object created!');
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var responseResult = JSON.parse(this.response);
-
-                checkAddress(responseResult);
-            }
-        };
-        var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyB3pGH041-hdat_tpiZtGwK24hfhySA-n4';
-
-        xhttp.open('GET', url, true);
-        xhttp.send();
-    }
-
-
     var addressElement = document.getElementById('InputAddress');
     var CityElement = document.getElementById('InputCity');
 
@@ -179,15 +159,39 @@ window.addEventListener('load', function () {
     function removeMapElements() {
         //remove button
         var element = document.getElementById('toggleMapBtn');
-        element.parentNode.removeChild(element);
-        //remove map
-        element = document.getElementById('map');
-        element.parentNode.removeChild(element);
-        //remove map container
-        element = document.getElementById('map-container');
-        element.parentNode.removeChild(element);
+        if(element){
+            element.parentNode.removeChild(element);
+            //remove map
+            element = document.getElementById('map');
+            element.parentNode.removeChild(element);
+            //remove map container
+            element = document.getElementById('map-container');
+            element.parentNode.removeChild(element);
+        }
+
 
     }
+
+    
+
+    //Create and send a request to Google Geocode API
+    function MakeReq(location) {
+        var xhttp = new XMLHttpRequest();
+        console.log('Response Object created!');
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseResult = JSON.parse(this.response);
+
+                checkAddress(responseResult);
+            }
+        };
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyB3pGH041-hdat_tpiZtGwK24hfhySA-n4';
+
+        xhttp.open('GET', url, true);
+        xhttp.send();
+    }
+
 
     //Optional todo: move the warning bootstrap classes functionality to the showPasswordFeedback and make that universal
     function checkAddress(response) {
