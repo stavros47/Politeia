@@ -1,4 +1,5 @@
 "use strict";
+/*jslint browser:true */
 
 window.addEventListener('load', function () {
 
@@ -73,13 +74,34 @@ window.addEventListener('load', function () {
         return false;
     }
 
+
+
+    //Create and send a request to Google Geocode API
+    function MakeReq(location) {
+        var xhttp = new XMLHttpRequest();
+        console.log('Response Object created!');
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseResult = JSON.parse(this.response);
+
+                checkAddress(responseResult);
+            }
+        };
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyB3pGH041-hdat_tpiZtGwK24hfhySA-n4';
+
+        xhttp.open('GET', url, true);
+        xhttp.send();
+    }
+
+
     var addressElement = document.getElementById('InputAddress');
     var CityElement = document.getElementById('InputCity');
 
     function getLocation() {
         var address = addressElement.value;
         var CityValue = document.getElementById('InputCity').value;
-        var CountryValue = document.getElementById('countries').value
+        var CountryValue = document.getElementById('countries').value;
         var location;
         if ((address == "") && (CityValue == "")) {
             return false;
@@ -200,24 +222,6 @@ window.addEventListener('load', function () {
         }
     }
 
-
-    //Create and send a request to Google Geocode API
-    function MakeReq(location) {
-        var xhttp = new XMLHttpRequest();
-        console.log('Response Object created!');
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var responseResult = JSON.parse(this.response);
-
-                checkAddress(responseResult);
-            }
-        };
-        var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyB3pGH041-hdat_tpiZtGwK24hfhySA-n4';
-
-        xhttp.open('GET', url, true);
-        xhttp.send();
-    }
 
     document.addEventListener('click', function (e) {
         if (e.target.id == 'toggleMapBtn') {
