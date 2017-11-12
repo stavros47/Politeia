@@ -180,24 +180,42 @@ var faceRec = (function () {
   }
 
   // !!!!!!!!!!! ================ TODO  ADD YOUR CODE HERE  ====================
-  // From here on there is code that should not be given....
-
-
-
-
+  function toggleWarning(create) {
+    if (create) {
+      let warningElement = document.createElement('div');
+      warningElement.innerHTML = "<strong>No faces Detected! Try Again!</strong>";
+      warningElement.style.color = 'red';
+      warningElement.style.textAlign = 'center';
+      warningElement.setAttribute('id', 'warningElement');
+      document.getElementById('video-container').insertAdjacentElement('afterbegin', warningElement);
+    } else {
+      var element = document.getElementById('warningElement');
+      if (element) {
+        element.parentNode.removeChild(element);
+      }
+    }
+  }
 
   function handleResponses(response, url, data) {
-    //get the username from the response
-    //Results Array is automatically sorted from the highest condifence to the lowest, so the first result is always the one we want
-    var userValue = response.results[0].user_id;
-    console.log(userValue);
+    if (response.results !== undefined) {
+      //Remove warning if it was previously created
+      toggleWarning(false);
+      //get the username from the response
+      //Results Array is automatically sorted from the highest condifence to the lowest, so the first result is always the one we want
+      var userValue = response.results[0].user_id;
+      console.log(userValue);
 
-    //hide the container
-    document.getElementById('video-container').style.display = 'none';
-    //Face Recognition is enabled only when we check the checkbox.
-    document.getElementById('faceIDcheck').checked = false;
-    document.getElementById('InputUsername').focus();
-    document.getElementById('InputUsername').value = userValue;
+      //hide the container
+      document.getElementById('video-container').style.display = 'none';
+      //Face Recognition is enabled only when we check the checkbox.
+      document.getElementById('faceIDcheck').checked = false;
+      document.getElementById('InputUsername').focus();
+      document.getElementById('InputUsername').value = userValue;
+    } else {
+      toggleWarning(true);
+      console.log('No Faces were detected! Try again!');
+    }
+
   }
 
   //Request Implementation(s):
