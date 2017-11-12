@@ -166,6 +166,26 @@ var faceRec = (function () {
   // !!!!!!!!!!! ================ TODO  ADD YOUR CODE HERE  ====================
   // From here on there is code that should not be given....
 
+  //Warning Creation
+  function toggleWarning(create) {
+    if (create) {
+      let warningElement = document.createElement('div');
+      warningElement.innerHTML = "<strong>No faces Detected! Try Again!</strong>";
+      warningElement.style.color = 'red';
+      warningElement.style.textAlign = 'center';
+      warningElement.setAttribute('id', 'warningElement');
+
+      // document.getElementById('video-container').appendChild(warningElement);
+      document.getElementById('video-container').insertAdjacentElement('afterbegin', warningElement);
+    } else {
+      var element = document.getElementById('warningElement');
+      if (element) {
+        element.parentNode.removeChild(element);
+      }
+    }
+  }
+
+
   function AddFaceToFaceset(response, data) {
     data.append('face_tokens', response.face_token);
     data.append('outer_id', 'hy359');
@@ -177,17 +197,19 @@ var faceRec = (function () {
 
     var UsernameElement = document.getElementById('InputUsername');
     //Append token to data(FormData)
-    if(response.faces.length !== 0){
+    if (response.faces.length !== 0) {
+      toggleWarning(false);
       data.append('face_token', response.faces[0].face_token);
       var username = UsernameElement.value;
       if (username != '') {
         data.append('user_id', username);
         ajaxRequest('POST', faceAPI.setuserId, data);
       }
-    }else{
+    } else {
+      toggleWarning(true);
       console.log('Could not identify any persons in the Image. Take another Image and try again!');
     }
-   
+
 
   }
 
