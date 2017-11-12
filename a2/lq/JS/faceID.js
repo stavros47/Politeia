@@ -177,12 +177,17 @@ var faceRec = (function () {
 
     var UsernameElement = document.getElementById('InputUsername');
     //Append token to data(FormData)
-    data.append('face_token', response.faces[0].face_token);
-    var username = UsernameElement.value;
-    if (username != '') {
-      data.append('user_id', username);
-      ajaxRequest('POST', faceAPI.setuserId, data);
+    if(response.faces.length !== 0){
+      data.append('face_token', response.faces[0].face_token);
+      var username = UsernameElement.value;
+      if (username != '') {
+        data.append('user_id', username);
+        ajaxRequest('POST', faceAPI.setuserId, data);
+      }
+    }else{
+      console.log('Could not identify any persons in the Image. Take another Image and try again!')
     }
+   
 
   }
 
