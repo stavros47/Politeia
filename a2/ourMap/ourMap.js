@@ -1,7 +1,7 @@
 function ourMap(array) {
     // What do we have to hold/track???
     var original = array;
-    TO COMPLETE!
+    var current = original;
     return (function mapWithCallback(fn, callback) {
         // If fn is not a function return current Array
         TO COMPLETE TOGETHER!
