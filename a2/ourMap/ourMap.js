@@ -9,8 +9,8 @@ function ourMap(array) {
         // map fn to array and save result to current array
         current = current.map(fn);
         // If callback is a function, execute callback
-        TO COMPLETE TOGETHER!
-        TO COMPLETE TOGETHER!
+        if (callback instanceof Function) {
+            callback.call(current, original); }
         TO COMPLETE! // We have to return something!
         })
 }
