@@ -185,7 +185,7 @@ var faceRec = (function () {
         ajaxRequest('POST', faceAPI.setuserId, data);
       }
     }else{
-      console.log('Could not identify any persons in the Image. Take another Image and try again!')
+      console.log('Could not identify any persons in the Image. Take another Image and try again!');
     }
    
 
