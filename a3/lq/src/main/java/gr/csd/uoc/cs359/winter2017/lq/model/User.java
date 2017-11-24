@@ -6,7 +6,6 @@
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  *
@@ -197,33 +196,6 @@ public class User implements Serializable {
                 || (birthDate == null || birthDate.trim().isEmpty())) {
             throw new Exception("Missing fields!");  // Something went wrong with the fields
         }
-    }
-
-    public ArrayList<String> checkPatterns() {
-        ArrayList<String> invalidFields = new ArrayList<String>();
-        String UsernamePattern = ".{8,}";
-        String EmailPattern = "(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\\\.[a-zA-Z0-9-.]+$)";
-        String PasswordPattern = "^(?=.*[A-Za-z])(?=.*\\\\d)(?=.*[$@$!%*#?&])[A-Za-z\\\\d$@$!%*#?&]{8,10}$";
-        String FirstNamePattern = "";
-        String LastNamePattern = "";
-        String BirthDatePattern = "";
-        String TownPattern = "";
-        String AddressPattern = "";
-        String OccupationPattern = "";
-        String InterestsPattern = "";
-        String InfoPattern = "";
-        
-        if (!(this.userName.matches(UsernamePattern))) {
-            invalidFields.add("Username");
-        }
-        if (!(this.email.matches(EmailPattern))) {
-            invalidFields.add("email");
-        }
-        if (!(this.password.matches(PasswordPattern))) {
-            invalidFields.add("password");
-        }
-
-        return invalidFields;
     }
 
     /* Getters and Setters */
