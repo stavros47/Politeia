@@ -108,7 +108,7 @@ window.addEventListener('load', function () {
                  console.log(this.response);
                  var resp = JSON.parse(this.response);
                  console.log(resp);
-                 console.log(resp.fields[0]);
+                 //console.log(resp.fields[0]);
                  //document.getElementById("test").innerHTML = this.response;
                 
             }
