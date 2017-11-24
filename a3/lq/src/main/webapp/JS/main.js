@@ -89,9 +89,9 @@ window.addEventListener('load', function () {
                 if((e.getAttribute("type") == "radio") && !(e.checked)){
                     continue;
                 }else{
-                    console.log("NAME: "+ e.name);
-                console.log("VALUE: "+ value);
-                data.append(e.name, value); 
+                    //console.log("NAME: "+ e.name);
+                    //console.log("VALUE: "+ value);
+                    data.append(e.name, value); 
                 }
                
             }                        

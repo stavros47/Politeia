@@ -55,9 +55,9 @@ public class UserDB {
                     user.setGender(res.getString("gender"));
                     user.setBirthDate(res.getString("birthDate"));
                     user.setCountry(res.getString("country"));
-                    user.setOccupation("occupation");
-                    user.setInterests("interests");
-                    user.setAddress("address");
+                    user.setOccupation(res.getString("occupation"));
+                    user.setInterests(res.getString("interests"));
+                    user.setAddress(res.getString("address"));
                     user.setTown(res.getString("town"));
                     user.setInfo(res.getString("additional"));
                     users.add(user);

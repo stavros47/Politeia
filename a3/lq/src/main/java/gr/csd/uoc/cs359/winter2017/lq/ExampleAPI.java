@@ -35,7 +35,7 @@ public class ExampleAPI {
         turing.setPassword("e37f7cfcb0cd53734184de812b5c6175");
         turing.setFirstName("Alan");
         turing.setLastName("Turing");
-        turing.setBirthDate("1912 / 07 / 07");
+        turing.setBirthDate("07/07/1912");
         turing.setCountry("Science");
         turing.setTown("Computer Science");
         turing.setAddress("Computability");

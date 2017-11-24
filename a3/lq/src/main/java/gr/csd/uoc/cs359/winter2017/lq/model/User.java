@@ -19,7 +19,7 @@ public class User implements Serializable {
     private String password;    // (could be encrypted in md5)
     private String firstName;
     private String lastName;
-    private String birthDate;   // (format: yyyy-MM-dddd)
+    private String birthDate;   // (format: ΗΗ/ΜΜ/ΧΧΧΧ)
     private Gender gender;
     private String country;
     private String address;
