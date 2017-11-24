@@ -1,7 +1,19 @@
 header {
-    background-color: #3b3bf7;
+    /* background: linear-gradient(#8E0E00, #8E0E00); */
+    background-color:#222222;
     padding: 20px;
     margin-bottom: 25px;
+    box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.5);
+}
+
+body {
+    /* background: linear-gradient(#8E0E00, #8E0E00); */
+    background-color: #404040;
+    /* color: #00ACE9;
+    color: #D43F3F;
+    color: #6A9A1F; */
+    color: #F6F6E8;
+    /* color: #404040;3b3bf7  */
 }
 
 h1 {
@@ -12,6 +24,14 @@ h1 {
     font-size: 3em;
 }
 
+#InputEmail:valid{
+    border: 2px #3c763d solid;
+}
+
+InputUsername:valid{
+    border: 2px #3c763d solid;
+    
+}
 
 /*
     Simple CSS rule to make my Text areas non-resizable
@@ -37,9 +57,10 @@ label {
 }
 
 footer {
-    background-color: rgb(59, 59, 247);
+    /* background-color:#222222; */
     margin-top: 25px;
     padding: 10px;
+    box-shadow: -5px 6px 8px 0 rgba(0, 0, 0, 0.5);
 }
 
 .footerLink {

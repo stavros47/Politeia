@@ -43,8 +43,11 @@ window.addEventListener('load', function () {
             }
 
         } else {
-            retypePasswordElement.classList.add('is-valid');
-            retypePasswordElement.classList.remove('is-invalid');
+            if(retypePasswordElement.value != ""){
+                retypePasswordElement.classList.add('is-valid');
+                retypePasswordElement.classList.remove('is-invalid');
+            }
+           
         }
     }
 
@@ -96,6 +99,13 @@ window.addEventListener('load', function () {
 
     CityElement.onblur = function () {
         var location = getLocation();
+        if (this.value != "") {
+            var map = document.getElementById('map');
+            if (map) {
+                map.style.display = 'none';
+                mapHiddenFlag = true;
+            }
+        }
         if (location) {
             MakeReq(location);
         }
@@ -103,7 +113,7 @@ window.addEventListener('load', function () {
 
     addressElement.onblur = function () {
         var location = getLocation();
-
+        //make this a function and put it onchange event
         if (this.value != "") {
             var map = document.getElementById('map');
             if (map) {
