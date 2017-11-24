@@ -40,7 +40,7 @@ public class FormValidator {
     public void ValidateRequired(HttpServletRequest request) {
         //Get all parameters from the request and validate them key:parametername value:regex
         for (Map.Entry<String, String> entry : this.fieldRegexMap.entrySet()) {
-            if (request.getParameter(entry.getKey()) != null) {
+            if (request.getParameter(entry.getKey()) != null && (!request.getParameter(entry.getKey()).isEmpty())) {
                 if (!(request.getParameter(entry.getKey()).matches(entry.getValue()))) {
                     this.invalidFields.add(entry.getKey());
                 }
@@ -55,7 +55,7 @@ public class FormValidator {
     public void ValidateOptional(HttpServletRequest request) {
         //Get all parameters from the request and validate them key:parametername value:regex
         for (Map.Entry<String, String> entry : this.optionalFieldRegexMap.entrySet()) {
-            if (request.getParameter(entry.getKey()) != null) {
+            if (request.getParameter(entry.getKey()) != null && (!request.getParameter(entry.getKey()).isEmpty())) {
                 if (!(request.getParameter(entry.getKey()).matches(entry.getValue()))) {
                     this.invalidFields.add(entry.getKey());
                 }

@@ -41,11 +41,10 @@ public class lqRegisterServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             ArrayList<String> results;
-//            out.println("<h1>Servlet lqRegisterServlet at " + request.getContextPath() + "</h1>");
-//            out.println("<h2>Method: " + request.getMethod() + "</h2>");
+
 
             FormValidator validator = new FormValidator();
-
+            //Validator checks for Empty Required Fields and perfoms a Regular expression check
             results = validator.Validate(request);
             //check for not matching passwords
             if (request.getParameter("confirmPassword") != null && request.getParameter("password") != null) {
@@ -57,6 +56,7 @@ public class lqRegisterServlet extends HttpServlet {
             } else {
                 results.add("passwordsEmpty");
             }
+
             if (!results.isEmpty()) {
                 // out.println("No Null Results");
                 Gson gson = new GsonBuilder().create();
@@ -66,15 +66,11 @@ public class lqRegisterServlet extends HttpServlet {
                 String jsonResponse = "{" + status + "," + test + "}";
                 //send json response
                 out.println(jsonResponse);
-//                for (String result : results) {
-//
-//                   // String json = new Gson().toJson(results);
-//                }
             } else {
                 out.println("No invalid fields");
             }
 
-        }
+        }//End of Try block
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
