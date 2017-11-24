@@ -41,8 +41,10 @@ public class lqRegisterServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             ArrayList<String> results;
+            //Invalid_fields/Registration_Success
+            String status;
 
-
+            //Todo: Form Validator should check for already existing username and email
             FormValidator validator = new FormValidator();
             //Validator checks for Empty Required Fields and perfoms a Regular expression check
             results = validator.Validate(request);
@@ -57,18 +59,20 @@ public class lqRegisterServlet extends HttpServlet {
                 results.add("passwordsEmpty");
             }
 
-            if (!results.isEmpty()) {
-                // out.println("No Null Results");
-                Gson gson = new GsonBuilder().create();
-                //create json response
-                String test = "\"fields\":" + gson.toJson(results) + "";
-                String status = "\"status\":\"invalid-fields\"";
-                String jsonResponse = "{" + status + "," + test + "}";
-                //send json response
-                out.println(jsonResponse);
+            if (results.isEmpty()) {
+                status = "Registration_Success";
+                //Now go and add the user to the database
             } else {
-                out.println("No invalid fields");
+                status = "Invalid_fields";
             }
+
+            Gson gson = new GsonBuilder().create();
+            //create json response
+            String statusObject = "\"status\":\"" + status + "\"";
+            String invalidFieldsResponse = "\"fields\":" + gson.toJson(results) + "";
+            String jsonResponse = "{" + statusObject + "," + invalidFieldsResponse + "}";
+            //send json response
+            out.println(jsonResponse);
 
         }//End of Try block
     }
