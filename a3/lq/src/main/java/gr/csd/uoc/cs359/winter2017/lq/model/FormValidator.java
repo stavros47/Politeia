@@ -45,7 +45,7 @@ public class FormValidator {
                     this.invalidFields.add(entry.getKey());
                 }
             } else {
-                this.invalidFields.add("Empty" + request.getParameter(entry.getKey()));
+                this.invalidFields.add("Empty" + entry.getKey());
             }
         }
 
