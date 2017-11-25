@@ -86,11 +86,9 @@ window.addEventListener('load', function () {
             
             if((e.name)&&(value !== "")){
                 //encodeURIComponent(e.name)
-                if((e.getAttribute("type") == "radio") && !(e.checked)){
+                if((e.getAttribute("type") === "radio") && !(e.checked)){
                     continue;
-                }else{
-                    //console.log("NAME: "+ e.name);
-                    //console.log("VALUE: "+ value);
+                }else{                
                     data.append(e.name, value); 
                 }
                
@@ -103,11 +101,19 @@ window.addEventListener('load', function () {
         //var data = document.getElementById("InputUsername").value;
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                 console.log("Response Received");
-                 console.log(this.response);
-                 var resp = JSON.parse(this.response);
-                 console.log(resp);
+            if (this.readyState === 4) {
+                var resp;
+                console.log(this.status);
+                if(this.status === 200){
+                    console.log("Response Received");                    
+                    resp = JSON.parse(this.response);
+                    console.log(resp);
+                }else if (this.status === 409) {
+                    console.log("Response Received");                   
+                    resp = JSON.parse(this.response);
+                    console.log(resp);
+                }
+                
                  //console.log(resp.fields[0]);
                  //document.getElementById("test").innerHTML = this.response;
                 
