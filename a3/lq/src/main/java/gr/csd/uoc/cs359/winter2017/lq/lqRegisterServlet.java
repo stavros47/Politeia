@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import gr.csd.uoc.cs359.winter2017.lq.model.Registrator;
 
 /**
  *
@@ -61,9 +62,14 @@ public class lqRegisterServlet extends HttpServlet {
 
             if (results.isEmpty()) {
                 status = "Registration_Success";
+                response.setStatus(200);
                 //Now go and add the user to the database
+                Registrator userRegistrator = new Registrator();
+                userRegistrator.RegisterUser(request);
+
             } else {
                 status = "Invalid_fields";
+                response.setStatus(409);
             }
 
             Gson gson = new GsonBuilder().create();
