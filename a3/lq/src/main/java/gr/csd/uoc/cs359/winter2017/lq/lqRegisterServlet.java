@@ -41,21 +41,30 @@ public class lqRegisterServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            ArrayList<String> results;
+            ArrayList<String> results = null;
             //Invalid_fields/Registration_Success
             String status;
 
             //Todo: Form Validator should check for already existing username and email
             FormValidator validator = new FormValidator();
-            //Validator checks for Empty Required Fields and perfoms a Regular expression check
-            results = validator.Validate(request);
-            //check for not matching passwords
-            if (request.getParameter("confirmPassword") != null && request.getParameter("password") != null) {
-                if (request.getParameter("confirmPassword").equals(request.getParameter("password"))) {
 
-                } else {
-                    results.add("NoMatchpassword");
+            if (request.getParameter("check") != null) {
+                if (request.getParameter("check") == "username") {
+                    results = validator.checkDuplicate(request.getParameter("username"), 0);
+                } else if (request.getParameter("check") == "email") {
+                    results = validator.checkDuplicate(request.getParameter("email"), 1);
                 }
+            } else {
+                //Validator checks for Empty Required Fields and perfoms a Regular expression check
+                results = validator.Validate(request);
+                //check for not matching passwords
+                if (request.getParameter("confirmPassword") != null && request.getParameter("password") != null) {
+                    if (request.getParameter("confirmPassword").equals(request.getParameter("password"))) {
+                    } else {
+                        results.add("NoMatchpassword");
+                    }
+                }
+
             }
 
             if (results.isEmpty()) {
