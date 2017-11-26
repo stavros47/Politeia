@@ -1,7 +1,7 @@
 "use strict";
 
 window.addEventListener('load', function () {
-              
+
     showRegistrationForm();
     //Flag to use in checking errors
     var passwordError = false;
@@ -43,7 +43,7 @@ window.addEventListener('load', function () {
             validForm = false;
         }
         for (var i = 0; i < elements.length; i++){
-            if(elements[i].value == "" || elements[i] != null){
+            if(elements[i].value == "" || elements[i] == null){
                 showFeedBack(elements[i].name, "Empty"); 
                 validForm= false;
                 
@@ -154,16 +154,23 @@ window.addEventListener('load', function () {
       
     }
     
-    function checkResponse (resp) {        
+    function checkResponse (resp) {   
+        //
+        let elements = elementsToArray();
+        for (var i = 0; i < elements.length; i++){
+            showFeedBack(elements[i].name,"valid");
+        }
+        
+        
         for(var i = 0;i < resp.fields.length; i++){
             var field;            
             if (resp.fields[i].substring(0,5) === "Empty"){
-                field = resp.fields[i].slice(5,resp.fields[i].length);
+                field = resp.fields[i].slice(5,resp.fields[i].length);             
                 showFeedBack(field, "Empty");
                document.getElementsByName(field)[0].classList.remove('is-valid');
                document.getElementsByName(field)[0].classList.add('is-invalid');
                 var msg = "This field is required";
-                document.getElementById(field+"-feedback").innerHTML = "Invalid input - " + msg;                
+                document.getElementById(field+"-feedback").innerHTML = "Invalid input - " + msg;               
                 
             }else{
                 field = resp.fields[i];
@@ -184,12 +191,12 @@ window.addEventListener('load', function () {
         }
     }
 
-    function sendToServer (typeOfRequest, url, data){
-        //var data = document.getElementById("InputUsername").value;
+    function sendToServer (typeOfRequest, url, data){      
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {                
                 var resp;
+                console.log(this.response);
                 resp = JSON.parse(this.response);
                 handleResponse(resp, this);                    
                
@@ -271,6 +278,14 @@ window.addEventListener('load', function () {
         } else {
             checkbox.style.display = 'none';
         }
+    }
+
+    usernameElement.onblur = function () {
+//        var data = new FormData();
+//        data.append("check", "username");
+//        data.append(usernameElement.name, usernameElement.value);
+//        var url = 'http://localhost:8084/lq/mainServlet';
+//        sendToServer('POST', url, data);
     }
 
 
