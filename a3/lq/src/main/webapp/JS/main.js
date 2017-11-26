@@ -1,18 +1,60 @@
 "use strict";
 
 window.addEventListener('load', function () {
-
+              
+    showRegistrationForm();
     //Flag to use in checking errors
     var passwordError = false;
     var mapHiddenFlag = true;
     var addressEmpty = true;
     //Commonly used elements
-    var UsernameElement = document.getElementById('InputUsername');
+    var usernameElement = document.getElementById('InputUsername');
+    
     var passwordElement = document.getElementById('InputPassword');
-    var retypePasswordElement = document.getElementById('InputPassword2');
-    var addressElement = document.getElementById('InputAddress');
+    var retypePasswordElement = document.getElementById('InputPassword2');   
     var CityElement = document.getElementById('InputCity');
+    var addressElement = document.getElementById('InputAddress');   
+    
 
+    function elementsToArray() {
+        var elementsArray = [];
+        elementsArray.push(document.getElementById('InputUsername'));
+        elementsArray.push(document.getElementById('InputEmail'));
+        elementsArray.push(document.getElementById('InputPassword'));
+        elementsArray.push(document.getElementById('InputPassword2'));
+        elementsArray.push(document.getElementById('InputName'));
+        elementsArray.push(document.getElementById('InputLastName'));
+        elementsArray.push(document.getElementById('InputDOB'));
+        elementsArray.push(document.getElementById('InputCity'));
+        elementsArray.push(document.getElementById('InputAddress'));
+        elementsArray.push(document.getElementById('InputInterests'));
+        elementsArray.push(document.getElementById('InputInfo'));
+
+        return elementsArray;
+    }
+
+   
+      //Prevent Submit on non matching passwords - refactor todo
+      var ValidateInputs = function () {
+        var validForm = true;
+        var elements = elementsToArray();
+        checkPasswords();
+        if (passwordError) {
+            validForm = false;
+        }
+        for (var i = 0; i < elements.length; i++){
+            if(elements[i].value == "" || elements[i] != null){
+                showFeedBack(elements[i].name, "Empty"); 
+                validForm= false;
+                
+            }else if (!elements[i].checkValidity()){
+                showFeedBack(elements[i].name, "invalid");
+                validForm= false;
+            }    
+        }       
+
+        return validForm;
+    }
     //hide the video container
     //Face Recognition is enabled only when we check the checkbox.
     var faceCheckbox = document.getElementById('faceIDcheck');
@@ -67,14 +109,7 @@ window.addEventListener('load', function () {
         checkPasswords();
     }
 
-    //Prevent Submit on non matching passwords
-    window.ValidateInputs = function () {
-        checkPasswords();
-        if (!passwordError) {
-            return true;
-        }
-        return false;
-    }
+  
     
     function collectFormData() {
         let data = new FormData();
@@ -96,27 +131,68 @@ window.addEventListener('load', function () {
         }
         return data;
     }
+
+    function showFeedBack (elementName, validity) {
+        var msg = "";        
+        if(validity == "valid"){
+            document.getElementsByName(elementName)[0].classList.remove('is-invalid');
+            document.getElementsByName(elementName)[0].classList.add('is-valid');
+            return;
+        }        
+        if(validity == 'Empty'){
+            msg = "This field is required";           
+        }else if(validity == 'invalid'){
+            msg = document.getElementsByName(elementName)[0].title; 
+        }     
+        
+        if(document.getElementById(elementName+"-feedback") != null) {
+            document.getElementById(elementName+"-feedback").innerHTML = "Invalid input - " + msg;
+        }
+        
+        document.getElementsByName(elementName)[0].classList.remove('is-valid');
+        document.getElementsByName(elementName)[0].classList.add('is-invalid');
+      
+    }
     
+    function checkResponse (resp) {        
+        for(var i = 0;i < resp.fields.length; i++){
+            var field;            
+            if (resp.fields[i].substring(0,5) === "Empty"){
+                field = resp.fields[i].slice(5,resp.fields[i].length);
+                showFeedBack(field, "Empty");
+               document.getElementsByName(field)[0].classList.remove('is-valid');
+               document.getElementsByName(field)[0].classList.add('is-invalid');
+                var msg = "This field is required";
+                document.getElementById(field+"-feedback").innerHTML = "Invalid input - " + msg;                
+                
+            }else{
+                field = resp.fields[i];
+                showFeedBack(field, "invalid");                     
+            }
+        }
+    }
+
+
+    function handleResponse (resp, reqObj) {
+        console.log("Response Received");        
+        console.log(resp);
+        if(reqObj.status === 200){   
+            console.log("Registration Success!"); 
+        }else if (reqObj.status === 409) {
+
+            checkResponse(resp);
+        }
+    }
+
     function sendToServer (typeOfRequest, url, data){
         //var data = document.getElementById("InputUsername").value;
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4) {                
                 var resp;
-                console.log(this.status);
-                if(this.status === 200){
-                    console.log("Response Received");                    
-                    resp = JSON.parse(this.response);
-                    console.log(resp);
-                }else if (this.status === 409) {
-                    console.log("Response Received");                   
-                    resp = JSON.parse(this.response);
-                    console.log(resp);
-                }
-                
-                 //console.log(resp.fields[0]);
-                 //document.getElementById("test").innerHTML = this.response;
-                
+                resp = JSON.parse(this.response);
+                handleResponse(resp, this);                    
+               
             }
         };
          
@@ -127,11 +203,15 @@ window.addEventListener('load', function () {
     
     document.getElementById('submit').addEventListener('click', function (){      
         
-        let userData = collectFormData();
-        var url = 'http://localhost:8084/lq/mainServlet';
-        if(userData){
-           sendToServer('POST', url, userData); 
-        }
+        if(ValidateInputs()){
+            let userData = collectFormData();
+            var url = 'http://localhost:8084/lq/mainServlet';
+            if(userData){
+               sendToServer('POST', url, userData); 
+            }
+        }else{
+            console.log("Field Invalid");
+        }       
         
     });
 
@@ -184,7 +264,7 @@ window.addEventListener('load', function () {
         }
     }
     
-    UsernameElement.onkeyup = function () {
+    usernameElement.onkeyup = function () {
         var checkbox = document.getElementById('checkbox-container');
         if (this.value != '') {
             checkbox.style.display = 'block';
@@ -334,5 +414,5 @@ window.addEventListener('load', function () {
         }
 
     });
-
+   console.log("main load");
 });

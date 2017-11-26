@@ -54,10 +54,8 @@ public class lqRegisterServlet extends HttpServlet {
                 if (request.getParameter("confirmPassword").equals(request.getParameter("password"))) {
 
                 } else {
-                    results.add("passwordsDoNotMatch");
+                    results.add("NoMatchpassword");
                 }
-            } else {
-                results.add("passwordsEmpty");
             }
 
             if (results.isEmpty()) {

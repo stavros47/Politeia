@@ -23,7 +23,7 @@ h1 {
     color: white;
     font-size: 3em;
 }
-
+/* 
 #InputEmail:valid{
     border: 2px #3c763d solid;
 }
@@ -31,7 +31,7 @@ h1 {
 InputUsername:valid{
     border: 2px #3c763d solid;
     
-}
+} */
 
 /*
     Simple CSS rule to make my Text areas non-resizable

@@ -25,9 +25,20 @@ public class Registrator {
         newUser.setLastName(request.getParameter("lastname"));
         newUser.setBirthDate(request.getParameter("DOB"));
         newUser.setTown(request.getParameter("city"));
-        newUser.setAddress(request.getParameter("address"));
-        newUser.setInterests(request.getParameter("interests"));
-        newUser.setInfo(request.getParameter("moreinfo"));
+
+        String address = request.getParameter("address");
+        String interests = request.getParameter("interests");
+        String moreinfo = request.getParameter("moreinfo");
+        if (address != null) {
+            newUser.setAddress(address);
+        }
+        if (interests != null) {
+            newUser.setInterests(interests);
+        }
+        if (moreinfo != null) {
+            newUser.setInfo(moreinfo);
+        }
+
 
         try {
             UserDB.addUser(newUser);

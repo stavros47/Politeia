@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /*
     Author: Panagiotis Papadakos papadako@csd.uoc.gr
