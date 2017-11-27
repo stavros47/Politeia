@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -27,11 +29,11 @@ public class FormValidator {
 
         this.fieldRegexMap.put("username", ".{8,}");
         this.fieldRegexMap.put("email", "(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)");
-        this.fieldRegexMap.put("password", "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
-        this.fieldRegexMap.put("confirmPassword", "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
+        this.fieldRegexMap.put("password", "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}");
+        this.fieldRegexMap.put("confirmPassword", "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}");
         this.fieldRegexMap.put("firstname", ".{1,20}");
         this.fieldRegexMap.put("lastname", ".{4,20}");
-//      this.fieldRegexMap.put("DOB", "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$\\");
+        //    this.fieldRegexMap.put("DOB", "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)");
         this.fieldRegexMap.put("city", ".{2,20}");
         this.fieldRegexMap.put("profession", ".{2,20}");
         //This fields are not required - Can be empty
@@ -41,15 +43,22 @@ public class FormValidator {
     }
 
     public void ValidateRequired(HttpServletRequest request) {
-
+        Pattern p;
+        Matcher m;
 
         //Get all parameters from the request and validate them key:parametername value:regex
         for (Map.Entry<String, String> entry : this.fieldRegexMap.entrySet()) {
+            //Check if the parameter exists
             if (request.getParameter(entry.getKey()) != null && (!request.getParameter(entry.getKey()).isEmpty())) {
-                if (!(request.getParameter(entry.getKey()).matches(entry.getValue()))) {
+                //Patern to check gets added in the Pattern object
+                p = Pattern.compile(entry.getValue());
+                //Check the patern p against the input
+                m = p.matcher(request.getParameter(entry.getKey()));
+                //check if the patter does not match the regular expression and if not then add the fields name to the arraylist
+                if (!m.find()) {
                     this.invalidFields.add(entry.getKey());
                 }
-            } else {
+            } else { // We need to indicate that the field is Empty
                 this.invalidFields.add("Empty" + entry.getKey());
             }
         }
@@ -58,10 +67,19 @@ public class FormValidator {
 
     //Same as validate, but it will not add anything to the invalid fields list if any of these fields are empty/do not exist
     public void ValidateOptional(HttpServletRequest request) {
+        Pattern p;
+        Matcher m;
+
         //Get all parameters from the request and validate them key:parametername value:regex
         for (Map.Entry<String, String> entry : this.optionalFieldRegexMap.entrySet()) {
+            //Check if the parameter exists
             if (request.getParameter(entry.getKey()) != null && (!request.getParameter(entry.getKey()).isEmpty())) {
-                if (!(request.getParameter(entry.getKey()).matches(entry.getValue()))) {
+                //Patern to check gets added in the Pattern object
+                p = Pattern.compile(entry.getValue());
+                //Check the patern p against the input
+                m = p.matcher(request.getParameter(entry.getKey()));
+                //check if the patter does not match the regular expression and if not then add the fields name to the arraylist
+                if (!m.find()) {
                     this.invalidFields.add(entry.getKey());
                 }
             }
