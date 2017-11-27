@@ -9,12 +9,20 @@ window.addEventListener('load', function () {
     var addressEmpty = true;
     //Commonly used elements
     var usernameElement = document.getElementById('InputUsername');
-    
+    var emailElement =document.getElementById('InputEmail');
     var passwordElement = document.getElementById('InputPassword');
     var retypePasswordElement = document.getElementById('InputPassword2');   
     var CityElement = document.getElementById('InputCity');
     var addressElement = document.getElementById('InputAddress');   
     
+    function optionalElementsToArray() {
+        var optionalElements = [];
+        optionalElements.push(document.getElementById('InputAddress'));
+        optionalElements.push(document.getElementById('InputInterests'));
+        optionalElements.push(document.getElementById('InputInfo'));
+
+        return optionalElements;
+    }
 
     function elementsToArray() {
         var elementsArray = [];
@@ -26,9 +34,8 @@ window.addEventListener('load', function () {
         elementsArray.push(document.getElementById('InputLastName'));
         elementsArray.push(document.getElementById('InputDOB'));
         elementsArray.push(document.getElementById('InputCity'));
-        elementsArray.push(document.getElementById('InputAddress'));
-        elementsArray.push(document.getElementById('InputInterests'));
-        elementsArray.push(document.getElementById('InputInfo'));
+
+        
 
         return elementsArray;
     }
@@ -38,6 +45,7 @@ window.addEventListener('load', function () {
       var ValidateInputs = function () {
         var validForm = true;
         var elements = elementsToArray();
+        var optionalElem = optionalElementsToArray();
         checkPasswords();
         if (passwordError) {
             validForm = false;
@@ -51,7 +59,14 @@ window.addEventListener('load', function () {
                 showFeedBack(elements[i].name, "invalid");
                 validForm= false;
             }    
-        }       
+        }
+        
+        for (var i = 0; i < optionalElem.length; i++) {
+            if (!optionalElem[i].checkValidity()){
+                showFeedBack(optionalElem[i].name, "invalid");
+                validForm= false;
+            }
+        }
 
         return validForm;
     }
@@ -123,7 +138,8 @@ window.addEventListener('load', function () {
                 //encodeURIComponent(e.name)
                 if((e.getAttribute("type") === "radio") && !(e.checked)){
                     continue;
-                }else{                
+                }else{
+                    console.log("Name: " + e.name + " Val: " + value);
                     data.append(e.name, value); 
                 }
                
@@ -139,10 +155,12 @@ window.addEventListener('load', function () {
             document.getElementsByName(elementName)[0].classList.add('is-valid');
             return;
         }        
-        if(validity == 'Empty'){
+        if(validity == "Empty"){
             msg = "This field is required";           
         }else if(validity == 'invalid'){
             msg = document.getElementsByName(elementName)[0].title; 
+        }else if(validity == "duplicate"){
+            msg = "This " + elementName + " already exists! Choose a different one.";  
         }     
         
         if(document.getElementById(elementName+"-feedback") != null) {
@@ -158,7 +176,10 @@ window.addEventListener('load', function () {
         //
         let elements = elementsToArray();
         for (var i = 0; i < elements.length; i++){
-            showFeedBack(elements[i].name,"valid");
+            if(elements[i].value != ""){
+                showFeedBack(elements[i].name,"valid");
+            }
+            
         }
         
         
@@ -167,11 +188,11 @@ window.addEventListener('load', function () {
             if (resp.fields[i].substring(0,5) === "Empty"){
                 field = resp.fields[i].slice(5,resp.fields[i].length);             
                 showFeedBack(field, "Empty");
-               document.getElementsByName(field)[0].classList.remove('is-valid');
-               document.getElementsByName(field)[0].classList.add('is-invalid');
-                var msg = "This field is required";
-                document.getElementById(field+"-feedback").innerHTML = "Invalid input - " + msg;               
+                     
                 
+            }else if(resp.fields[i].substring(0,9) === "Duplicate"){
+                field = resp.fields[i].slice(9,resp.fields[i].length); 
+               showFeedBack(field, "duplicate"); 
             }else{
                 field = resp.fields[i];
                 showFeedBack(field, "invalid");                     
@@ -184,7 +205,12 @@ window.addEventListener('load', function () {
         console.log("Response Received");        
         console.log(resp);
         if(reqObj.status === 200){   
-            console.log("Registration Success!"); 
+            if(resp.status == "Registration_Success"){
+                console.log("Registration Success!"); 
+                
+                
+            }
+            
         }else if (reqObj.status === 409) {
 
             checkResponse(resp);
@@ -194,12 +220,14 @@ window.addEventListener('load', function () {
     function sendToServer (typeOfRequest, url, data){      
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function () {
-            if (this.readyState === 4) {                
+            if (this.readyState === 4) { 
+                
                 var resp;
                 console.log(this.response);
-                resp = JSON.parse(this.response);
-                handleResponse(resp, this);                    
-               
+                if(this.response){
+                    resp = JSON.parse(this.response);
+                    handleResponse(resp, this);
+                }                              
             }
         };
          
@@ -209,15 +237,16 @@ window.addEventListener('load', function () {
     
     
     document.getElementById('submit').addEventListener('click', function (){      
-        
-        if(ValidateInputs()){
-            let userData = collectFormData();
+        //TODO: remove !
+        if(true){
+              let userData = collectFormData();
             var url = 'http://localhost:8084/lq/mainServlet';
             if(userData){
                sendToServer('POST', url, userData); 
             }
         }else{
-            console.log("Field Invalid");
+          
+            //console.log("Field Invalid");
         }       
         
     });
@@ -281,14 +310,27 @@ window.addEventListener('load', function () {
     }
 
     usernameElement.onblur = function () {
-//        var data = new FormData();
-//        data.append("check", "username");
-//        data.append(usernameElement.name, usernameElement.value);
-//        var url = 'http://localhost:8084/lq/mainServlet';
-//        sendToServer('POST', url, data);
+        
+        if(usernameElement.value != "" && usernameElement != null){
+              var data = new FormData();
+                data.append("check", "username");
+                data.append(usernameElement.name, usernameElement.value);
+                var url = 'http://localhost:8084/lq/mainServlet';
+                sendToServer('POST', url, data);
+        }      
     }
 
-
+    emailElement.onblur = function () {        
+        if(emailElement.value !== "" && emailElement !== null){
+              var data = new FormData();
+                data.append("check", "email");
+                data.append(emailElement.name, emailElement.value);
+                var url = 'http://localhost:8084/lq/mainServlet';
+                sendToServer('POST', url, data);
+        }      
+    }
+    
+    
     function createMapElements() {
         if (!document.getElementById('map-container')) {
             //Map Container

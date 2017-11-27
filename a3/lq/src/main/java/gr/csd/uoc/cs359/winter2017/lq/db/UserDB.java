@@ -220,6 +220,7 @@ public class UserDB {
                         .append(" COUNTRY = ").append("'").append(user.getCountry()).append("',")
                         .append(" TOWN = ").append("'").append(user.getTown()).append("',")
                         .append(" ADDRESS = ").append("'").append(user.getAddress()).append("',")
+                        .append(" INTERESTS = ").append("'").append(user.getInterests()).append("',")
                         .append(" OCCUPATION = ").append("'").append(user.getOccupation()).append("',")
                         .append(" ADDITIONAL = ").append("'").append(user.getInfo()).append("'")
                         .append(" WHERE USERNAME = ").append("'").append(user.getUserName()).append("';");

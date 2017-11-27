@@ -76,9 +76,9 @@ public class User implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
+        this.occupation = occupation;
         this.country = country;
         this.town = town;
-        this.town = occupation;
         // Not obligatory fields
         this.info = "";
         this.gender = Gender.UNKNOWN;
