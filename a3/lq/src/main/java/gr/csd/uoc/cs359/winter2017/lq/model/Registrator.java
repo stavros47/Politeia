@@ -16,35 +16,49 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Registrator {
 
-    public void RegisterUser(HttpServletRequest request) {
+    public User RegisterUser(HttpServletRequest request) {
         User newUser = new User();
         newUser.setUserName(request.getParameter("username"));
         newUser.setEmail(request.getParameter("email"));
         newUser.setPassword(request.getParameter("password"));
         newUser.setFirstName(request.getParameter("firstname"));
         newUser.setLastName(request.getParameter("lastname"));
+        newUser.setGender(request.getParameter("gender"));
         newUser.setBirthDate(request.getParameter("DOB"));
+        newUser.setCountry(request.getParameter("country"));
         newUser.setTown(request.getParameter("city"));
+        newUser.setOccupation(request.getParameter("profession"));
 
         String address = request.getParameter("address");
         String interests = request.getParameter("interests");
         String moreinfo = request.getParameter("moreinfo");
-        if (address != null) {
+        if (address != null && !address.isEmpty()) {
+            System.out.println("Address:" + address);
             newUser.setAddress(address);
         }
-        if (interests != null) {
+        if (interests != null && !interests.isEmpty()) {
+
             newUser.setInterests(interests);
         }
-        if (moreinfo != null) {
+        if (moreinfo != null && !moreinfo.isEmpty()) {
             newUser.setInfo(moreinfo);
         }
 
 
         try {
+
             UserDB.addUser(newUser);
+            User test = UserDB.getUser("stavrosargyrou");
+            //
+
+            System.out.println(test.toString());
+
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Registrator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(Registrator.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        return newUser;
     }
 }

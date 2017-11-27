@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gr.csd.uoc.cs359.winter2017.lq.model.Registrator;
+import gr.csd.uoc.cs359.winter2017.lq.model.User;
 
 /**
  *
@@ -40,8 +41,8 @@ public class lqRegisterServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
-            ArrayList<String> results = null;
+            User resultUser = null;
+            ArrayList<String> invalidFields = null;
             //Invalid_fields/Registration_Success
             String status;
 
@@ -49,42 +50,67 @@ public class lqRegisterServlet extends HttpServlet {
             FormValidator validator = new FormValidator();
 
             if (request.getParameter("check") != null) {
-                if (request.getParameter("check") == "username") {
-                    results = validator.checkDuplicate(request.getParameter("username"), 0);
-                } else if (request.getParameter("check") == "email") {
-                    results = validator.checkDuplicate(request.getParameter("email"), 1);
+                System.out.println("Checking. . . ");
+                if (request.getParameter("check").equals("username")) {
+                    invalidFields = validator.checkDuplicate(request.getParameter("username"), 0);
+                } else if (request.getParameter("check").equals("email")) {
+                    invalidFields = validator.checkDuplicate(request.getParameter("email"), 1);
                 }
+
+                if (invalidFields.isEmpty()) {
+                    status = request.getParameter("check") + "_available";
+                    response.setStatus(200);
+
+                } else {
+                    status = request.getParameter("check") + "_unavailable";
+                    response.setStatus(409);
+                }
+
             } else {
                 //Validator checks for Empty Required Fields and perfoms a Regular expression check
-                results = validator.Validate(request);
+                invalidFields = validator.Validate(request);
                 //check for not matching passwords
                 if (request.getParameter("confirmPassword") != null && request.getParameter("password") != null) {
                     if (request.getParameter("confirmPassword").equals(request.getParameter("password"))) {
                     } else {
-                        results.add("NoMatchpassword");
+                        invalidFields.add("NoMatchpassword");
                     }
                 }
 
-            }
+                if (invalidFields.isEmpty()) {
+                    status = "Registration_Success";
+                    response.setStatus(200);
+                    //Now go and add the user to the database
+                    Registrator userRegistrator = new Registrator();
 
-            if (results.isEmpty()) {
-                status = "Registration_Success";
-                response.setStatus(200);
-                //Now go and add the user to the database
-                Registrator userRegistrator = new Registrator();
-                userRegistrator.RegisterUser(request);
+                    resultUser = userRegistrator.RegisterUser(request);
 
-            } else {
-                status = "Invalid_fields";
-                response.setStatus(409);
+                } else {
+                    status = "Invalid_fields";
+                    response.setStatus(409);
+                }
             }
+            System.out.println("Invalid Array:" + invalidFields);
+
 
             Gson gson = new GsonBuilder().create();
-            //create json response
+            String jsonResponse;
+            String invalidFieldsResponse;
+            //create json response            
             String statusObject = "\"status\":\"" + status + "\"";
-            String invalidFieldsResponse = "\"fields\":" + gson.toJson(results) + "";
-            String jsonResponse = "{" + statusObject + "," + invalidFieldsResponse + "}";
+
+            if (resultUser != null) {
+                String userResult = "\"user\":" + gson.toJson(resultUser);
+                jsonResponse = "{" + statusObject + "," + userResult + "}";
+            } else {
+                invalidFieldsResponse = "\"fields\":" + gson.toJson(invalidFields) + "";
+                jsonResponse = "{" + statusObject + "," + invalidFieldsResponse + "}";
+            }
+
+
+
             //send json response
+            System.out.println("Json response: " + jsonResponse);
             out.println(jsonResponse);
 
         }//End of Try block
