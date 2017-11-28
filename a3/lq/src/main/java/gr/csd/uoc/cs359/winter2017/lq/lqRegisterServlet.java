@@ -67,6 +67,7 @@ public class lqRegisterServlet extends HttpServlet {
                 }
 
             } else {
+                System.out.println("Registration Process");
                 //Validator checks for Empty Required Fields and perfoms a Regular expression check
                 invalidFields = validator.Validate(request);
                 //check for not matching passwords

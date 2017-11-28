@@ -2,7 +2,9 @@
 
 window.addEventListener('load', function () {
 
-    showRegistrationForm();
+    showLoginPage();
+    //showRegistrationForm();
+    //showSuccessPage();
     //Flag to use in checking errors
     var passwordError = false;
     var mapHiddenFlag = true;
@@ -24,18 +26,23 @@ window.addEventListener('load', function () {
         return optionalElements;
     }
 
-    function elementsToArray() {
+    function elementsToArray(context) {
         var elementsArray = [];
-        elementsArray.push(document.getElementById('InputUsername'));
-        elementsArray.push(document.getElementById('InputEmail'));
-        elementsArray.push(document.getElementById('InputPassword'));
-        elementsArray.push(document.getElementById('InputPassword2'));
-        elementsArray.push(document.getElementById('InputName'));
-        elementsArray.push(document.getElementById('InputLastName'));
-        elementsArray.push(document.getElementById('InputDOB'));
-        elementsArray.push(document.getElementById('InputCity'));
-
         
+        if(context == "register"){
+            elementsArray.push(document.getElementById('InputUsername'));
+            elementsArray.push(document.getElementById('InputEmail'));
+            elementsArray.push(document.getElementById('InputPassword'));
+            elementsArray.push(document.getElementById('InputPassword2'));
+            elementsArray.push(document.getElementById('InputName'));
+            elementsArray.push(document.getElementById('InputLastName'));
+            elementsArray.push(document.getElementById('InputDOB'));
+            elementsArray.push(document.getElementById('InputCity'));
+            elementsArray.push(document.getElementById('InputProfession'));
+        }else if(context == "login"){
+            elementsArray.push(document.getElementById("loginUsername"));
+            elementsArray.push(document.getElementById("loginPassword"));
+        }       
 
         return elementsArray;
     }
@@ -120,9 +127,12 @@ window.addEventListener('load', function () {
         showPasswordFeedback(passwordError);
     }
 
-    retypePasswordElement.onblur = function () {
-        checkPasswords();
+    if(retypePasswordElement){
+        retypePasswordElement.onblur = function () {
+            checkPasswords();
+        }
     }
+   
 
   
     
@@ -161,6 +171,8 @@ window.addEventListener('load', function () {
             msg = document.getElementsByName(elementName)[0].title; 
         }else if(validity == "duplicate"){
             msg = "This " + elementName + " already exists! Choose a different one.";  
+        }else if (validity == "wrong"){
+            msg = "Wrong Password - Try again"
         }     
         
         if(document.getElementById(elementName+"-feedback") != null) {
@@ -172,17 +184,15 @@ window.addEventListener('load', function () {
       
     }
     
-    function checkResponse (resp) {   
+    function checkResponse (resp, context) {   
         //
-        let elements = elementsToArray();
+        let elements = elementsToArray(context);
         for (var i = 0; i < elements.length; i++){
             if(elements[i].value != ""){
                 showFeedBack(elements[i].name,"valid");
             }
             
-        }
-        
-        
+        }          
         for(var i = 0;i < resp.fields.length; i++){
             var field;            
             if (resp.fields[i].substring(0,5) === "Empty"){
@@ -193,27 +203,56 @@ window.addEventListener('load', function () {
             }else if(resp.fields[i].substring(0,9) === "Duplicate"){
                 field = resp.fields[i].slice(9,resp.fields[i].length); 
                showFeedBack(field, "duplicate"); 
-            }else{
+            }else if(resp.fields[i].substring(0,7) === "invalid"){
+                        field = resp.fields[i].slice(7,resp.fields[i].length); ;
+                        showFeedBack(field, "wrong");  
+             }else{
                 field = resp.fields[i];
                 showFeedBack(field, "invalid");                     
             }
         }
     }
 
-
+    function fillSuccessPage(resp){
+        document.getElementById("username").innerHTML = resp.user.userName;
+        document.getElementById("email").innerHTML = resp.user.email;
+        document.getElementById("firstname").innerHTML = resp.user.firstName;
+        document.getElementById("lastname").innerHTML = resp.user.lastName;
+        document.getElementById("genderS").innerHTML =  resp.user.gender;
+        document.getElementById("birthdate").innerHTML = resp.user.birthDate;
+        document.getElementById("country").innerHTML = resp.user.country;
+        document.getElementById("town").innerHTML = resp.user.town;
+        document.getElementById("address").innerHTML = resp.user.address;
+        document.getElementById("occupation").innerHTML = resp.user.occupation;        
+        document.getElementById("moreinfo").innerHTML = resp.user.info;
+        document.getElementById("interests").innerHTML = resp.user.interests;      
+       
+    }
+    
+    
     function handleResponse (resp, reqObj) {
         console.log("Response Received");        
         console.log(resp);
         if(reqObj.status === 200){   
             if(resp.status == "Registration_Success"){
                 console.log("Registration Success!"); 
-                
-                
+                showSuccessPage();
+                fillSuccessPage(resp);                
             }
             
+            if(resp.status == "Login_success"){
+                console.log("Login Success!"); 
+                //showUserPage();
+            }
         }else if (reqObj.status === 409) {
-
-            checkResponse(resp);
+            if(resp.status == "Invalid_login" || resp.status == "user_unknown"){ 
+                 console.log("Login Failed!"); 
+              checkResponse(resp, "login");
+            }else{
+                console.log("Registration Failed!"); 
+                checkResponse(resp, "register");
+            }
+            
         }
     }
 
@@ -235,21 +274,21 @@ window.addEventListener('load', function () {
         xhttp.send(data);
     }
     
+    if(document.getElementById('submit')){
+        document.getElementById('submit').addEventListener('click', function (){               
+            if(ValidateInputs()){                
+                  let userData = collectFormData();
+                var url = 'http://localhost:8084/lq/mainServlet';
+                if(userData){
+                   sendToServer('POST', url, userData); 
+                }
+            }else{              
+                //console.log("Field Invalid");
+            }       
+            
+        });
+    }
     
-    document.getElementById('submit').addEventListener('click', function (){      
-        //TODO: remove !
-        if(true){
-              let userData = collectFormData();
-            var url = 'http://localhost:8084/lq/mainServlet';
-            if(userData){
-               sendToServer('POST', url, userData); 
-            }
-        }else{
-          
-            //console.log("Field Invalid");
-        }       
-        
-    });
 
     function getLocation() {
         var address = addressElement.value;
@@ -271,65 +310,93 @@ window.addEventListener('load', function () {
 
     }
 
-    CityElement.onblur = function () {
-        var location = getLocation();
-        if (this.value != "") {
-            var map = document.getElementById('map');
-            if (map) {
-                map.style.display = 'none';
-                mapHiddenFlag = true;
+    if(CityElement){
+        CityElement.onblur = function () {
+            var location = getLocation();
+            if (this.value != "") {
+                var map = document.getElementById('map');
+                if (map) {
+                    map.style.display = 'none';
+                    mapHiddenFlag = true;
+                }
             }
-        }
-        if (location) {
-            MakeReq(location);
-        }
-    }
-
-    addressElement.onblur = function () {
-        var location = getLocation();
-        //make this a function and put it onchange event
-        if (this.value != "") {
-            var map = document.getElementById('map');
-            if (map) {
-                map.style.display = 'none';
-                mapHiddenFlag = true;
+            if (location) {
+                MakeReq(location);
             }
-        }
-        if (location) {
-            MakeReq(location);
         }
     }
     
-    usernameElement.onkeyup = function () {
-        var checkbox = document.getElementById('checkbox-container');
-        if (this.value != '') {
-            checkbox.style.display = 'block';
-        } else {
-            checkbox.style.display = 'none';
+
+    if(addressElement){
+        addressElement.onblur = function () {
+            var location = getLocation();
+            //make this a function and put it onchange event
+            if (this.value != "") {
+                var map = document.getElementById('map');
+                if (map) {
+                    map.style.display = 'none';
+                    mapHiddenFlag = true;
+                }
+            }
+            if (location) {
+                MakeReq(location);
+            }
+        }
+    }
+    
+    if(usernameElement){
+        usernameElement.onkeyup = function () {
+            var checkbox = document.getElementById('checkbox-container');
+            if (this.value != '') {
+                checkbox.style.display = 'block';
+            } else {
+                checkbox.style.display = 'none';
+            }
+        }
+        usernameElement.onblur = function () {
+            
+            if(usernameElement.value != "" && usernameElement != null){
+                  var data = new FormData();
+                    data.append("check", "username");
+                    data.append(usernameElement.name, usernameElement.value);
+                    var url = 'http://localhost:8084/lq/mainServlet';
+                    sendToServer('POST', url, data);
+            }      
+        }
+    }
+    
+
+    if(emailElement){
+        emailElement.onblur = function () {        
+            if(emailElement.value !== "" && emailElement !== null){
+                  var data = new FormData();
+                    data.append("check", "email");
+                    data.append(emailElement.name, emailElement.value);
+                    var url = 'http://localhost:8084/lq/mainServlet';
+                    sendToServer('POST', url, data);
+            }      
         }
     }
 
-    usernameElement.onblur = function () {
-        
-        if(usernameElement.value != "" && usernameElement != null){
-              var data = new FormData();
-                data.append("check", "username");
-                data.append(usernameElement.name, usernameElement.value);
-                var url = 'http://localhost:8084/lq/mainServlet';
-                sendToServer('POST', url, data);
-        }      
+    if(document.getElementById("signInButton")){
+        document.getElementById("signInButton").addEventListener('click', function () {
+            let loginUsername = document.getElementById("loginUsername");
+            let loginPassword = document.getElementById("loginPassword");
+            if(true){
+                console.log("Sending Sign In request");
+                  let loginData = new FormData();
+                  loginData.append(loginUsername.name, loginUsername.value);
+                  loginData.append(loginPassword.name, loginPassword.value);
+                var url = 'http://localhost:8084/lq/lqLoginServlet';
+                if(loginData){
+                   sendToServer('POST', url, loginData); 
+                }
+            }else{              
+                //console.log("Field Invalid");
+            }     
+        });
     }
-
-    emailElement.onblur = function () {        
-        if(emailElement.value !== "" && emailElement !== null){
-              var data = new FormData();
-                data.append("check", "email");
-                data.append(emailElement.name, emailElement.value);
-                var url = 'http://localhost:8084/lq/mainServlet';
-                sendToServer('POST', url, data);
-        }      
-    }
-    
+   
     
     function createMapElements() {
         if (!document.getElementById('map-container')) {
@@ -468,6 +535,8 @@ window.addEventListener('load', function () {
                 mapHiddenFlag = true;
             }
             initMap();
+        }else if (e.target.id == 'signUpButton') {
+            showRegistrationForm();
         }
 
     });

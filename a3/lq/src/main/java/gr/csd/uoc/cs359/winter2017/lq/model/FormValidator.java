@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -33,29 +31,31 @@ public class FormValidator {
         this.fieldRegexMap.put("confirmPassword", "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}");
         this.fieldRegexMap.put("firstname", ".{1,20}");
         this.fieldRegexMap.put("lastname", ".{4,20}");
-        //    this.fieldRegexMap.put("DOB", "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)");
+        // this.fieldRegexMap.put("DOB", "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)");
         this.fieldRegexMap.put("city", ".{2,20}");
         this.fieldRegexMap.put("profession", ".{2,20}");
         //This fields are not required - Can be empty
         this.optionalFieldRegexMap.put("address", ".{2,20}");
-        this.optionalFieldRegexMap.put("interests", ".{,100}");
-        this.optionalFieldRegexMap.put("moreinfo", ".{,500}");
+        this.optionalFieldRegexMap.put("interests", ".{0,100}");
+        this.optionalFieldRegexMap.put("moreinfo", ".{0,500}");
     }
 
     public void ValidateRequired(HttpServletRequest request) {
-        Pattern p;
-        Matcher m;
+//        Pattern p;
+//        Matcher m;
 
         //Get all parameters from the request and validate them key:parametername value:regex
         for (Map.Entry<String, String> entry : this.fieldRegexMap.entrySet()) {
             //Check if the parameter exists
             if (request.getParameter(entry.getKey()) != null && (!request.getParameter(entry.getKey()).isEmpty())) {
                 //Patern to check gets added in the Pattern object
-                p = Pattern.compile(entry.getValue());
-                //Check the patern p against the input
-                m = p.matcher(request.getParameter(entry.getKey()));
-                //check if the patter does not match the regular expression and if not then add the fields name to the arraylist
-                if (!m.find()) {
+//                p = Pattern.compile(entry.getValue());
+//                //Check the patern p against the input
+//                m = p.matcher(request.getParameter(entry.getKey()));
+//                //check if the patter does not match the regular expression and if not then add the fields name to the arraylist
+//
+//
+                if (!request.getParameter(entry.getKey()).matches(entry.getValue())) {
                     this.invalidFields.add(entry.getKey());
                 }
             } else { // We need to indicate that the field is Empty
@@ -67,19 +67,19 @@ public class FormValidator {
 
     //Same as validate, but it will not add anything to the invalid fields list if any of these fields are empty/do not exist
     public void ValidateOptional(HttpServletRequest request) {
-        Pattern p;
-        Matcher m;
+//        Pattern p;
+//        Matcher m;
 
         //Get all parameters from the request and validate them key:parametername value:regex
         for (Map.Entry<String, String> entry : this.optionalFieldRegexMap.entrySet()) {
             //Check if the parameter exists
             if (request.getParameter(entry.getKey()) != null && (!request.getParameter(entry.getKey()).isEmpty())) {
                 //Patern to check gets added in the Pattern object
-                p = Pattern.compile(entry.getValue());
-                //Check the patern p against the input
-                m = p.matcher(request.getParameter(entry.getKey()));
+//                p = Pattern.compile(entry.getValue());
+//                //Check the patern p against the input
+//                m = p.matcher(request.getParameter(entry.getKey()));
                 //check if the patter does not match the regular expression and if not then add the fields name to the arraylist
-                if (!m.find()) {
+                if (!request.getParameter(entry.getKey()).matches(entry.getValue())) {
                     this.invalidFields.add(entry.getKey());
                 }
             }
@@ -94,6 +94,33 @@ public class FormValidator {
 
         return this.invalidFields;
     }
+
+    public ArrayList<String> ValidateLogin(HttpServletRequest request) {
+        String username = (String) request.getParameter("lgnUsername");
+        String password = (String) request.getParameter("lgnPassword");
+        String usernameRegex = ".{8,}";
+        String passwordRegex = "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}";
+
+        if (username != null && !username.isEmpty()) {
+            if (!username.matches(usernameRegex)) {
+                this.invalidFields.add("lgnUsername");
+            }
+        } else {
+            this.invalidFields.add("EmptylgnUsername");
+        }
+
+        if (password != null && !password.isEmpty()) {
+            if (!password.matches(passwordRegex)) {
+                this.invalidFields.add("lgnPassword");
+            }
+        } else {
+            this.invalidFields.add("EmptylgnPassword");
+        }
+
+
+        return this.invalidFields;
+    }
+
     // 0: username 1: email
     public ArrayList<String> checkDuplicate(String field, int flag) {
 
