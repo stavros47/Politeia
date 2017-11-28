@@ -1,8 +1,8 @@
 header {
     /* background: linear-gradient(#8E0E00, #8E0E00); */
-    background-color:#222222;
-    padding: 20px;
-    margin-bottom: 25px;
+    background-color:#212121;
+    padding: 15px;
+    margin-bottom: 5px;
     box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -19,8 +19,8 @@ body {
 h1 {
     padding: 20px;
     text-align: center;
-    margin-bottom: 25px;
-    color: white;
+    margin-bottom: 10px;
+    color: #f67519;
     font-size: 3em;
 }
 /* 
@@ -41,6 +41,38 @@ textarea {
     resize: none;
 }
 
+/*
+Registration Success:
+#212121 blackish
+#1f9e75 greenish
+#f67519 orange
+#ebf0f6 grey: 1
+#eeeeee grey: 2
+*/
+.jumbotron {
+    background-color: #1f9e75;
+    color: #ebf0f6;
+    font-weight: 700;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.gratz {
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+.lg li{
+    background-color: #1f9e75;
+    color: black;
+}
+.reg {
+    color: white;
+}
+
+.my-4 {
+    background-color: #eeeeee;
+}
 
 /*
 And some Label formating
@@ -176,4 +208,10 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+@media (max-width: 770px) {
+   #signInButton {
+       float: left;
+   }
 }
