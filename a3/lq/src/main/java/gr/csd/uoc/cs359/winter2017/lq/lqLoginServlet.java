@@ -22,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -64,6 +65,12 @@ public class lqLoginServlet extends HttpServlet {
                                 status = "Login_success";
                                 response.setStatus(200);
                                 //Return user to redirect to user page
+                                //send the request to the user servlet to create a new session
+
+                                HttpSession session = request.getSession(true);
+                                session.setAttribute("user", resultUser);
+                                session.setMaxInactiveInterval(3600);
+
                             } else {
                                 invalidFields.add("invalidlgnPassword");
                                 resultUser = null;
@@ -104,9 +111,9 @@ public class lqLoginServlet extends HttpServlet {
             System.out.println("Json response: " + jsonResponse);
             out.println(jsonResponse);
 
-
         }//End of Try
     }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
