@@ -32,7 +32,22 @@ InputUsername:valid{
     border: 2px #3c763d solid;
     
 } */
+/*
+UserPage
+*/
+.user-info {
+    color: #212121;
+    font-size: 0.8em;
+}
 
+.buttons input{
+    margin-right: 5px;
+}
+
+#username-login {
+    
+    color: #267cec;
+}
 /*
     Simple CSS rule to make my Text areas non-resizable
 */

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import gr.csd.uoc.cs359.winter2017.lq.model.Registrator;
+import gr.csd.uoc.cs359.winter2017.lq.model.UserAccessor;
 import gr.csd.uoc.cs359.winter2017.lq.model.User;
 
 /**
@@ -46,7 +46,6 @@ public class lqRegisterServlet extends HttpServlet {
             //Invalid_fields/Registration_Success
             String status;
 
-            //Todo: Form Validator should check for already existing username and email
             FormValidator validator = new FormValidator();
 
             if (request.getParameter("check") != null) {
@@ -72,8 +71,7 @@ public class lqRegisterServlet extends HttpServlet {
                 invalidFields = validator.Validate(request);
                 //check for not matching passwords
                 if (request.getParameter("confirmPassword") != null && request.getParameter("password") != null) {
-                    if (request.getParameter("confirmPassword").equals(request.getParameter("password"))) {
-                    } else {
+                    if (!request.getParameter("confirmPassword").equals(request.getParameter("password"))) {
                         invalidFields.add("NoMatchpassword");
                     }
                 }
@@ -82,7 +80,7 @@ public class lqRegisterServlet extends HttpServlet {
                     status = "Registration_Success";
                     response.setStatus(200);
                     //Now go and add the user to the database
-                    Registrator userRegistrator = new Registrator();
+                    UserAccessor userRegistrator = new UserAccessor();
 
                     resultUser = userRegistrator.RegisterUser(request);
 
@@ -108,13 +106,11 @@ public class lqRegisterServlet extends HttpServlet {
                 jsonResponse = "{" + statusObject + "," + invalidFieldsResponse + "}";
             }
 
-
-
             //send json response
             System.out.println("Json response: " + jsonResponse);
             out.println(jsonResponse);
 
-        }//End of Try block
+        }//End of Try block//End of Try block
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
