@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,6 +71,9 @@ public class lqLoginServlet extends HttpServlet {
                                 HttpSession session = request.getSession(true);
                                 session.setAttribute("user", resultUser);
                                 session.setMaxInactiveInterval(3600);
+                                Cookie newcookie = new Cookie("JSESSIONID", session.getId());
+                                newcookie.setMaxAge(1800);
+                                response.addCookie(newcookie);
 
                             } else {
                                 invalidFields.add("invalidlgnPassword");

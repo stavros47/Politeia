@@ -1,0 +1,9 @@
+About XSS:
+
+ My page was vulrerable to these attacks because when I added a script in any of the fields when I presented the users data the script or style tags would execute.
+ 
+ At the first attempt I created a button that showed an alert, and I also tried a style tags change. 
+ 
+ Finaly the solution was to escape certain characters before showing them to the screen.
+ 
+ I created a function that replaces these characters
