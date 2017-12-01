@@ -44,11 +44,9 @@ public class UserAccessor {
             newUser.setInfo(moreinfo);
         }
 
-
         try {
 
             UserDB.addUser(newUser);
-
 
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(UserAccessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,7 +62,7 @@ public class UserAccessor {
         String email = request.getParameter("email-edit");
         String address = request.getParameter("address-edit");
         String interests = request.getParameter("interests-edit");
-        String moreinfo = request.getParameter("moreInfo-edit");
+        String moreinfo = request.getParameter("moreinfo-edit");
         String password = request.getParameter("password-edit");
         String firstname = request.getParameter("firstname-edit");
         String lastname = request.getParameter("lastname-edit");

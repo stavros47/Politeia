@@ -6,6 +6,10 @@ header {
     box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.5);
 }
 
+.username-login:hover {
+    color: #267cec;
+}
+
 body {
     /* background: linear-gradient(#8E0E00, #8E0E00); */
     background-color: #404040;

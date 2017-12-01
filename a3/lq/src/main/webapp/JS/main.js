@@ -1,18 +1,37 @@
 "use strict";
 
 window.addEventListener('load', function () {
-    //main page shows
-    showLoginPage();
-    //showRegistrationForm();
+
     //Flags to use in checking errors
     var passwordError = false;
     var mapHiddenFlag = true;
     var addressEmpty = true;
     //Commonly used elements
-   
+    var escapedCharactersMap = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': '&quot;',
+        "'": '&#39;',
+        "/": '&#x2F;'
+    };
+    //add a function to the string object so I can use it on any string to escape XSS characters
+    String.prototype.toHtml = function () {
+        return String(this).replace(/[&<>"'\/]/g, function (s) {
+            return escapedCharactersMap[s];
+        });
+    }
     var elementsArray = [];
 
-    
+    function checkSession() {
+        console.log("choosing View");
+        let data = new FormData();
+        data.append("button", "checkSession");
+        var url = 'http://localhost:8084/lq/userServlet';
+        if (data) {
+            sendToServer('POST', url, data);
+        }
+    }
 
 
     function optionalElementsToArray() {
@@ -77,8 +96,7 @@ window.addEventListener('load', function () {
     }
     //hide the video container
     //Face Recognition is enabled only when we check the checkbox.
-    var faceCheckbox = document.getElementById('faceIDcheck');
-    faceCheckbox.addEventListener('change', function () {
+    function openFaceID() {
         var takePhotoContainer = document.getElementById('video-container');
         if (this.checked) {
             faceRec.init();
@@ -87,60 +105,47 @@ window.addEventListener('load', function () {
         } else {
             takePhotoContainer.style.display = 'none';
         }
-    });
-
-    //Assigns the appropreate bootstrap classes to show (make visible) feedback/warning when needed.
-    function showPasswordFeedback(passError) {
-        if (passError) {
-            /*
-            Set the proper bootstrap classes to visually show errors
-            */
-            document.getElementById('InputPassword2').classList.add('is-invalid');
-            document.getElementById('InputPassword2').classList.remove('is-valid');
-            // Clear the fields and set focus to the password field
-            //Checking if the value is not empty, because we might want to leave the input field blank for testing purposes
-            if (document.getElementById('InputPassword2').value != '') {
-                document.getElementById('InputPassword2').value = '';
-                document.getElementById('InputPassword2').focus();
-            }
-
-        } else {
-            if (document.getElementById('InputPassword2').value != "") {
-                document.getElementById('InputPassword2').classList.add('is-valid');
-                document.getElementById('InputPassword2').classList.remove('is-invalid');
-            }
-
-        }
     }
 
+    //Assigns the appropreate bootstrap classes to show (make visible) feedback/warning when needed.
+   
     function checkPasswords() {
-        var password = document.getElementById('InputPassword').value;
-        var retypePassword = document.getElementById('InputPassword2').value;
+        var password = document.getElementById('InputPassword');
+        var retypePassword = document.getElementById('InputPassword2');
 
-        if (password != retypePassword) {
+        if (password.value != retypePassword.value) {
+            showFeedBack(retypePassword.name,"NoMatch");
+            if(retypePassword.value != ""){
+                retypePassword.value = "";
+                retypePassword.focus();
+            }
             passwordError = true;
         } else {
-            passwordError = false;
+            if(retypePassword.value != ""){
+                showFeedBack(retypePassword.name,"valid");
+                passwordError = false;
+            }
+            
         }
-        showPasswordFeedback(passwordError);
+       
     }
 
 
     function collectFormData(form) {
         let data = new FormData();
         var form = document.getElementById(form);
-        
+
         for (var i = 0; i < form.elements.length; i++) {
 
             var e = form.elements[i];
             var value = e.value;
             //console.log("Name: " + e.name + " ID: " + e.id);
             if ((e.name) && (value !== "")) {
-                //encodeURIComponent(e.name)
+
                 if ((e.getAttribute("type") === "radio") && !(e.checked)) {
                     continue;
                 } else {
-                     console.log("Name: " + e.name + " Val: " + value + "ID:" + e.id);
+                    // console.log("Name: " + e.name + " Val: " + value + "ID:" + e.id);
                     elementsArray.push(document.getElementById(e.id));
                     data.append(e.name, value);
                 }
@@ -150,6 +155,7 @@ window.addEventListener('load', function () {
         return data;
     }
 
+ 
     function showFeedBack(elementName, validity) {
         var msg = "";
         if (validity == "valid") {
@@ -165,6 +171,8 @@ window.addEventListener('load', function () {
             msg = "This " + elementName + " already exists! Choose a different one.";
         } else if (validity == "wrong") {
             msg = "Wrong Password - Try again"
+        } else if (validity == "NoMatch"){
+            msg = "Passwords do not match!";
         }
 
         if (document.getElementById(elementName + "-feedback") != null) {
@@ -207,43 +215,46 @@ window.addEventListener('load', function () {
             }
         }
     }
+
+  
+
     //refactor
     function fillPage(resp, postfix) {
         if (document.getElementById("username" + postfix)) {
-            document.getElementById("username" + postfix).innerHTML = resp.user.userName;
+            document.getElementById("username" + postfix).innerHTML = resp.user.userName.toHtml();
         }
         if (document.getElementById("email" + postfix)) {
-            document.getElementById("email" + postfix).innerHTML = resp.user.email;
+            document.getElementById("email" + postfix).innerHTML = resp.user.email.toHtml();
         }
         if (document.getElementById("firstname" + postfix)) {
-            document.getElementById("firstname" + postfix).innerHTML = resp.user.firstName;
+            document.getElementById("firstname" + postfix).innerHTML = resp.user.firstName.toHtml();
         }
         if (document.getElementById("lastname" + postfix)) {
-            document.getElementById("lastname" + postfix).innerHTML = resp.user.lastName;
+            document.getElementById("lastname" + postfix).innerHTML = resp.user.lastName.toHtml();
         }
         if (document.getElementById("genderS" + postfix)) {
-            document.getElementById("genderS" + postfix).innerHTML = resp.user.gender;
+            document.getElementById("genderS" + postfix).innerHTML = resp.user.gender.toHtml();
         }
         if (document.getElementById("birthdate" + postfix)) {
-            document.getElementById("birthdate" + postfix).innerHTML = resp.user.birthDate;
+            document.getElementById("birthdate" + postfix).innerHTML = resp.user.birthDate.toHtml();
         }
         if (document.getElementById("country" + postfix)) {
-            document.getElementById("country" + postfix).innerHTML = resp.user.country;
+            document.getElementById("country" + postfix).innerHTML = resp.user.country.toHtml();
         }
         if (document.getElementById("town" + postfix)) {
-            document.getElementById("town" + postfix).innerHTML = resp.user.town;
+            document.getElementById("town" + postfix).innerHTML = resp.user.town.toHtml();
         }
         if (document.getElementById("address" + postfix)) {
-            document.getElementById("address" + postfix).innerHTML = resp.user.address;
+            document.getElementById("address" + postfix).innerHTML = resp.user.address.toHtml();
         }
         if (document.getElementById("occupation" + postfix)) {
-            document.getElementById("occupation" + postfix).innerHTML = resp.user.occupation;
+            document.getElementById("occupation" + postfix).innerHTML = resp.user.occupation.toHtml();
         }
         if (document.getElementById("moreinfo" + postfix)) {
-            document.getElementById("moreinfo" + postfix).innerHTML = resp.user.info;
+            document.getElementById("moreinfo" + postfix).innerHTML = resp.user.info.toHtml();
         }
         if (document.getElementById("interests" + postfix)) {
-            document.getElementById("interests" + postfix).innerHTML = resp.user.interests;
+            document.getElementById("interests" + postfix).innerHTML = resp.user.interests.toHtml();
         }
 
 
@@ -263,23 +274,42 @@ window.addEventListener('load', function () {
             if (resp.status == "Login_success" || resp.status == "Cancel") {
                 console.log("Login Success!");
                 showUserPage();
+                setUserPageEventListeners();
                 fillPage(resp, "-login");
             }
 
             if (resp.status == "Edit_user") {
                 console.log("You can now edit the user:");
                 showEditUserPage();
+                setUpdatePageEventListeners();
+                setUserPageEventListeners();
                 //fillPage(resp, "-edit");
             }
             if (resp.status == "Update_success") {
                 console.log("User info updated!");
                 showUserPage();
+                setUserPageEventListeners();
                 fillPage(resp, "-login");
             }
-            if(resp.status == "signout"){
+            if (resp.status == "signout") {
+                console.log("Singed out!!");
                 showLoginPage();
+                setLoginPageEventListeners();
             }
-            
+            if (resp.status == "all_users") {
+                console.log("ALL USERS:");
+                generateAllUsersPage(resp);
+                setUserPageEventListeners();
+            }
+
+            if (resp.status == "session_valid") {
+                console.log("User info updated!");
+                showUserPage();
+                setUserPageEventListeners();
+                fillPage(resp, "-login");
+            }
+
+
         } else if (reqObj.status === 409) {
             if (resp.status == "Invalid_login" || resp.status == "user_unknown") {
                 console.log("Login Failed!");
@@ -290,6 +320,11 @@ window.addEventListener('load', function () {
             } else if (resp.status == "update_failed") {
                 console.log("Update failed");
                 checkResponse(resp, "update");
+            } else if (resp.status == "session_invalid") {
+                console.log("No active sessions");
+                showLoginPage();
+                setLoginPageEventListeners();
+
             }
 
         }
@@ -299,9 +334,8 @@ window.addEventListener('load', function () {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
-
                 var resp;
-                console.log(this.response);
+                //console.log(this.response);
                 if (this.response) {
                     resp = JSON.parse(this.response);
                     handleResponse(resp, this);
@@ -315,7 +349,7 @@ window.addEventListener('load', function () {
 
     //Listener functions
     function submitRegistrationForm() {
-        if (ValidateInputs()) {
+        if (true) {
             let userData = collectFormData("lqForm");
             var url = 'http://localhost:8084/lq/mainServlet';
             if (userData) {
@@ -326,7 +360,7 @@ window.addEventListener('load', function () {
         }
     }
 
-    
+
     function checkCityGeocode() {
         var location = getLocation();
         if (document.getElementById("InputCity").value != "") {
@@ -375,19 +409,14 @@ window.addEventListener('load', function () {
         sendToServer('POST', url, data);
     }
 
-    
-    function checkExistingEmail(){
+
+    function checkExistingEmail() {
         var data = new FormData();
         data.append("check", "email");
         data.append(document.getElementById('InputEmail').name, document.getElementById('InputEmail').value);
         var url = 'http://localhost:8084/lq/mainServlet';
         sendToServer('POST', url, data);
     }
-
-
-
-    //--
-
 
 
     function getLocation() {
@@ -425,7 +454,7 @@ window.addEventListener('load', function () {
             btnMap.setAttribute('id', 'toggleMapBtn');
             btnMap.setAttribute('type', 'button');
             btnMap.innerHTML = 'Toggle Map';
-
+            btnMap.addEventListener('click', toggleMap);
             //Map
             var MapElement = document.createElement('div');
             MapElement.setAttribute('id', 'map');
@@ -536,96 +565,144 @@ window.addEventListener('load', function () {
 
     }
 
-document.addEventListener('keyup', function (e) {
-    if (e.target.id == 'InputUsername') {
-        toggleFaceIdCheckbox();
+   
+    function toggleMap(){
+        if (mapHiddenFlag) {
+            document.getElementById('map').style.display = '';
+            mapHiddenFlag = false;
+        } else {
+            document.getElementById('map').style.display = 'none';
+            mapHiddenFlag = true;
+        }
+        initMap();
     }
-    
-});
 
-function RegistrationEventListeners(){
-    document.getElementById("InputCity").addEventListener('blur', checkCityGeocode);
-     document.getElementById("InputAddress").addEventListener('blur', checkAddressGeocode);
-      document.getElementById("InputPassword2").addEventListener('blur', checkPasswords);
-       document.getElementById("InputUsername").addEventListener('blur', checkExistingUsername);
-        document.getElementById("InputEmail").addEventListener('blur', checkExistingEmail);
-}
+    function signOutRequest(){
+        let data = new FormData();
+        data.append("button", "signout");
 
+        var url = 'http://localhost:8084/lq/userServlet';
+        if (data) {
+            sendToServer('POST', url, data);
+        }
+    }
 
-    document.addEventListener('click', function (e) {
-        if (e.target.id == 'toggleMapBtn') {
-            if (mapHiddenFlag) {
-                document.getElementById('map').style.display = '';
-                mapHiddenFlag = false;
-            } else {
-                document.getElementById('map').style.display = 'none';
-                mapHiddenFlag = true;
-            }
-            initMap();
-        } else if (e.target.id == 'signUpButton') {
-            showRegistrationForm();
-            RegistrationEventListeners();
-        } else if (e.target.id == "edit") {
-            console.log("Edit");
-            let data = new FormData();
-            data.append("button", "edit");
+    function editUserInfoRequest(){
+        console.log("Edit");
+        let data = new FormData();
+        data.append("button", "edit");
 
-            var url = 'http://localhost:8084/lq/userServlet';
-            if (data) {
-                sendToServer('POST', url, data);
-            }
-        } else if (e.target.id == "SignOut") {
-            location.reload();
-        } else if (e.target.id == "update-fields") {
-            console.log("Update");
-            let userData = collectFormData("editForm");
-            userData.append("button", "update");
-            var url = 'http://localhost:8084/lq//userServlet';
-            if (userData) {
-                sendToServer('POST', url, userData);
-            }
-        }else if (e.target.id == "submit") {
-            submitRegistrationForm();
-        } else if (e.target.id == "signInButton"){
-             let loginUsername = document.getElementById("loginUsername");
-                        let loginPassword = document.getElementById("loginPassword");
-                        if (true) {
-                                console.log("Sending Sign In request");
-                                let loginData = new FormData();
-                                loginData.append(loginUsername.name, loginUsername.value);
-                                loginData.append(loginPassword.name, loginPassword.value);
-                                var url = 'http://localhost:8084/lq/lqLoginServlet';
-                                if (loginData) {
-                                        sendToServer('POST', url, loginData);
-                                }
-                        } else {
-                                //console.log("Field Invalid");
-                        }
-        } else if (e.target.id == "home"){
-            showLoginPage();
-        }  else if (e.target.id == "cancel") {
-            console.log("cancel");
-            let data = new FormData();
-            data.append("button", "cancel");
+        var url = 'http://localhost:8084/lq/userServlet';
+        if (data) {
+            sendToServer('POST', url, data);
+        }
+    }
 
-            var url = 'http://localhost:8084/lq/userServlet';
-            if (data) {
-                sendToServer('POST', url, data);
-            }
-            
-        }else if (e.target.id == "signout") {
-            console.log("cancel");
-            let data = new FormData();
-            data.append("button", "signout");
+    function updateFieldsRequest(){
+        console.log("Update");
+        let userData = collectFormData("editForm");
+        userData.append("button", "update");
+        var url = 'http://localhost:8084/lq//userServlet';
+        if (userData) {
+            sendToServer('POST', url, userData);
+        }
+    }
 
-            var url = 'http://localhost:8084/lq/userServlet';
-            if (data) {
-                sendToServer('POST', url, data);
-            }
+    function cancelButtonRequest(){
+        console.log("cancel");
+        let data = new FormData();
+        data.append("button", "cancel");
+
+        var url = 'http://localhost:8084/lq/userServlet';
+        if (data) {
+            sendToServer('POST', url, data);
         }
 
-    });
+    }
+
+    function showUsersRequest(){
+        console.log("showUsers");
+        let data = new FormData();
+        data.append("button", "showUsers");
+
+        var url = 'http://localhost:8084/lq/userServlet';
+        if (data) {
+            sendToServer('POST', url, data);
+        }
+    }
+
+    function singUpButton(){
+        showRegistrationForm();
+        setRegistrationEventListeners();
+
+    }
+
+    function signInButtonRequest(){
+        let loginUsername = document.getElementById("loginUsername");
+        let loginPassword = document.getElementById("loginPassword");
+        if (true) {
+            console.log("Sending Sign In request");
+            let loginData = new FormData();
+            loginData.append(loginUsername.name, loginUsername.value);
+            loginData.append(loginPassword.name, loginPassword.value);
+            var url = 'http://localhost:8084/lq/lqLoginServlet';
+            if (loginData) {
+                sendToServer('POST', url, loginData);
+            }
+        } else {
+            //console.log("Field Invalid");
+        }
+    }
+
+    //Set listener functions
+    function setRegistrationEventListeners() {
+        document.getElementById("InputCity").addEventListener('blur', checkCityGeocode);
+        document.getElementById("InputAddress").addEventListener('blur', checkAddressGeocode);
+        document.getElementById("InputPassword2").addEventListener('blur', checkPasswords);
+        document.getElementById("InputUsername").addEventListener('blur', checkExistingUsername);
+        document.getElementById("InputEmail").addEventListener('blur', checkExistingEmail);
+        document.getElementById('InputUsername').addEventListener('keyup', toggleFaceIdCheckbox);
+        document.getElementById('faceIDcheck').addEventListener('change', openFaceID);
+       
+        document.getElementById("home").addEventListener('click', LoginForm);
+        document.getElementById("submit").addEventListener('click',submitRegistrationForm);
+
+    }
+
+    function setUserPageEventListeners(){
+        document.getElementById('SignOut').addEventListener('click',signOutRequest);
+        document.getElementById('edit').addEventListener('click',editUserInfoRequest);
+        document.getElementById('showUsers').addEventListener('click',showUsersRequest);
+        document.getElementById("username-login").addEventListener('click',UserHome);
+    }
+
+    function setUpdatePageEventListeners(){
+        document.getElementById("cancel").addEventListener('click', cancelButtonRequest);
+        document.getElementById('update-fields').addEventListener('click',updateFieldsRequest);
+    }
 
 
+  
+    function setLoginPageEventListeners(){
+        document.getElementById("signUpButton").addEventListener('click', singUpButton);
+        document.getElementById("signInButton").addEventListener('click', signInButtonRequest);
+    }
+    
+    function setSuccessPageEventListeners(){
+        document.getElementById("signup").addEventListener('click', singUpButton);
+        document.getElementById("Login").addEventListener('click',LoginForm);
+        document.getElementById("home2").addEventListener('click', LoginForm);
+    }
+    
+    function LoginForm(){
+        showLoginPage();
+        setLoginPageEventListeners();
+    }
+    
+    function UserHome(){
+        cancelButtonRequest();
+    }
+    
+    checkSession();
     console.log("main load");
 });

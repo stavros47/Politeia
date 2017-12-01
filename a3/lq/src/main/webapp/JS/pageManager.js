@@ -437,11 +437,11 @@ function showSuccessPage() {
         var successPage = [
                 '<nav class="navbar navbar-light bg-faded row">',
                 '<div class="col-md-6" style="padding-left: 0;">',
-                '<button class="btn btn-outline-success" type="button" style="margin:10px;">Home</button>',
+                '<button class="btn btn-outline-success" type="button" id="home2" style="margin:10px;">Home</button>',
                 '</div>',
                 '<div class="col-md-6" style="padding-right: 0;">',
-                '<button class="btn btn-outline-success" type="button" style="float:right; margin:10px;">Login</button>',
-                '<button class="btn btn-sm align-right btn-outline-secondary" type="button" style="float:right; margin:10px;">Register</button>',
+                '<button class="btn btn-outline-success" type="button" id="Login" style="float:right; margin:10px;">Login</button>',
+                '<button class="btn btn-sm align-right btn-outline-secondary" type="button" id="signup" style="float:right; margin:10px;">Sign up</button>',
                 '</div>',
                 '</nav>',
                 '<div class="jumbotron">',
@@ -629,7 +629,7 @@ function showUserPage() {
                 '<div class="col-md-6 buttons">',
                 '<input id="SignOut" type="button" style="float:right;" class="btn btn-secondary" value="Sign out" />',
                 '<input id="edit" type="button" style="float:right;" class="btn btn-primary" value="Edit Info" />',
-                '<input id="viewUsers" type="button" style="float:right;" class="btn btn-primary" value="View-users" />',
+                '<input id="showUsers" type="button" style="float:right;" class="btn btn-primary" value="View-users" />',
                 '</div>',
                 '</div>'
         ].join("\n");
@@ -1149,7 +1149,7 @@ function showEditUserPage() {
                 '<div class="row">',
                 '<h4 class="col-md-2">Interests:</h4>',
                 '<h6 class="col-md-10" id="interests-login">',
-                '<textarea class="form-control has-success has-feedback"  name="interests-login" id="interests-edit" rows="3" maxlength="100"',
+                '<textarea class="form-control has-success has-feedback"  name="interests-edit" id="interests-edit" rows="3" maxlength="100"',
                 'placeholder="What are your interests?"></textarea>',
                 '<div id="interests-edit-feedback" class="invalid-feedback">',
                 'Invalid input -',
@@ -1163,7 +1163,7 @@ function showEditUserPage() {
                 '<div class="row">',
                 '<h4 class="col-md-2">More Info:</h4>',
                 '<h6 class="col-md-10" " id="moreInfo-login">',
-                '<textarea class="form-control has-success has-feedback" name="moreInfo-login id="moreinfo-edit" rows="5" maxlength="500" placeholder="Any additional Information"></textarea>',
+                '<textarea class="form-control has-success has-feedback" name="moreinfo-edit" id="moreinfo-edit" rows="5" maxlength="500" placeholder="Any additional Information"></textarea>',
                 '<div id="moreinfo-edit-feedback" class="invalid-feedback">',
                 'Invalid input -',
                 '</div>',
@@ -1190,4 +1190,38 @@ function showEditUserPage() {
         ].join("\n");
 
         main.innerHTML = EditPage;
+}
+
+
+function generateAllUsersPage(resp){
+     var userCount = resp.user.length;
+     var main = document.getElementById('mainContent');
+     
+     var userArrayTop = ['<table class="table table-hover">',
+                        '<thead>',
+                          '<tr>',
+                            '<th>#</th>',
+                            '<th>Username</th>',
+                            '<th>First Name</th>',
+                            '<th>Last Name</th>',
+                            '<th>email</th>',
+                          '</tr>',
+                        '</thead>'].join("\n");
+                    
+     var userArrayBottom = ['</tbody>',
+                          '</table>'].join("\n");
+                 
+    var userRows = [];
+    for(var i = 0; i < userCount; i++){
+        userRows.push("<tr>");                            
+        userRows.push("<th scope='row'>"+(i+1)+"</th>");
+        userRows.push("<td>"+ resp.user[i].userName+"</td>");                                            
+        userRows.push("<td>"+ resp.user[i].firstName +"</td>");
+        userRows.push("<td>"+ resp.user[i].lastName +"</td>");
+        userRows.push("<td>"+ resp.user[i].email +"</td></tr>");                 
+    }
+    
+    userRows.join(" ");                 
+    console.log(userArrayTop + userRows + userArrayBottom);                  
+    main.innerHTML = userArrayTop +userRows+ userArrayBottom;
 }

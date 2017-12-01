@@ -5,14 +5,17 @@
  */
 package gr.csd.uoc.cs359.winter2017.lq;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import gr.csd.uoc.cs359.winter2017.lq.db.UserDB;
 import gr.csd.uoc.cs359.winter2017.lq.model.FormValidator;
+import gr.csd.uoc.cs359.winter2017.lq.model.JsonResponse;
 import gr.csd.uoc.cs359.winter2017.lq.model.User;
 import gr.csd.uoc.cs359.winter2017.lq.model.UserAccessor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -45,12 +48,16 @@ public class userServlet extends HttpServlet {
             User currentUser = (User) request.getSession(true).getAttribute("user");
             // System.out.println("Current User:" + currentUser.toString());
             ArrayList<String> invalidFields = null;
+            JsonResponse responder = new JsonResponse();
             String status = "";
+            String jsonResponse = "";
             FormValidator validator = new FormValidator();
             System.out.println("Button:" + request.getParameter("button"));
+
             if (request.getParameter("button") != null) {
                 System.out.println("Button Pressed!");
                 String button = (String) request.getParameter("button");
+
                 if (button.equals("edit")) {
                     status = "Edit_user";
                     response.setStatus(200);
@@ -84,6 +91,15 @@ public class userServlet extends HttpServlet {
                         status = "update_failed";
                         response.setStatus(409);
                     }
+                } else if (button.equals("checkSession")) {
+                    if (request.getSession().getAttribute("user") != null) {
+                        status = "session_valid";
+                        response.setStatus(200);
+                    } else {
+                        status = "session_invalid";
+                        response.setStatus(409);
+                    }
+                    System.out.println(status);
                 } else if (button.equals("cancel")) {
                     status = "Cancel";
                     response.setStatus(200);
@@ -92,30 +108,30 @@ public class userServlet extends HttpServlet {
                     request.getSession(true).invalidate();
                     response.setStatus(200);
 
-                }
-
-                Gson gson = new GsonBuilder().create();
-                String jsonResponse = "";
-                String invalidFieldsResponse = "";
-                //create json response
-                String statusObject = "\"status\":\"" + status + "\"";
-
-                if (invalidFields == null || invalidFields.isEmpty()) {
-                    if (currentUser != null) {
-                        String userResult = "\"user\":" + gson.toJson(currentUser);
-                        jsonResponse = "{" + statusObject + "," + userResult + "}";
+                } else if (button.equals("showUsers")) {
+                    status = "all_users";
+                    response.setStatus(200);
+                    try {
+                        List<User> allUsers = UserDB.getUsers();
+                        jsonResponse = responder.userPageResponseAll(invalidFields, allUsers, status);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(userServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                } else {
-                    invalidFieldsResponse = "\"fields\":" + gson.toJson(invalidFields) + "";
-                    jsonResponse = "{" + statusObject + "," + invalidFieldsResponse + "}";
                 }
 
+            }
+            System.out.println("Json response1: " + jsonResponse);
+            if (jsonResponse == "") {
+
+                jsonResponse = responder.userPageResponse(invalidFields, currentUser, status);
+            }
+
+
                 //send json response
-                System.out.println("Json response: " + jsonResponse);
+                System.out.println("Json response2: " + jsonResponse);
                 out.println(jsonResponse);
 
-            }
 
         }
     }
