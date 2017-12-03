@@ -145,7 +145,7 @@ window.addEventListener('load', function () {
                 if ((e.getAttribute("type") === "radio") && !(e.checked)) {
                     continue;
                 } else {
-                    // console.log("Name: " + e.name + " Val: " + value + "ID:" + e.id);
+                     console.log("Name: " + e.name + " Val: " + value + "ID:" + e.id);
                     elementsArray.push(document.getElementById(e.id));
                     data.append(e.name, value);
                 }
@@ -173,6 +173,8 @@ window.addEventListener('load', function () {
             msg = "Wrong Password - Try again"
         } else if (validity == "NoMatch"){
             msg = "Passwords do not match!";
+        } else if (validity == "unknown") {
+            msg = "We could not find this user - Sign up for a new account to continue!";
         }
 
         if (document.getElementById(elementName + "-feedback") != null) {
@@ -207,57 +209,16 @@ window.addEventListener('load', function () {
                 field = resp.fields[i].slice(9, resp.fields[i].length);
                 showFeedBack(field, "duplicate");
             } else if (resp.fields[i].substring(0, 7) === "invalid") {
-                field = resp.fields[i].slice(7, resp.fields[i].length);;
+                field = resp.fields[i].slice(7, resp.fields[i].length);
                 showFeedBack(field, "wrong");
-            } else {
+            } else if (resp.fields[i].substring(0, 7) === "unknown"){
+                field = resp.fields[i].slice(7, resp.fields[i].length);
+                showFeedBack(field, "unknown");
+            }else {
                 field = resp.fields[i];
                 showFeedBack(field, "invalid");
             }
         }
-    }
-
-  
-
-    //refactor
-    function fillPage(resp, postfix) {
-        if (document.getElementById("username" + postfix)) {
-            document.getElementById("username" + postfix).innerHTML = resp.user.userName.toHtml();
-        }
-        if (document.getElementById("email" + postfix)) {
-            document.getElementById("email" + postfix).innerHTML = resp.user.email.toHtml();
-        }
-        if (document.getElementById("firstname" + postfix)) {
-            document.getElementById("firstname" + postfix).innerHTML = resp.user.firstName.toHtml();
-        }
-        if (document.getElementById("lastname" + postfix)) {
-            document.getElementById("lastname" + postfix).innerHTML = resp.user.lastName.toHtml();
-        }
-        if (document.getElementById("genderS" + postfix)) {
-            document.getElementById("genderS" + postfix).innerHTML = resp.user.gender.toHtml();
-        }
-        if (document.getElementById("birthdate" + postfix)) {
-            document.getElementById("birthdate" + postfix).innerHTML = resp.user.birthDate.toHtml();
-        }
-        if (document.getElementById("country" + postfix)) {
-            document.getElementById("country" + postfix).innerHTML = resp.user.country.toHtml();
-        }
-        if (document.getElementById("town" + postfix)) {
-            document.getElementById("town" + postfix).innerHTML = resp.user.town.toHtml();
-        }
-        if (document.getElementById("address" + postfix)) {
-            document.getElementById("address" + postfix).innerHTML = resp.user.address.toHtml();
-        }
-        if (document.getElementById("occupation" + postfix)) {
-            document.getElementById("occupation" + postfix).innerHTML = resp.user.occupation.toHtml();
-        }
-        if (document.getElementById("moreinfo" + postfix)) {
-            document.getElementById("moreinfo" + postfix).innerHTML = resp.user.info.toHtml();
-        }
-        if (document.getElementById("interests" + postfix)) {
-            document.getElementById("interests" + postfix).innerHTML = resp.user.interests.toHtml();
-        }
-
-
     }
 
 
@@ -268,6 +229,7 @@ window.addEventListener('load', function () {
             if (resp.status == "Registration_Success") {
                 console.log("Registration Success!");
                 showSuccessPage();
+                setSuccessPageEventListeners();
                 fillPage(resp, "");
             }
 
@@ -324,6 +286,9 @@ window.addEventListener('load', function () {
                 console.log("No active sessions");
                 showLoginPage();
                 setLoginPageEventListeners();
+
+            } else if (resp.status == "username_unavailable" || resp.status == "email_unavailable") {
+               checkResponse(resp, "register");
 
             }
 
@@ -401,21 +366,32 @@ window.addEventListener('load', function () {
     }
 
     function checkExistingUsername() {
-        console.log("checkusername");
-        var data = new FormData();
-        data.append("check", "username");
-        data.append(document.getElementById('InputUsername').name, document.getElementById('InputUsername').value);
-        var url = 'http://localhost:8084/lq/mainServlet';
-        sendToServer('POST', url, data);
+        if (document.getElementById('InputUsername').value != ""){
+            console.log("checkusername");
+            var data = new FormData();
+            data.append("check", "username");
+            data.append(document.getElementById('InputUsername').name, document.getElementById('InputUsername').value);
+            var url = 'http://localhost:8084/lq/mainServlet';
+            sendToServer('POST', url, data);
+        }
+       
     }
 
 
     function checkExistingEmail() {
-        var data = new FormData();
-        data.append("check", "email");
-        data.append(document.getElementById('InputEmail').name, document.getElementById('InputEmail').value);
-        var url = 'http://localhost:8084/lq/mainServlet';
-        sendToServer('POST', url, data);
+        var email;
+        if(document.getElementById("email-edit") != null && document.getElementById("email-edit").value != ""){
+            email = document.getElementById("email-edit");
+        } else if(document.getElementById("InputEmail") != null && document.getElementById("InputEmail").value != ""){
+            email = document.getElementById("InputEmail");
+        }
+            var data = new FormData();
+            data.append("check", "email");
+            data.append(email.name, email.value);
+            var url = 'http://localhost:8084/lq/mainServlet';
+            sendToServer('POST', url, data);
+        
+     
     }
 
 
@@ -679,6 +655,7 @@ window.addEventListener('load', function () {
     function setUpdatePageEventListeners(){
         document.getElementById("cancel").addEventListener('click', cancelButtonRequest);
         document.getElementById('update-fields').addEventListener('click',updateFieldsRequest);
+      //  document.getElementById("email-edit").addEventListener('blur', checkExistingEmail);// should remove email from update page entirely
     }
 
 
