@@ -83,6 +83,7 @@ public class lqLoginServlet extends HttpServlet {
 
                     } else {
                         status = "user_unknown";
+                        invalidFields.add("unknownlgnUsername");
                         response.setStatus(409);
                     }
                 } catch (ClassNotFoundException ex) {
@@ -91,7 +92,10 @@ public class lqLoginServlet extends HttpServlet {
             }
 
             if (!invalidFields.isEmpty()) {
-                status = "Invalid_login";
+                System.out.println("STATUS:" + status);
+                if (status.equals("")) {
+                    status = "Invalid_login";
+                }
                 response.setStatus(409);
             }
 

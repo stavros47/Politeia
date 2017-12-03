@@ -125,16 +125,16 @@ public class FormValidator {
     }
 
     // 0: username 1: email
-    public ArrayList<String> checkDuplicate(String field, int flag) {
+    public ArrayList<String> checkDuplicate(String field, int flag, String name) {
 
         try {
             if (flag == 0) {
                 if (!UserDB.checkValidUserName(field)) {
-                    this.invalidFields.add("Duplicateusername");
+                    this.invalidFields.add("Duplicate" + name);
                 }
             } else if (flag == 1) {
                 if (!UserDB.checkValidEmail(field)) {
-                    this.invalidFields.add("Duplicateemail");
+                    this.invalidFields.add("Duplicate" + name);
                 }
             }
 
