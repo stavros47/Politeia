@@ -63,7 +63,45 @@ window.addEventListener('load', function () {
 
         return elementsArray;
     }
+    
+    function fillPage(resp, postfix) {
 
+        if (document.getElementById("username" + postfix)) {
+            document.getElementById("username" + postfix).innerHTML = resp.user.userName.toHtml();
+       }
+        if (document.getElementById("email" + postfix)) {
+            document.getElementById("email" + postfix).innerHTML = resp.user.email.toHtml();
+        if (document.getElementById("firstname" + postfix)) {
+           document.getElementById("firstname" + postfix).innerHTML = resp.user.firstName.toHtml();
+       }
+       if (document.getElementById("lastname" + postfix)) {
+           document.getElementById("lastname" + postfix).innerHTML = resp.user.lastName.toHtml();
+       }
+        if (document.getElementById("genderS" + postfix)) {
+            document.getElementById("genderS" + postfix).innerHTML = resp.user.gender.toHtml();
+        }
+        if (document.getElementById("birthdate" + postfix)) {
+            document.getElementById("birthdate" + postfix).innerHTML = resp.user.birthDate.toHtml();
+        }
+        if (document.getElementById("country" + postfix)) {
+           document.getElementById("country" + postfix).innerHTML = resp.user.country.toHtml();
+        }
+       if (document.getElementById("town" + postfix)) {
+          document.getElementById("town" + postfix).innerHTML = resp.user.town.toHtml();
+       if (document.getElementById("address" + postfix)) {
+           document.getElementById("address" + postfix).innerHTML = resp.user.address.toHtml();
+       }
+        if (document.getElementById("occupation" + postfix)) {
+           document.getElementById("occupation" + postfix).innerHTML = resp.user.occupation.toHtml();
+       }
+       if (document.getElementById("moreinfo" + postfix)) {
+           document.getElementById("moreinfo" + postfix).innerHTML = resp.user.info.toHtml();
+       }
+      if (document.getElementById("interests" + postfix)) {
+           document.getElementById("interests" + postfix).innerHTML = resp.user.interests.toHtml();
+       }
+
+    }
 
     //Prevent Submit on non matching passwords - refactor todo
     var ValidateInputs = function () {
