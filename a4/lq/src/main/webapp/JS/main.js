@@ -71,6 +71,7 @@ window.addEventListener('load', function () {
        }
         if (document.getElementById("email" + postfix)) {
             document.getElementById("email" + postfix).innerHTML = resp.user.email.toHtml();
+        }
         if (document.getElementById("firstname" + postfix)) {
            document.getElementById("firstname" + postfix).innerHTML = resp.user.firstName.toHtml();
        }
@@ -88,6 +89,7 @@ window.addEventListener('load', function () {
         }
        if (document.getElementById("town" + postfix)) {
           document.getElementById("town" + postfix).innerHTML = resp.user.town.toHtml();
+      }
        if (document.getElementById("address" + postfix)) {
            document.getElementById("address" + postfix).innerHTML = resp.user.address.toHtml();
        }
