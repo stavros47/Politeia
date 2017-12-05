@@ -3,12 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gr.csd.uoc.cs359.winter2017.lq.model;
+package gr.csd.uoc.cs359.winter2017.lq;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
+import gr.csd.uoc.cs359.winter2017.lq.model.FormValidator;
+import gr.csd.uoc.cs359.winter2017.lq.model.Initiative;
+import static gr.csd.uoc.cs359.winter2017.lq.model.JsonResponse.initiativeResponse;
+import gr.csd.uoc.cs359.winter2017.lq.model.PollAccessor;
+import gr.csd.uoc.cs359.winter2017.lq.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -23,9 +29,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Kyriacos
  */
 @WebServlet(name = "lqPollServlet", urlPatterns = {
-    "/lqPollServlet"
-})
-@MultipartConfig
+    "/lqInitiativeServlet"
+})@MultipartConfig
 public class lqInitiativeServlet extends HttpServlet {
 
     /**
@@ -42,24 +47,34 @@ public class lqInitiativeServlet extends HttpServlet {
     throws ServletException, IOException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
+             List<Initiative> list;
             String status = "";
-
+            User curentUser= (User)request.getSession(true).getAttribute("user");
             ArrayList < String > invalidFields = null;
             FormValidator validator = new FormValidator();
-            Initiative initiative = new Initiative();
+            Initiative initiative = null;
             System.out.println("Poll Process");
             
             if (request.getParameter("poll") != null) {
                 if (request.getParameter("poll").equals("new")) {
                     invalidFields = validator.ValidatePollFields(request);
                     if (invalidFields.isEmpty()){
-                        PollAccessor.createInitiative(initiative, request);
-                       
-                       
+                        initiative=PollAccessor.createInitiative(request);  
+                        status="initiative_success";
+                        response.setStatus(200);
+                    }
+                    else{
+                        status="initiative_failed";
+                        response.setStatus(409);
                     }
                 }
             }
+            list=InitiativeDB.getInitiatives(curentUser.getUserName());
+        
+            String jsonResponse = initiativeResponse(invalidFields, list, status);
+           
+            out.print(jsonResponse);
+           
         }
     }
 

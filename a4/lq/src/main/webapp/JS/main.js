@@ -340,7 +340,7 @@ window.addEventListener('load', function () {
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 var resp;
-                //console.log(this.response);
+                console.log(this.response);
                 if (this.response) {
                     resp = JSON.parse(this.response);
                     handleResponse(resp, this);
@@ -727,7 +727,7 @@ window.addEventListener('load', function () {
     }
     
     function setNewPolicyPageListeners(){
-       // document.getElementById('createNewPolicy').addEventListener('click', submitNewPolicy);
+        document.getElementById('createNewPolicy').addEventListener('click', submitNewPolicy);
         document.getElementById("cancelNewPolicy").addEventListener('click', UserHome);
     }
     

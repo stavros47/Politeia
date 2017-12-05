@@ -167,20 +167,21 @@ public class FormValidator {
      * @return
      */
     public ArrayList<String> ValidatePollFields (HttpServletRequest request){
-         String creator = (String) request.getParameter("creator-newPolicy");
+        
          String description = (String) request.getParameter("description-newPolicy"); 
          String category = (String) request.getParameter("category-newPolicy");
          String title = (String) request.getParameter("title-newPolicy");
            
         if (description == null || description.trim().isEmpty()){
-                 this.invalidFields.add("Empty description-newPolicy");
+                 this.invalidFields.add("Emptydescription-newPolicy");
              }
          if (category == null || category.trim().isEmpty()){
-                 this.invalidFields.add("Empty category-newPolicy");
+                 this.invalidFields.add("Emptycategory-newPolicy");
          }
         if (title == null || title.trim().isEmpty()){
-                 this.invalidFields.add("Empty title-newPolicy");
+                 this.invalidFields.add("Emptytitle-newPolicy");
         }
+        
         return this.invalidFields;
     }
          

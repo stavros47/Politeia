@@ -18,30 +18,30 @@ import javax.servlet.http.HttpSession;
  */
 public class PollAccessor {
     
-    public static void createInitiative(Initiative initiative, HttpServletRequest request) throws ClassNotFoundException{
+    public static Initiative createInitiative( HttpServletRequest request) throws ClassNotFoundException{
                String category=request.getParameter("category-newPolicy");
                String title=request.getParameter("title-newPolicy");
+               Initiative initiative= new Initiative ();
                int status=Integer.parseInt(request.getParameter("status-newPolicy"));
-               
-
-               
-              
                String description=request.getParameter("description-newPolicy");
                User user=(User)request.getSession(true).getAttribute("user");
                String creator= user.getUserName();
                if (user!=null){
                    initiative.setCreator(creator);
+                   initiative.setTitle(title);
                    initiative.setCategory(category);
                    initiative.setDescription(description);
                    initiative.setStatus(status);
                    System.out.println("Initiative: "+ initiative.toString());
-                   //InitiativeDB.addInitiative(initiative);
+                   InitiativeDB.addInitiative(initiative);
                    
                }
                else {
                    System.out.println("No session found.");
                }
+            
                
+               return initiative;
                
        
     }

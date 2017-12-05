@@ -39,6 +39,30 @@ public class JsonResponse {
         return jsonResponseString;
     }
 
+      public static String initiativeResponse(ArrayList<String> invalidFields, List<Initiative> initiative, String status) {
+        String jsonResponseString = "";
+        // Gson gson = new GsonBuilder().create();
+        Gson gson = new Gson();
+
+        String invalidFieldsResponse = "";
+        //create json response
+        String statusObject = "\"status\":\"" + status + "\"";
+
+        if (invalidFields == null || invalidFields.isEmpty()) {
+            if (initiative != null) {
+                String initiativeResult = "\"initiative\":" + gson.toJson(initiative);
+                jsonResponseString = "{" + statusObject + "," + initiativeResult + "}";
+                return jsonResponseString;
+            }
+
+        }
+            invalidFieldsResponse = "\"fields\":" + gson.toJson(invalidFields) + "";
+            jsonResponseString = "{" + statusObject + "," + invalidFieldsResponse + "}";
+
+
+        return jsonResponseString;
+    }
+    
     public String userPageResponseAll(ArrayList<String> invalidFields, List<User> allUsers, String status) {
         String jsonResponseString = "";
         // Gson gson = new GsonBuilder().create();
