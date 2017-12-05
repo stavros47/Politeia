@@ -623,6 +623,15 @@ window.addEventListener('load', function () {
             sendToServer('POST', url, userData);
         }
     }
+    
+    function submitNewPolicy(){
+        let policyData = collectFormData("newPolicyForm");
+        policyData.append("poll", "new");
+        var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+        if (policyData) {
+            sendToServer('POST', url, policyData);
+        }
+    }
 
     function cancelButtonRequest(){
         console.log("cancel");
@@ -669,7 +678,12 @@ window.addEventListener('load', function () {
             //console.log("Field Invalid");
         }
     }
-
+    
+    function createNewPolicyPage(){
+        showNewPolicyPage();
+        setNewPolicyPageListeners();
+        
+    }
     //Set listener functions
     function setRegistrationEventListeners() {
         document.getElementById("InputCity").addEventListener('blur', checkCityGeocode);
@@ -690,6 +704,7 @@ window.addEventListener('load', function () {
         document.getElementById('edit').addEventListener('click',editUserInfoRequest);
         document.getElementById('showUsers').addEventListener('click',showUsersRequest);
         document.getElementById("username-login").addEventListener('click',UserHome);
+        document.getElementById('allPolicies').addEventListener('click', createNewPolicyPage);
     }
 
     function setUpdatePageEventListeners(){
@@ -709,6 +724,11 @@ window.addEventListener('load', function () {
         document.getElementById("signup").addEventListener('click', singUpButton);
         document.getElementById("Login").addEventListener('click',LoginForm);
         document.getElementById("home2").addEventListener('click', LoginForm);
+    }
+    
+    function setNewPolicyPageListeners(){
+       // document.getElementById('createNewPolicy').addEventListener('click', submitNewPolicy);
+        document.getElementById("cancelNewPolicy").addEventListener('click', UserHome);
     }
     
     function LoginForm(){
