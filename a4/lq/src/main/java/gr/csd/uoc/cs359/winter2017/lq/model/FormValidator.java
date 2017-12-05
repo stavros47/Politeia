@@ -161,5 +161,27 @@ public class FormValidator {
         return this.invalidFields;
     }
 
-
+    /**
+     *
+     * @param request
+     * @return
+     */
+    public ArrayList<String> ValidatePollFields (HttpServletRequest request){
+         String creator = (String) request.getParameter("creator-newPolicy");
+         String description = (String) request.getParameter("description-newPolicy"); 
+         String category = (String) request.getParameter("category-newPolicy");
+         String title = (String) request.getParameter("title-newPolicy");
+           
+        if (description == null || description.trim().isEmpty()){
+                 this.invalidFields.add("Empty description-newPolicy");
+             }
+         if (category == null || category.trim().isEmpty()){
+                 this.invalidFields.add("Empty category-newPolicy");
+         }
+        if (title == null || title.trim().isEmpty()){
+                 this.invalidFields.add("Empty title-newPolicy");
+        }
+        return this.invalidFields;
+    }
+         
 }
