@@ -59,7 +59,9 @@ UserPage
 textarea {
     resize: none;
 }
-
+.with-margin {
+  margin-bottom: 15px;
+}
 /*
 Registration Success:
 #212121 blackish
