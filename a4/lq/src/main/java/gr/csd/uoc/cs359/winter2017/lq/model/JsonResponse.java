@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class JsonResponse {
 
-    public String userPageResponse(ArrayList<String> invalidFields, User currentUser, String status) {
+    public String userPageResponse(ArrayList < String > invalidFields, User currentUser, String status) {
         String jsonResponseString = "";
         // Gson gson = new GsonBuilder().create();
         Gson gson = new Gson();
@@ -32,14 +32,14 @@ public class JsonResponse {
             }
 
         }
-            invalidFieldsResponse = "\"fields\":" + gson.toJson(invalidFields) + "";
-            jsonResponseString = "{" + statusObject + "," + invalidFieldsResponse + "}";
+        invalidFieldsResponse = "\"fields\":" + gson.toJson(invalidFields) + "";
+        jsonResponseString = "{" + statusObject + "," + invalidFieldsResponse + "}";
 
 
         return jsonResponseString;
     }
 
-      public static String initiativeResponse(ArrayList<String> invalidFields, List<Initiative> initiative, String status) {
+    public static String initiativeResponse(ArrayList < String > invalidFields, List < Initiative > initiative, String status) {
         String jsonResponseString = "";
         // Gson gson = new GsonBuilder().create();
         Gson gson = new Gson();
@@ -56,14 +56,14 @@ public class JsonResponse {
             }
 
         }
-            invalidFieldsResponse = "\"fields\":" + gson.toJson(invalidFields) + "";
-            jsonResponseString = "{" + statusObject + "," + invalidFieldsResponse + "}";
+        invalidFieldsResponse = "\"fields\":" + gson.toJson(invalidFields) + "";
+        jsonResponseString = "{" + statusObject + "," + invalidFieldsResponse + "}";
 
 
         return jsonResponseString;
     }
-    
-    public String userPageResponseAll(ArrayList<String> invalidFields, List<User> allUsers, String status) {
+
+    public String userPageResponseAll(ArrayList < String > invalidFields, List < User > allUsers, String status) {
         String jsonResponseString = "";
         // Gson gson = new GsonBuilder().create();
         Gson gson = new Gson();

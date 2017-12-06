@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -51,8 +52,9 @@ public class InitiativeDB {
                 initiative.setCategory(res.getString("category"));
                 initiative.setDescription(res.getString("description"));
                 initiative.setStatus(res.getInt("status"));
-                initiative.setCreated(res.getDate("created"));
-                initiative.setModified(res.getDate("modified"));
+                initiative.setCreated(res.getTimestamp("created"));
+                initiative.setModified(res.getTimestamp("modified"));
+                initiative.setExpires(res.getTimestamp("expires"));
                 initiatives.add(initiative);
             }
 
@@ -99,8 +101,9 @@ public class InitiativeDB {
                 initiative.setCategory(res.getString("category"));
                 initiative.setDescription(res.getString("description"));
                 initiative.setStatus(res.getInt("status"));
-                initiative.setCreated(res.getDate("created"));
-                initiative.setModified(res.getDate("modified"));
+                initiative.setCreated(res.getTimestamp("created"));
+                initiative.setModified(res.getTimestamp("modified"));
+                initiative.setExpires(res.getTimestamp("expires"));
                 initiatives.add(initiative);
             }
 
@@ -147,8 +150,9 @@ public class InitiativeDB {
                 initiative.setCategory(res.getString("category"));
                 initiative.setDescription(res.getString("description"));
                 initiative.setStatus(res.getInt("status"));
-                initiative.setCreated(res.getDate("created"));
-                initiative.setModified(res.getDate("modified"));
+                initiative.setCreated(res.getTimestamp("created"));
+                initiative.setModified(res.getTimestamp("modified"));
+                initiative.setExpires(res.getTimestamp("expires"));
                 initiatives.add(initiative);
             }
 
@@ -184,13 +188,14 @@ public class InitiativeDB {
             StringBuilder insQuery = new StringBuilder();
 
             insQuery.append("INSERT INTO ")
-                    .append(" initiatives (CREATORID, TITLE, CATEGORY, DESCRIPTION, "
+                    .append(" initiatives (CREATORID, TITLE, CATEGORY, DESCRIPTION, EXPIRES,"
                             + "STATUS) ")
                     .append(" VALUES (")
                     .append("'").append(initiative.getCreator()).append("',")
                     .append("'").append(initiative.getTitle()).append("',")
                     .append("'").append(initiative.getCategory()).append("',")
                     .append("'").append(initiative.getDescription()).append("',")
+                    .append("'").append(initiative.getExpires()).append("',")
                     .append("'").append(initiative.getStatus()).append("');");
 
             String generatedColumns[] = {"ID"};
@@ -242,7 +247,7 @@ public class InitiativeDB {
 
             ResultSet res = stmtIns.getResultSet();
 
-            while (res.next() == true) {
+            if (res.next() == true) {
                 initiative.setCreator(res.getString("creatorID"));
                 initiative.setTitle(res.getString("title"));
                 initiative.setCategory(res.getString("category"));
@@ -250,6 +255,7 @@ public class InitiativeDB {
                 initiative.setStatus(res.getInt("status"));
                 initiative.setCreated(res.getTimestamp("created"));
                 initiative.setModified(res.getTimestamp("modified"));
+                initiative.setExpires(res.getTimestamp("expires"));
             }
 
             System.out.println("#DB: The initiative was successfully retrieved from the database.");
@@ -284,12 +290,20 @@ public class InitiativeDB {
             Connection con = CS359DB.getConnection();
             StringBuilder insQuery = new StringBuilder();
 
+            Timestamp expireDate = null;
+            if (initiative.getExpires() != null)
+                expireDate = new Timestamp(initiative.getExpires().getTime());
+
             insQuery.append("UPDATE initiatives ")
                     .append(" SET ")
                     .append(" TITLE = ").append("'").append(initiative.getTitle()).append("',")
                     .append(" CATEGORY = ").append("'").append(initiative.getCategory()).append("',")
-                    .append(" DESCRIPTION = ").append("'").append(initiative.getDescription()).append("',")
-                    .append(" STATUS = ").append("'").append(initiative.getStatus()).append("'")
+                    .append(" DESCRIPTION = ").append("'").append(initiative.getDescription()).append("',");
+            // If we have added an expire date
+            if (expireDate != null) {
+                insQuery.append(" EXPIRES = ").append("'").append(expireDate).append("',");
+            }
+            insQuery.append(" STATUS = ").append("'").append(initiative.getStatus()).append("'")
                     .append(" WHERE ID = ").append("'").append(initiative.getId()).append("';");
 
             PreparedStatement stmtUpdate = con.prepareStatement(insQuery.toString());

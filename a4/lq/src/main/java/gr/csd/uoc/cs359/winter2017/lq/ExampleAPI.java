@@ -11,6 +11,7 @@ import gr.csd.uoc.cs359.winter2017.lq.db.VoteDB;
 import gr.csd.uoc.cs359.winter2017.lq.model.Initiative;
 import gr.csd.uoc.cs359.winter2017.lq.model.User;
 import gr.csd.uoc.cs359.winter2017.lq.model.Vote;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -113,6 +114,9 @@ public class ExampleAPI {
             System.out.println("vote:" + i++);
             System.out.println(current);
         }
+
+        initiative.setExpires(new Date());
+        InitiativeDB.updateInitiative(initiative);
 
         // Get Initiatives
         List<Initiative> initiatives = InitiativeDB.getInitiativesWithStatus(1);

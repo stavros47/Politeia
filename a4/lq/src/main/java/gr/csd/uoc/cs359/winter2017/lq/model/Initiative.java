@@ -22,7 +22,9 @@ public class Initiative implements Serializable {
     private String description;
     private int status;         // 0 for non-active, 1 active, 2 ended
     private Date created;       // set by db
-    private Date modified;       // set by db
+    private Date modified;      // set by db
+    private Date expires;      // set by db
+
     /**
      * Default Constructor
      *
@@ -102,9 +104,20 @@ public class Initiative implements Serializable {
     }
 
     public void setModified(Date modified) {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         this.modified = modified;
-        sdfDate.format(modified);
+    }
+
+    public Date getExpires() {
+        return expires;
+    }
+
+    public String getExpiresAsString() {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return sdfDate.format(expires);
+    }
+
+    public void setExpires(Date expires) {
+        this.expires = expires;
     }
 
     public String getCreator() {
@@ -183,7 +196,20 @@ public class Initiative implements Serializable {
         if (modified != null) {
             sb.append("Last Modified: ").append(this.getModifiedAsString()).append("\n");
         }
+        if (expires != null) {
+            switch (status) {
+                case 0:
+                    sb.append("Set to expire at: ").append(this.getExpiresAsString()).append("\n");
+                    break;
+                case 1:
+                    sb.append("Will expire at: ").append(this.getExpiresAsString()).append("\n");
+                    break;
+                default:
+                    sb.append("Expired at: ").append(this.getExpiresAsString()).append("\n");
+                    break;
+            }
 
+        }
         return sb.toString();
 
     }
