@@ -59,6 +59,12 @@ window.addEventListener('load', function () {
         } else if (context == "login") {
             elementsArray.push(document.getElementById("loginUsername"));
             elementsArray.push(document.getElementById("loginPassword"));
+        }else if (context == "Policies") {
+            elementsArray.push(document.getElementById("title-newPolicy"));
+            elementsArray.push(document.getElementById("category-newPolicy"));
+            elementsArray.push(document.getElementById("expiration-newPolicy"));
+            elementsArray.push(document.getElementById("description-newPolicy"));
+          
         }
 
         return elementsArray;
@@ -310,7 +316,10 @@ window.addEventListener('load', function () {
                 setUserPageEventListeners();
                 fillPage(resp, "-login");
             }
-
+            if (resp.status == "all_polls" || resp.status == "initiative_success" ){
+                generatePoliciesPage(resp);
+                setNewPolicyPageListeners();
+            }
 
         } else if (reqObj.status === 409) {
             if (resp.status == "Invalid_login" || resp.status == "user_unknown") {
@@ -330,6 +339,8 @@ window.addEventListener('load', function () {
             } else if (resp.status == "username_unavailable" || resp.status == "email_unavailable") {
                checkResponse(resp, "register");
 
+            } else if (resp.status == "iniative_failed") {
+                checkResponse(resp, "Policies");
             }
 
         }
@@ -680,8 +691,14 @@ window.addEventListener('load', function () {
     }
     
     function createNewPolicyPage(){
-        showNewPolicyPage();
-        setNewPolicyPageListeners();
+        console.log("Sending Sign In request");
+            let pollData = new FormData();
+            pollData.append("poll", "mypolls");
+         
+            var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+            if (pollData) {
+                sendToServer('POST', url, pollData);
+            }
         
     }
     //Set listener functions

@@ -1225,11 +1225,11 @@ function generateAllUsersPage(resp){
     }
     
     userRows.join(" ");                 
-    console.log(userArrayTop + userRows + userArrayBottom);                  
+    //console.log(userArrayTop + userRows + userArrayBottom);                  
     main.innerHTML = userArrayTop +userRows+ userArrayBottom;
 }
 
-function showNewPolicyPage(){
+function generatePoliciesPage(resp){
     var main = document.getElementById('mainContent');
 
         var newPolicyPage = ['<form id="newPolicyForm">',
@@ -1254,7 +1254,7 @@ function showNewPolicyPage(){
                                         '<li class="list-group-item col-md-12">',
                                                 '<div class="row">',
                                                         '<h4 class="col-md-2">Category:</h4>',
-                                                        '<h5 class="col-md-10" id="category-newPolicy">',
+                                                        '<h5 class="col-md-10" id="categorynewPolicy">',
                                                                 '<input required type="text" class="form-control has-success has-feedback" name="category-newPolicy" id="category-newPolicy" pattern=".{4,20}"', 
                                                                 'title="Must be between 4 - 20 characters long." placeholder="Category (Required">',
                         '<div id="category-newPolicy-feedback" class="invalid-feedback">',
@@ -1322,5 +1322,54 @@ function showNewPolicyPage(){
                         '</ul>',
                         '</form>'].join("\n");
         
-        main.innerHTML = newPolicyPage;
+        var allPoliciesTop = ['<ul class="nav nav-pills">',
+                        '<li class="nav-item">',
+                                '<a class="nav-link active" data-toggle="pill" href="#myPolicies">My Policies</a>',
+                        '</li>',
+                        '<li class="nav-item">',
+                                '<a class="nav-link" data-toggle="pill" href="#activePolicies">Active Policies</a>',
+                        '</li>',
+                        '<li class="nav-item">',
+                                '<a class="nav-link" data-toggle="pill" href="#newPolicy">New Policy</a>',
+                        '</li>',
+                '</ul>',
+                '<div class="tab-content">',
+                        '<div class="tab-pane active" id="home" role="tabpanel">',
+                                '<div class="list-group" id="mydiv">'].join("\n");
+                            
+          var allPoliciesBottom = ['</div>',
+                        '</div>',
+                        '<div class="tab-pane" id="activePolicies" role="tabpanel"></div>',
+                        '<div class="tab-pane" id="newPolicy" role="tabpanel"></div>',
+                '</div>'].join("\n");  
+            
+         var policyRows = [];
+         for(var i = 0; i < resp.initiative.length; i++){
+             var policyStatus;
+             if (resp.initiative[i].status == "0"){
+                 policyStatus = "Inactive";
+             }else if (resp.initiative[i].status == "1"){
+                 policyStatus = "Active";
+             } else {
+                 policyStatus = "Ended";
+             }
+             policyRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start" id="policyID' + resp.initiative[i].id + '">');
+             policyRows.push('<div class="d-flex w-100 justify-content-between">');
+             policyRows.push('<h5 class="mb-2" id="title-Policy">'+ resp.initiative[i].title +'</h5>');
+             policyRows.push(' <small class="justify-content-between">Status:<p id="status-Policy">' + policyStatus +'</p> </small>');
+             policyRows.push('</div><div class="d-flex w-100 justify-content-between"><div class="justify-content-between row"><h5 class="col-md-6">Category:</h5>');
+             policyRows.push('<h5 class="col-md-6" id="category-Policy">'+ resp.initiative[i].category +'</h5>');
+             policyRows.push('</div><small class="justify-content-between"> <p style="float:right; margin:0;">Expires:</p>');
+             policyRows.push('<p id="expiration-Policy">19/02/2017</p>'+ resp.initiative[i].expiration +'</small>');
+             policyRows.push('</div><div class="d-flex w-100 justify-content-between">');
+             policyRows.push('<p class="mb-1" id="description-Policy">'+  resp.initiative[i].description +'</p>');
+             policyRows.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
+             policyRows.push('<p id="creator-Policy">' + resp.initiative[i].creator + '</p></small>');
+             policyRows.push('</div></a>');
+         }
+        
+        var newPolicyContent = document.getElementById("newPolicy");
+        newPolicyContent.innerHTML = newPolicyPage;
+        main.innerHTML = allPoliciesTop + policyRows + allPoliciesBottom;
 }
+
