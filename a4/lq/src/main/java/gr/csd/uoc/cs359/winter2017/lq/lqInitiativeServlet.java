@@ -70,7 +70,7 @@ public class lqInitiativeServlet extends HttpServlet {
                     }
                     list=InitiativeDB.getInitiatives(curentUser.getUserName());
                 }
-                else if(request.getParameter("poll").equals("my_poll")){
+                else if(request.getParameter("poll").equals("mypolls")){
                     status="all_polls";
                     response.setStatus(200);
                     list=InitiativeDB.getInitiatives(curentUser.getUserName());

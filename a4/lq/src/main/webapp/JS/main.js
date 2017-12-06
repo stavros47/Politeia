@@ -339,7 +339,7 @@ window.addEventListener('load', function () {
             } else if (resp.status == "username_unavailable" || resp.status == "email_unavailable") {
                checkResponse(resp, "register");
 
-            } else if (resp.status == "iniative_failed") {
+            } else if (resp.status == "initiative_failed") {
                 checkResponse(resp, "Policies");
             }
 

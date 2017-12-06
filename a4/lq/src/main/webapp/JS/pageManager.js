@@ -1367,9 +1367,9 @@ function generatePoliciesPage(resp){
              policyRows.push('<p id="creator-Policy">' + resp.initiative[i].creator + '</p></small>');
              policyRows.push('</div></a>');
          }
-        
+        main.innerHTML = allPoliciesTop + policyRows + allPoliciesBottom;
         var newPolicyContent = document.getElementById("newPolicy");
         newPolicyContent.innerHTML = newPolicyPage;
-        main.innerHTML = allPoliciesTop + policyRows + allPoliciesBottom;
+      
 }
 
