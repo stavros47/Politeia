@@ -47,7 +47,7 @@ public class lqInitiativeServlet extends HttpServlet {
     throws ServletException, IOException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-             List<Initiative> list;
+             List<Initiative> list=null;
             String status = "";
             User curentUser= (User)request.getSession(true).getAttribute("user");
             ArrayList < String > invalidFields = null;
@@ -62,15 +62,24 @@ public class lqInitiativeServlet extends HttpServlet {
                         initiative=PollAccessor.createInitiative(request);  
                         status="initiative_success";
                         response.setStatus(200);
+                       
                     }
                     else{
                         status="initiative_failed";
                         response.setStatus(409);
                     }
+                    list=InitiativeDB.getInitiatives(curentUser.getUserName());
                 }
+                else if(request.getParameter("poll").equals("my_poll")){
+                    status="all_polls";
+                    response.setStatus(200);
+                    list=InitiativeDB.getInitiatives(curentUser.getUserName());
+                     System.out.println("this is the list with the initiatives of the user "+ curentUser + " ->>> "+ list);
+                }
+               
             }
-            list=InitiativeDB.getInitiatives(curentUser.getUserName());
-        
+            
+           
             String jsonResponse = initiativeResponse(invalidFields, list, status);
            
             out.print(jsonResponse);

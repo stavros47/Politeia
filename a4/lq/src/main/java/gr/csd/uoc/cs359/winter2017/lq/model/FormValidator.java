@@ -171,6 +171,7 @@ public class FormValidator {
          String description = (String) request.getParameter("description-newPolicy"); 
          String category = (String) request.getParameter("category-newPolicy");
          String title = (String) request.getParameter("title-newPolicy");
+         String expDate= (String)request.getParameter("expiration-newPolicy");
            
         if (description == null || description.trim().isEmpty()){
                  this.invalidFields.add("Emptydescription-newPolicy");
@@ -180,6 +181,9 @@ public class FormValidator {
          }
         if (title == null || title.trim().isEmpty()){
                  this.invalidFields.add("Emptytitle-newPolicy");
+        }
+        if (expDate == null || title.trim().isEmpty()){
+                 this.invalidFields.add("Emptyexpiration-newPolicy");
         }
         
         return this.invalidFields;
