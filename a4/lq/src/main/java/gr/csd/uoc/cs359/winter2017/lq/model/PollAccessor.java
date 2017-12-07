@@ -4,6 +4,7 @@ import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -102,5 +103,31 @@ public class PollAccessor {
             Logger.getLogger(PollAccessor.class.getName()).log(Level.SEVERE, null, ex);
         }
           return null;
-     }
+    }
+
+    public static void endExpiredPolicies() {
+        Date today = new Date();
+        try {
+            List<Initiative> activeInitiatives = InitiativeDB.getInitiativesWithStatus(1);
+            int count = 0;
+            for (Initiative iterator : activeInitiatives) {
+
+                if (iterator.getExpires() != null) {
+                    count += 1;
+                    if (iterator.getExpires().getTime() <= today.getTime()) {
+                        iterator.setStatus(2);
+                        InitiativeDB.updateInitiative(iterator);
+                        System.out.println("New:" + iterator);
+
+                    }
+                }
+
+            }
+            System.out.println("Count:" + count);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PollAccessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 }
