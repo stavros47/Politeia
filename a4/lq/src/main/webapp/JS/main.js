@@ -1,6 +1,6 @@
     "use strict";
 
-window.addEventListener('load', function () {
+
 
     //Flags to use in checking errors
     var passwordError = false;
@@ -23,15 +23,7 @@ window.addEventListener('load', function () {
     }
     var elementsArray = [];
 
-    function checkSession() {
-        console.log("choosing View");
-        let data = new FormData();
-        data.append("button", "checkSession");
-        var url = 'http://localhost:8084/lq/userServlet';
-        if (data) {
-            sendToServer('POST', url, data);
-        }
-    }
+    
 
 
     function optionalElementsToArray() {
@@ -319,6 +311,7 @@ window.addEventListener('load', function () {
             if (resp.status == "all_polls" || resp.status == "initiative_success" ){
                 generatePoliciesPage(resp);
                 setNewPolicyPageListeners();
+             
             }
 
         } else if (reqObj.status === 409) {
@@ -351,7 +344,7 @@ window.addEventListener('load', function () {
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 var resp;
-                console.log(this.response);
+                //console.log(this.response);
                 if (this.response) {
                     resp = JSON.parse(this.response);
                     handleResponse(resp, this);
@@ -721,7 +714,7 @@ window.addEventListener('load', function () {
         document.getElementById('edit').addEventListener('click',editUserInfoRequest);
         document.getElementById('showUsers').addEventListener('click',showUsersRequest);
         document.getElementById("username-login").addEventListener('click',UserHome);
-        document.getElementById('allPolicies').addEventListener('click', createNewPolicyPage);
+        document.getElementById('userPolicies').addEventListener('click', createNewPolicyPage);
     }
 
     function setUpdatePageEventListeners(){
@@ -746,8 +739,9 @@ window.addEventListener('load', function () {
     function setNewPolicyPageListeners(){
         document.getElementById('createNewPolicy').addEventListener('click', submitNewPolicy);
         document.getElementById("cancelNewPolicy").addEventListener('click', UserHome);
-    }
+    }    
     
+   
     function LoginForm(){
         showLoginPage();
         setLoginPageEventListeners();
@@ -757,6 +751,17 @@ window.addEventListener('load', function () {
         cancelButtonRequest();
     }
     
+window.addEventListener('load', function () {
+    
+    function checkSession() {
+        console.log("choosing View");
+        let data = new FormData();
+        data.append("button", "checkSession");
+        var url = 'http://localhost:8084/lq/userServlet';
+        if (data) {
+            sendToServer('POST', url, data);
+        }
+    }
     checkSession();
     console.log("main load");
 });

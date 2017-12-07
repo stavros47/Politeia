@@ -27,6 +27,22 @@ h1 {
     color: #f67519;
     font-size: 3em;
 }
+
+.redClass {
+    color: red;
+    font-weight: 700;
+}
+
+.greenClass {
+    color: green;
+    font-weight: 700;
+    
+}
+
+.cyanClass {
+    color: cyan;
+    font-weight: 700;
+}
 /* 
 #InputEmail:valid{
     border: 2px #3c763d solid;

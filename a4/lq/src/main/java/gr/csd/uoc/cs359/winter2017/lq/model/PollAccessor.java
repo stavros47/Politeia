@@ -4,13 +4,9 @@ import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -26,7 +22,7 @@ public class PollAccessor {
             int status=Integer.parseInt(request.getParameter("status-newPolicy"));
             String description=request.getParameter("description-newPolicy");
             String expiration=request.getParameter("expiration-newPolicy");
-            
+
             
             Date expDate=new SimpleDateFormat("yyyy-MM-dd").parse(expiration);
             
@@ -41,7 +37,7 @@ public class PollAccessor {
                 initiative.setStatus(status);
                 initiative.setExpires(expDate);
                 InitiativeDB.addInitiative(initiative);
-                System.out.println("----------------------------------------------------------------------- " + initiative);
+                System.out.println("Initiative: " + initiative);
             }
             else {
                 System.out.println("No session found.");

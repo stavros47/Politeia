@@ -632,7 +632,7 @@ function showUserPage() {
                 '<input id="SignOut" type="button" style="float:right;" class="btn btn-secondary" value="Sign out" />',
                 '<input id="edit" type="button" style="float:right;" class="btn btn-primary" value="Edit Info" />',
                 '<input id="showUsers" type="button" style="float:right;" class="btn btn-primary" value="View Users" />',
-                '<input id="allPolicies" type="button" style="float:right;" class="btn btn-primary" value="Policies" />',
+                '<input id="userPolicies" type="button" style="float:right;" class="btn btn-primary" value="Policies" />',
                 '</div>',
                 '</div>'
         ].join("");
@@ -1326,7 +1326,7 @@ function generatePoliciesPage(resp){
                                 '<a class="nav-link active" data-toggle="pill" href="#myPolicies">My Policies</a>',
                         '</li>',
                         '<li class="nav-item">',
-                                '<a class="nav-link" data-toggle="pill" href="#activePolicies">All Policies</a>',
+                                '<a class="nav-link" data-toggle="pill" href="#allPolicies">All Policies</a>',
                         '</li>',
                         '<li class="nav-item">',
                                 '<a class="nav-link" data-toggle="pill" href="#newPolicy">New Policy</a>',
@@ -1345,35 +1345,48 @@ function generatePoliciesPage(resp){
          var policyRows = [];
          for(var i = 0; i < resp.initiative.length; i++){
              var policyStatus;
+             var colorClass;
              if (resp.initiative[i].status == "0"){
+                 colorClass = "cyanClass"
                  policyStatus = "Inactive";
              }else if (resp.initiative[i].status == "1"){
+                 colorClass = "greenClass"
                  policyStatus = "Active";
              } else {
+                 colorClass = "redClass"
                  policyStatus = "Ended";
              }
-             policyRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start with-margin" id="policyID' + resp.initiative[i].id + '">');
+             policyRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + resp.initiative[i].id + '">');
              policyRows.push('<div class="row">');
              policyRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">'+ resp.initiative[i].title +'</h5> <div class="col-md-3">');
-             policyRows.push('<small style="float:right">Status:<p id="status-Policy">' + policyStatus +'</p></small></div></div>');
+             policyRows.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="'+colorClass+'">' + policyStatus +'</p></small></div></div>');
              policyRows.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
              policyRows.push('<div class="col-md-1"></div>');
              policyRows.push('<h5 class="col-md-10" id="category-Policy">'+ resp.initiative[i].category +'</h5></div></div>');
-             policyRows.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="float:right; margin-bottom:0;">Expires:</p>');
-             policyRows.push('<p id="expiration-Policy">'+ resp.initiative[i].expiration +'</p></small></div></div>');
+             policyRows.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
+             policyRows.push('<p id="expiration-Policy" style="float:right"><strong>'+ resp.initiative[i].expires +'</strong></p></small></div></div>');
              policyRows.push('<div class="d-flex w-100 justify-content-between">');
              policyRows.push('<p class="mb-1" id="description-Policy">'+  resp.initiative[i].description +'</p>');
              policyRows.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
-             policyRows.push('<p id="creator-Policy">' + resp.initiative[i].creator + '</p></small>');
+             policyRows.push('<p id="creator-Policy"><strong>' + resp.initiative[i].creator + '</strong></p></small>');
              policyRows.push('</div></a>');
          }
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
+       
+    for (var i = 0 ; i < resp.initiative.length; i++){
+            let element = document.getElementById("policyID" + resp.initiative[i].id);
+            let id = element.id;
+        element.addEventListener('click', function() {
+               showEditPolicy(id);
+           
+            });
+        }
         var newPolicyContent = document.getElementById("newPolicy");
         newPolicyContent.innerHTML = newPolicyPage;
       
 }
 
-function showEditPolicy (){
+function showEditPolicy (policyId){
      var main = document.getElementById('mainContent');
 
         var editPolicyPage = ['<form id="editPolicyForm">',
@@ -1464,5 +1477,24 @@ function showEditPolicy (){
                         '</div>',
                         '</ul>',
                         '</form>'].join("");
+                    
+                    main.innerHTML = editPolicyPage;
+                    
+                    document.getElementById('updatePolicy').addEventListener('click', function (){
+                        let data = new FormData();
+                        data = collectFormData("editPolicyForm");
+                        data.append("poll", "update");
+                        data.append("policyId",policyId);
+                        console.log("Update Policy request");
+                        var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+                        if (data) {
+                            sendToServer('POST', url, data);
+                        }                        
+                    });
+                    
+                        document.getElementById("cancelPolicy").addEventListener('click', createNewPolicyPage);
+                    
+                    
+              
 }
 
