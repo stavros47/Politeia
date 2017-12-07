@@ -116,10 +116,6 @@ public class Initiative implements Serializable {
         return sdfDate.format(expires);
     }
 
-    /**
-     *
-     * @param expires
-     */
     public void setExpires(Date expires) {
         this.expires = expires;
     }

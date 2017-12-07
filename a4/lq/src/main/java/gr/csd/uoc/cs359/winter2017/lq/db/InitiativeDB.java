@@ -248,6 +248,7 @@ public class InitiativeDB {
             ResultSet res = stmtIns.getResultSet();
 
             if (res.next() == true) {
+                initiative.setId(res.getInt("ID"));
                 initiative.setCreator(res.getString("creatorID"));
                 initiative.setTitle(res.getString("title"));
                 initiative.setCategory(res.getString("category"));
