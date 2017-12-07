@@ -104,11 +104,12 @@ public class ExampleAPI {
         System.out.println(vote);
         VoteDB.addVote(vote);
 
-        vote.setVote(true, true);
+        vote.setVote(false, true);
         VoteDB.updateVote(vote);
+        System.out.println(vote);
 
-        // Get upvotes
-        List<Vote> votes = VoteDB.getVotesWithStatus(1);
+        // Get upvotes from users (i.e. non delegators)
+        List<Vote> votes = VoteDB.getVotedBy(1);
         i = 0;
         for (Vote current : votes) {
             System.out.println("vote:" + i++);

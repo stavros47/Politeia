@@ -46,9 +46,9 @@ public class VoteDB {
             while (res.next() == true) {
                 Vote vote = new Vote();
                 vote.setId(res.getInt("id"));
-                vote.setUser(res.getString("user"));
-                vote.setDelegator(res.getString("delegator"));
-                vote.setVote(res.getBoolean("vote"), res.getBoolean("votedBy"));
+                vote.setUser(res.getString("userID"));
+                vote.setDelegator(res.getString("delegatorID"));
+                vote.setVote(res.getInt("vote") == 1, res.getInt("votedBy") == 1);
                 vote.setInitiativeID(res.getInt("initiativeID"));
                 vote.setCreated(res.getTimestamp("created"));
                 vote.setModified(res.getTimestamp("updated"));
@@ -93,9 +93,9 @@ public class VoteDB {
             while (res.next() == true) {
                 Vote vote = new Vote();
                 vote.setId(res.getInt("id"));
-                vote.setUser(res.getString("user"));
-                vote.setDelegator(res.getString("delegator"));
-                vote.setVote(res.getBoolean("vote"), res.getBoolean("votedBy"));
+                vote.setUser(res.getString("userID"));
+                vote.setDelegator(res.getString("delegatorID"));
+                vote.setVote(res.getInt("vote") == 1, res.getInt("votedBy") == 1);
                 vote.setInitiativeID(res.getInt("initiativeID"));
                 vote.setCreated(res.getTimestamp("created"));
                 vote.setModified(res.getTimestamp("updated"));
@@ -115,13 +115,13 @@ public class VoteDB {
     }
 
     /**
-     * Get initiatives with status
-     *
-     * @param status
+     * Get votes voted by
+       *
+     * @param status, 0 for delegators, 1 for users
      * @return
      * @throws ClassNotFoundException
      */
-    public static List<Vote> getVotesWithStatus(int status) throws ClassNotFoundException {
+    public static List<Vote> getVotedBy(int status) throws ClassNotFoundException {
         List<Vote> votes = new ArrayList<>();
 
         try {
@@ -131,7 +131,7 @@ public class VoteDB {
 
             insQuery.append("SELECT * FROM votes ")
                     .append(" WHERE ")
-                    .append(" vote = ").append("'").append(status).append("';");
+                    .append(" votedBy = ").append("'").append(status).append("';");
 
             stmt.execute(insQuery.toString());
 
@@ -142,7 +142,7 @@ public class VoteDB {
                 vote.setId(res.getInt("id"));
                 vote.setUser(res.getString("userID"));
                 vote.setDelegator(res.getString("delegatorID"));
-                vote.setVote(res.getBoolean("vote"), res.getBoolean("votedBy"));
+                vote.setVote(res.getInt("vote") == 1, res.getInt("votedBy") == 1);
                 vote.setInitiativeID(res.getInt("initiativeID"));
                 vote.setCreated(res.getTimestamp("created"));
                 vote.setModified(res.getTimestamp("updated"));
@@ -245,7 +245,7 @@ public class VoteDB {
             while (res.next() == true) {
                 vote.setUser(res.getString("userID"));
                 vote.setDelegator(res.getString("delegatorID"));
-                vote.setVote(res.getBoolean("vote"), res.getBoolean("votedBy"));
+                vote.setVote(res.getInt("vote") == 1, res.getInt("votedBy") == 1);
                 vote.setCreated(res.getTimestamp("created"));
                 vote.setModified(res.getTimestamp("updated"));
             }

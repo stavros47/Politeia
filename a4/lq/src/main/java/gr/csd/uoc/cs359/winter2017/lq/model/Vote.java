@@ -18,19 +18,11 @@ public class Vote implements Serializable {
     private int id;             // unique, set by db
     private String user;        // foreign key to username
     private String delegator;   // foreign key to username
-    private boolean vote;       // false for user downvote, 1 for user upvote
-    private boolean votedBy;    // false by delegator, true by user
+    private boolean vote;       // 0 for user downvote, 1 for user upvote
+    private boolean votedBy;    // 0 by delegator, 1 by user
     private int initiativeID;   // initiativeID
     private Date created;       // set by db
     private Date modified;      // set by db
-
-    public int getInitiativeID() {
-        return initiativeID;
-    }
-
-    public void setInitiativeID(int initiativeID) {
-        this.initiativeID = initiativeID;
-    }
 
     /**
      * Default Constructor
@@ -84,6 +76,14 @@ public class Vote implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getInitiativeID() {
+        return initiativeID;
+    }
+
+    public void setInitiativeID(int initiativeID) {
+        this.initiativeID = initiativeID;
     }
 
     public String getCreatedAsString() {
@@ -146,8 +146,6 @@ public class Vote implements Serializable {
     public void setVote(boolean vote, boolean votedBy) {
         // Do not allow delegators override user votes
         if (this.votedBy == true && votedBy == false) {
-            return; // Do nothing
-
         } else {
             this.vote = vote;
             this.votedBy = votedBy;
