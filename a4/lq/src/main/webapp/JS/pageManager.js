@@ -632,7 +632,7 @@ function showUserPage() {
                 '<input id="SignOut" type="button" style="float:right;" class="btn btn-secondary" value="Sign out" />',
                 '<input id="edit" type="button" style="float:right;" class="btn btn-primary" value="Edit Info" />',
                 '<input id="showUsers" type="button" style="float:right;" class="btn btn-primary" value="View Users" />',
-                '<input id="allPolicies" type="button" style="float:right;" class="btn btn-primary" value="Policies" />',
+                '<input id="userPolicies" type="button" style="float:right;" class="btn btn-primary" value="Policies" />',
                 '</div>',
                 '</div>'
         ].join("");
@@ -1289,8 +1289,7 @@ function generatePoliciesPage(resp){
                         '<input required type="date" class="form-control" name="expiration-newPolicy" id="expiration-newPolicy" title="Date format must be: DD/MM/YYYY">',
                         '<div id="expiration-newPolicy-feedback" class="invalid-feedback">',
                         'Invalid input -',                        
-                        '</h6>',                     
-                        
+                        '</h6>',                       
                          '</div>',                             
                                 '</div>',                                                                                 
                         '<div class="row">',
@@ -1327,7 +1326,7 @@ function generatePoliciesPage(resp){
                                 '<a class="nav-link active" data-toggle="pill" href="#myPolicies">My Policies</a>',
                         '</li>',
                         '<li class="nav-item">',
-                                '<a class="nav-link" data-toggle="pill" href="#activePolicies">Active Policies</a>',
+                                '<a class="nav-link" data-toggle="pill" href="#allPolicies">All Policies</a>',
                         '</li>',
                         '<li class="nav-item">',
                                 '<a class="nav-link" data-toggle="pill" href="#newPolicy">New Policy</a>',
@@ -1339,38 +1338,166 @@ function generatePoliciesPage(resp){
                             
           var allPoliciesBottom = ['</div>',
                         '</div>',
-                        '<div class="tab-pane" id="activePolicies" role="tabpanel"></div>',
+                        '<div class="tab-pane" id="allPolicies" role="tabpanel"></div>',
                         '<div class="tab-pane" id="newPolicy" role="tabpanel"></div>',
                 '</div>'].join("");  
             
          var policyRows = [];
          for(var i = 0; i < resp.initiative.length; i++){
              var policyStatus;
+             var colorClass;
              if (resp.initiative[i].status == "0"){
+                 colorClass = "cyanClass"
                  policyStatus = "Inactive";
              }else if (resp.initiative[i].status == "1"){
+                 colorClass = "greenClass"
                  policyStatus = "Active";
              } else {
+                 colorClass = "redClass"
                  policyStatus = "Ended";
              }
-             policyRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start with-margin" id="policyID' + resp.initiative[i].id + '">');
+             policyRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + resp.initiative[i].id + '">');
              policyRows.push('<div class="row">');
              policyRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">'+ resp.initiative[i].title +'</h5> <div class="col-md-3">');
-             policyRows.push('<small style="float:right">Status:<p id="status-Policy">' + policyStatus +'</p></small></div></div>');
+             policyRows.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="'+colorClass+'">' + policyStatus +'</p></small></div></div>');
              policyRows.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
              policyRows.push('<div class="col-md-1"></div>');
              policyRows.push('<h5 class="col-md-10" id="category-Policy">'+ resp.initiative[i].category +'</h5></div></div>');
-             policyRows.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="float:right; margin-bottom:0;">Expires:</p>');
-             policyRows.push('<p id="expiration-Policy">'+ resp.initiative[i].expiration +'</p></small></div></div>');
+             policyRows.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
+             policyRows.push('<p id="expiration-Policy" style="float:right"><strong>'+ resp.initiative[i].expires +'</strong></p></small></div></div>');
              policyRows.push('<div class="d-flex w-100 justify-content-between">');
              policyRows.push('<p class="mb-1" id="description-Policy">'+  resp.initiative[i].description +'</p>');
              policyRows.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
-             policyRows.push('<p id="creator-Policy">' + resp.initiative[i].creator + '</p></small>');
+             policyRows.push('<p id="creator-Policy"><strong>' + resp.initiative[i].creator + '</strong></p></small>');
              policyRows.push('</div></a>');
          }
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
-        var newPolicyContent = document.getElementById("newPolicy");
-        newPolicyContent.innerHTML = newPolicyPage;
-      
+       
+    for (var i = 0 ; i < resp.initiative.length; i++){
+            let element = document.getElementById("policyID" + resp.initiative[i].id);
+            let id = element.id;
+            let status = resp.initiative[i].status;
+        element.addEventListener('click', function() {
+            if (status == "0"){
+                showEditPolicy(id);
+            }
+           
+        });
+    }
+    var newPolicyContent = document.getElementById("newPolicy");
+    newPolicyContent.innerHTML = newPolicyPage;
+
+}
+
+function showEditPolicy (policyId){
+     var main = document.getElementById('mainContent');
+
+        var editPolicyPage = ['<form id="editPolicyForm">',
+                        '<ul class="list-group user-info">',
+                                '<div class="row">',
+                                        '<li class="list-group-item active col-md-12"><h6>Edit Policy</h6></li>',
+                                '</div>',       
+                                '<div class="row">',
+                                        '<li class="list-group-item col-md-12">',
+                                                '<div class="row">',
+                                                        '<h4 class="col-md-1">Title:</h4>',
+                                                        '<h5 class="col-md-11" id="titlePolicy">',
+                                                                '<input required type="text" class="form-control has-success has-feedback" name="title-editPolicy" id="title-editPolicy" pattern=".{1,20}"',
+                                                                'title="Cannot be Longer than 20 characters" placeholder="Title (Required)">',
+                        '<div id="title-newPolicy-feedback" class="invalid-feedback">',
+                        'Invalid input - </div>',
+                                                        '</h5>',
+                                                '</div>',                                               
+                                       '</li>',                                        
+                                 '</div>',  
+                                '<div class="row">',                               
+                                        '<li class="list-group-item col-md-12">',
+                                                '<div class="row">',
+                                                        '<h4 class="col-md-2">Category:</h4>',
+                                                        '<h5 class="col-md-10" id="categoryEditPolicy">',
+                                                                '<input required type="text" class="form-control has-success has-feedback" name="category-editPolicy" id="category-editPolicy" pattern=".{4,20}"', 
+                                                                'title="Must be between 4 - 20 characters long." placeholder="Category (Required">',
+                        '<div id="category-newPolicy-feedback" class="invalid-feedback">',
+                        'Invalid input - </div>',
+                                                        '</h5>',
+                                                '</div>',
+                                        '</li>',
+                                '</div>',
+                        
+                               '<div class="row">',
+                                        '<li class="list-group-item col-md-6">',
+                                                '<div class="row">',
+                                                        '<h4 class="col-md-4">Status:</h4>',
+                                                        '<h6 class="col-md-8" id="status-editPolicy">',
+                                                                '<div class="form-check form-check-inline">',
+                                                                        '<label class="form-check-label">',
+                                                                                '<input class="form-check-input" type="radio" name="status-editPolicy" id="inactivePolicy" value="0" checked> Inactive',
+                                                                        '</label>',
+                                                                '</div>',
+                                                                '<div class="form-check form-check-inline">',
+                                                                        '<label class="form-check-label">',
+                                                                                '<input class="form-check-input" type="radio" name="status-editPolicy" id="activePolicy" value="1"> Active',
+                                                                        '</label>',
+                                                               '</div>',                                                                
+                                                        '</h6>',
+                                                '</div>',
+                                        '</li>',
+                                        '<li class="list-group-item col-md-6">',
+                        '<div class="row">',
+                        '<h5 class="col-md-4">Expiration Date:</h5>',
+                        '<h6 class="col-md-8" id="expirationEditPolicy">',                       
+                        '<input required type="date" class="form-control" name="expiration-editPolicy" id="expiration-editPolicy" title="Date format must be: DD/MM/YYYY">',
+                        '<div id="expiration-newPolicy-feedback" class="invalid-feedback">',
+                        'Invalid input -',                        
+                        '</h6>',                       
+                         '</div>',                             
+                                '</div>',                                                                                 
+                        '<div class="row">',
+                        '<li class="list-group-item col-md-12">',
+                        '<div class="row">',
+                        '<h4 class="col-md-2">Description:</h4>',
+                        '<h6 class="col-md-10" id="descriptionEditPolicy">',
+                        '<textarea class="form-control has-success has-feedback"  name="description-editPolicy" id="description-editPolicy" rows="3" maxlength="200"',
+                        'placeholder="Policy Initiative Description (Required)"></textarea>',
+                        '<div id="description-newPolicy-feedback" class="invalid-feedback">',
+                        'Invalid input -',
+                        '</div>',
+                        '</h6>',
+                        '</div>',
+                        '</li>',
+                        '</div>',                       
+                        '<div class="row">',
+                        '<li class="list-group-item col-md-12">',
+                        '<div class="row">',
+                        '<div class="col-md-4"></div>',
+                        '<div class="col-md-4"> </div>',
+                        '<div class="col-md-4">',
+                        '<input id="updatePolicy" type="button" style="float:right;" class="btn btn-primary" value="Update Policy" />',
+                        '<input id="cancelPolicy" type="button" style="float:right;" class="btn btn-secondary" value="Cancel" />',
+                        '</div>',
+                        '</div>',
+                        '</li>',
+                        '</div>',
+                        '</ul>',
+                        '</form>'].join("");
+                    
+                    main.innerHTML = editPolicyPage;
+                    
+                    document.getElementById('updatePolicy').addEventListener('click', function (){
+                        let data = new FormData();
+                        data = collectFormData("editPolicyForm");
+                        data.append("poll", "update");
+                        data.append("policyId",policyId);
+                        console.log("Update Policy request");
+                        var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+                        if (data) {
+                            sendToServer('POST', url, data);
+                        }                        
+                    });
+                    
+                        document.getElementById("cancelPolicy").addEventListener('click', createNewPolicyPage);
+                    
+                    
+              
 }
 
