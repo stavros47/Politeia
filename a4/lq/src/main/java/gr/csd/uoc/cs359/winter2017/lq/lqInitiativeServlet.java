@@ -69,7 +69,21 @@ public class lqInitiativeServlet extends HttpServlet {
                     status="all_polls";
                     response.setStatus(200);
                     list=InitiativeDB.getInitiatives(curentUser.getUserName());
-                     System.out.println("this is the list with the initiatives of the user "+ curentUser + " ->>> "+ list);
+                     System.out.println("All initiatives of the user "+ curentUser.getUserName()+ "----->" + list);
+                }
+                else if (request.getParameter("poll").equals("active_polls")){
+                    status="active_polls";
+                    response.setStatus(200);
+                    list=InitiativeDB.getInitiativesWithStatus(1);
+                    System.out.println("All active initiatives --->" + list);
+                    
+                }
+                else if (request.getParameter("poll").equals("inactive_polls")){
+                    status="inactive_polls";
+                    response.setStatus(200);
+                    list=InitiativeDB.getInitiativesWithStatus(0);
+                    System.out.println("All inactive initiatives --->" + list);
+                
                 }
                
             }
