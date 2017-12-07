@@ -1376,14 +1376,17 @@ function generatePoliciesPage(resp){
     for (var i = 0 ; i < resp.initiative.length; i++){
             let element = document.getElementById("policyID" + resp.initiative[i].id);
             let id = element.id;
+            let status = resp.initiative[i].status;
         element.addEventListener('click', function() {
-               showEditPolicy(id);
+            if (status == "0"){
+                showEditPolicy(id);
+            }
            
-            });
-        }
-        var newPolicyContent = document.getElementById("newPolicy");
-        newPolicyContent.innerHTML = newPolicyPage;
-      
+        });
+    }
+    var newPolicyContent = document.getElementById("newPolicy");
+    newPolicyContent.innerHTML = newPolicyPage;
+
 }
 
 function showEditPolicy (policyId){
