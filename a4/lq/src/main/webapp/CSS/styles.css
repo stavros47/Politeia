@@ -29,18 +29,18 @@ h1 {
 }
 
 .redClass {
-    color: red;
+    color: #D50000;
     font-weight: 700;
 }
 
 .greenClass {
-    color: green;
+    color: #33691E;
     font-weight: 700;
     
 }
 
 .cyanClass {
-    color: cyan;
+    color: #1565C0;
     font-weight: 700;
 }
 /* 
