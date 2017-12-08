@@ -186,7 +186,10 @@ public class InitiativeDB {
         try {
             Connection con = CS359DB.getConnection();
             StringBuilder insQuery = new StringBuilder();
-
+            Timestamp expireDate = null;
+            if (initiative.getExpires() != null) {
+                expireDate = new Timestamp(initiative.getExpires().getTime());
+            }
             insQuery.append("INSERT INTO ")
                     .append(" initiatives (CREATORID, TITLE, CATEGORY, DESCRIPTION, EXPIRES,"
                             + "STATUS) ")
@@ -195,7 +198,7 @@ public class InitiativeDB {
                     .append("'").append(initiative.getTitle()).append("',")
                     .append("'").append(initiative.getCategory()).append("',")
                     .append("'").append(initiative.getDescription()).append("',")
-                    .append("'").append(initiative.getExpires()).append("',")
+                    .append("'").append(expireDate).append("',")
                     .append("'").append(initiative.getStatus()).append("');");
 
             String generatedColumns[] = {"ID"};
