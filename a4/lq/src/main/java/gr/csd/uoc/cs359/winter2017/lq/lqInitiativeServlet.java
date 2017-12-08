@@ -52,6 +52,7 @@ public class lqInitiativeServlet extends HttpServlet {
             System.out.println("Poll Process");
             
             if (request.getParameter("poll") != null) {
+                 
                  switch (request.getParameter("poll")) {
                      case "new":
                          invalidFields = validator.ValidatePollFields(request);
@@ -71,10 +72,9 @@ public class lqInitiativeServlet extends HttpServlet {
                      case "mypolls":
                          status="my_polls";
                          response.setStatus(200);
-                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          PollAccessor.endExpiredPolicies();
+                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
-
                          break;
                      case "active_polls":
                          status="active_polls";
@@ -89,6 +89,7 @@ public class lqInitiativeServlet extends HttpServlet {
                              initiative=PollAccessor.updateInitiative(request);
                              status="update_success";
                              response.setStatus(200);
+                             PollAccessor.endExpiredPolicies();
                              myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
                              activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          }
