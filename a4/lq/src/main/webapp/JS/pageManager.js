@@ -1364,7 +1364,7 @@ function generatePoliciesPage(resp) {
 
         var allPoliciesBottom = ['</div>',
                 '</div>',
-                '<div class="tab-pane" id="allPolicies" role="tabpanel">' + activeRows + '</div>',
+                '<div class="tab-pane" id="allPolicies" role="tabpanel"></div>',
                 '<div class="tab-pane" id="newPolicy" role="tabpanel"></div>',
                 '</div>'
         ].join("");
@@ -1399,7 +1399,7 @@ function generatePoliciesPage(resp) {
                 policyRows.push('</div></a>');
         }
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
-
+        document.getElementById("allPolicies").innerHTML=activeRows.join("");
         for (var i = 0; i < resp.initiative.length; i++) {
                 let element = document.getElementById("policyID" + resp.initiative[i].id);
                 let id = element.id;
