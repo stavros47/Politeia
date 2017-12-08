@@ -1373,14 +1373,14 @@ function generatePoliciesPage(resp) {
         for (var i = 0; i < resp.initiative.length; i++) {
                 var policyStatus;
                 var colorClass;
-                if (resp.initiative[i].status === "0") {
-                        colorClass = "cyanClass"
+                if (resp.initiative[i].status == "0") {
+                        colorClass = "cyanClass";
                         policyStatus = "Inactive";
-                } else if (resp.initiative[i].status === "1") {
-                        colorClass = "greenClass"
+                } else if (resp.initiative[i].status == "1") {
+                        colorClass = "greenClass";
                         policyStatus = "Active";
                 } else {
-                        colorClass = "redClass"
+                        colorClass = "redClass";
                         policyStatus = "Ended";
                 }
                 policyRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + resp.initiative[i].id + '">');
@@ -1405,7 +1405,7 @@ function generatePoliciesPage(resp) {
                 let id = element.id;
                 let status = resp.initiative[i].status;
                 element.addEventListener('click', function () {
-                        if (status === "0") {
+                        if (status == "0") {
                                 showEditPolicy(id);
                         }
 

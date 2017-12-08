@@ -52,42 +52,53 @@ public class lqInitiativeServlet extends HttpServlet {
             System.out.println("Poll Process");
             
             if (request.getParameter("poll") != null) {
-                if (request.getParameter("poll").equals("new")) {
-                    invalidFields = validator.ValidatePollFields(request);
-                    if (invalidFields.isEmpty()){
-                        initiative=PollAccessor.createInitiative(request);  
-                        status="initiative_success";
-                        response.setStatus(200);
-                       
-                    }
-                    else{
-                        status="initiative_failed";
-                        response.setStatus(409);
-                    }
-                    myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
-                    activePollsList=InitiativeDB.getInitiativesWithStatus(1);
-                }
-                else if(request.getParameter("poll").equals("mypolls")){
-                    status="my_polls";
-                    response.setStatus(200);
-                    myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
-                    activePollsList=InitiativeDB.getInitiativesWithStatus(1);
-                     System.out.println("All initiatives of the user "+ curentUser.getUserName()+ "----->" + myPollsList);
-                }
-                else if (request.getParameter("poll").equals("active_polls")){
-                    status="active_polls";
-                    response.setStatus(200);
-                    activePollsList=InitiativeDB.getInitiativesWithStatus(1);
-                    System.out.println("All active initiatives --->" + activePollsList);
-                    
-                }
-                else if (request.getParameter("poll").equals("inactive_polls")){
-                    status="inactive_polls";
-                    response.setStatus(200);
-                    activePollsList=InitiativeDB.getInitiativesWithStatus(0);
-                    System.out.println("All inactive initiatives --->" + activePollsList);
-                
-                }
+                 switch (request.getParameter("poll")) {
+                     case "new":
+                         invalidFields = validator.ValidatePollFields(request);
+                         if (invalidFields.isEmpty()){
+                             initiative=PollAccessor.createInitiative(request);
+                             status="initiative_success";
+                             response.setStatus(200);
+                             
+                         }
+                         else{
+                             status="initiative_failed";
+                             response.setStatus(409);
+                         }    
+                         myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
+                         activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                         break;
+                     case "mypolls":
+                         status="my_polls";
+                         response.setStatus(200);
+                         myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
+                         activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                        
+                         break;
+                     case "active_polls":
+                         status="active_polls";
+                         response.setStatus(200);
+                         activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                         break;
+                     case "update":
+                         status="update_polls";
+                         response.setStatus(200);
+                         invalidFields = validator.ValidatePollEditFields(request);
+                         if (invalidFields.isEmpty()){
+                             initiative=PollAccessor.updateInitiative(request);
+                             status="update_success";
+                             response.setStatus(200);
+                             myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
+                             activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                         }
+                         else{
+                             status="update_failed";
+                             response.setStatus(409);
+                         }   
+                         break;
+                     default:
+                         break;
+                 }
                
             }
             

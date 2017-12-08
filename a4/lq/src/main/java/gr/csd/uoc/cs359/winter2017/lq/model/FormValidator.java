@@ -169,7 +169,7 @@ public class FormValidator {
     public ArrayList<String> ValidatePollFields (HttpServletRequest request){
         
          String description = (String) request.getParameter("description-newPolicy"); 
-         String category = (String) request.getParameter("category-newPolicy");
+         String category =(String) request.getParameter("category-newPolicy");
          String title = (String) request.getParameter("title-newPolicy");
          String expDate= (String)request.getParameter("expiration-newPolicy");
            
@@ -184,6 +184,28 @@ public class FormValidator {
         }
         if (expDate == null || title.trim().isEmpty()){
                  this.invalidFields.add("Emptyexpiration-newPolicy");
+        }
+        
+        return this.invalidFields;
+    }
+    public ArrayList<String> ValidatePollEditFields (HttpServletRequest request){
+        
+         String description = (String) request.getParameter("description-editPolicy"); 
+         String category =(String) request.getParameter("category-editPolicy");
+         String title = (String) request.getParameter("title-editPolicy");
+         String expDate= (String)request.getParameter("expiration-editPolicy");
+           
+        if (description == null || description.trim().isEmpty()){
+                 this.invalidFields.add("Emptydescription-editPolicy");
+             }
+         if (category == null || category.trim().isEmpty()){
+                 this.invalidFields.add("Emptycategory-editPolicy");
+         }
+        if (title == null || title.trim().isEmpty()){
+                 this.invalidFields.add("Emptytitle-editPolicy");
+        }
+        if (expDate == null || title.trim().isEmpty()){
+                 this.invalidFields.add("Emptyexpiration-editPolicy");
         }
         
         return this.invalidFields;

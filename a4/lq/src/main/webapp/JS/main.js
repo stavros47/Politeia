@@ -308,7 +308,7 @@
                 setUserPageEventListeners();
                 fillPage(resp, "-login");
             }
-            if (resp.status === "my_polls" ||  resp.status === "initiative_success" || resp.status === "active_polls" ){
+            if (resp.status === "my_polls" ||  resp.status === "initiative_success" || resp.status === "update_success" ){
                 generatePoliciesPage(resp);
                 setNewPolicyPageListeners();
              
