@@ -1,7 +1,6 @@
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,8 +57,8 @@ public class PollAccessor {
             String title=request.getParameter("title-editPolicy");
             int status=Integer.parseInt(request.getParameter("status-editPolicy"));
             String description=request.getParameter("description-editPolicy");
-            String expiration=(String)request.getParameter("expiration-editPolicy");
-            Date expDate=(Date)new SimpleDateFormat("yyyy-MM-dd").parse(expiration);
+            String expiration = (String) request.getParameter("expiration-editPolicy");
+
             User user=(User)request.getSession(true).getAttribute("user");
            
             String id = request.getParameter("policyId");
@@ -68,14 +67,31 @@ public class PollAccessor {
             Date date = new Date();
             
              int intid=Integer.parseInt(id);
-             if (user!=null){
-                initiative= InitiativeDB.getInitiative(intid);
-                initiative.setCategory(category);
-                initiative.setDescription(description);
-                initiative.setExpires(expDate);
+            if (user != null) {
+
+                initiative = InitiativeDB.getInitiative(intid);
+
+                if (category != null && !category.isEmpty()) {
+                    initiative.setCategory(category);
+                }
+                if (description != null && !description.isEmpty()) {
+                    initiative.setDescription(description);
+                }
+                if (expiration != null && !expiration.isEmpty()) {
+                    Date expDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expiration);
+                    initiative.setExpires(expDate);
+                }
+
+                if (request.getParameter("status-editPolicy") != null && !request.getParameter("status-editPolicy").isEmpty()) {
+                    initiative.setStatus(status);
+                }
+                if (title != null && !title.isEmpty()) {
+                    initiative.setTitle(title);
+                }
                 initiative.setModified(date);
-                initiative.setTitle(title);
+
                 InitiativeDB.updateInitiative(initiative);
+
             }
             else {
                 System.out.println("No session found.");
