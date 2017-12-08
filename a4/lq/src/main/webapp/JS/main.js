@@ -308,11 +308,13 @@
                 setUserPageEventListeners();
                 fillPage(resp, "-login");
             }
-            if (resp.status == "all_polls" || resp.status == "initiative_success" ){
+            if (resp.status === "my_polls" ||  resp.status === "initiative_success" || resp.status === "active_polls" ){
                 generatePoliciesPage(resp);
                 setNewPolicyPageListeners();
              
             }
+            
+            
 
         } else if (reqObj.status === 409) {
             if (resp.status == "Invalid_login" || resp.status == "user_unknown") {

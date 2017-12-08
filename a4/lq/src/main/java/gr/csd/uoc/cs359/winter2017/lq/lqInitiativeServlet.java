@@ -42,7 +42,8 @@ public class lqInitiativeServlet extends HttpServlet {
     throws ServletException, IOException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-             List<Initiative> list=null;
+             List<Initiative> myPollsList=null;
+             List<Initiative> activePollsList=null;
             String status = "";
             User curentUser= (User)request.getSession(true).getAttribute("user");
             ArrayList < String > invalidFields = null;
@@ -63,33 +64,35 @@ public class lqInitiativeServlet extends HttpServlet {
                         status="initiative_failed";
                         response.setStatus(409);
                     }
-                    list=InitiativeDB.getInitiatives(curentUser.getUserName());
+                    myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
+                    activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                 }
                 else if(request.getParameter("poll").equals("mypolls")){
-                    status="all_polls";
+                    status="my_polls";
                     response.setStatus(200);
-                    list=InitiativeDB.getInitiatives(curentUser.getUserName());
-                     System.out.println("All initiatives of the user "+ curentUser.getUserName()+ "----->" + list);
+                    myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
+                    activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                     System.out.println("All initiatives of the user "+ curentUser.getUserName()+ "----->" + myPollsList);
                 }
                 else if (request.getParameter("poll").equals("active_polls")){
                     status="active_polls";
                     response.setStatus(200);
-                    list=InitiativeDB.getInitiativesWithStatus(1);
-                    System.out.println("All active initiatives --->" + list);
+                    activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                    System.out.println("All active initiatives --->" + activePollsList);
                     
                 }
                 else if (request.getParameter("poll").equals("inactive_polls")){
                     status="inactive_polls";
                     response.setStatus(200);
-                    list=InitiativeDB.getInitiativesWithStatus(0);
-                    System.out.println("All inactive initiatives --->" + list);
+                    activePollsList=InitiativeDB.getInitiativesWithStatus(0);
+                    System.out.println("All inactive initiatives --->" + activePollsList);
                 
                 }
                
             }
             
            
-            String jsonResponse = initiativeResponse(invalidFields, list, status);
+            String jsonResponse = initiativeResponse(invalidFields, myPollsList,activePollsList, status);
            
             out.print(jsonResponse);
            
