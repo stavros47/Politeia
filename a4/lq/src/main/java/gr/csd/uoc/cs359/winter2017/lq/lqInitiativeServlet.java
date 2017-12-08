@@ -46,7 +46,7 @@ public class lqInitiativeServlet extends HttpServlet {
              List<Initiative> activePollsList=null;
             String status = "";
             User curentUser= (User)request.getSession(true).getAttribute("user");
-            ArrayList < String > invalidFields = null;
+            ArrayList< String> invalidFields = new ArrayList<>();
             FormValidator validator = new FormValidator();
             Initiative initiative = null;
             System.out.println("Poll Process");
@@ -83,8 +83,8 @@ public class lqInitiativeServlet extends HttpServlet {
                      case "update":
                          status="update_polls";
                          response.setStatus(200);
-                         invalidFields = validator.ValidatePollEditFields(request);
-                         if (invalidFields.isEmpty()){
+                         //invalidFields = validator.ValidatePollEditFields(request);
+                         if (invalidFields.isEmpty()) {
                              initiative=PollAccessor.updateInitiative(request);
                              status="update_success";
                              response.setStatus(200);
@@ -92,7 +92,7 @@ public class lqInitiativeServlet extends HttpServlet {
                              activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          }
                          else{
-                             status="update_failed";
+                             status = "update_polls_failed";
                              response.setStatus(409);
                          }   
                          break;
