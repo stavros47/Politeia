@@ -243,9 +243,11 @@ public class VoteDB {
             ResultSet res = stmtIns.getResultSet();
 
             while (res.next() == true) {
+                vote.setId(res.getInt("id"));
                 vote.setUser(res.getString("userID"));
                 vote.setDelegator(res.getString("delegatorID"));
                 vote.setVote(res.getInt("vote") == 1, res.getInt("votedBy") == 1);
+                vote.setInitiativeID(res.getInt("initiativeID"));
                 vote.setCreated(res.getTimestamp("created"));
                 vote.setModified(res.getTimestamp("updated"));
             }
