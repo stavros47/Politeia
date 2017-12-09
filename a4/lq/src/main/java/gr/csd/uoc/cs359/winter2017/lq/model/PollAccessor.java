@@ -1,6 +1,7 @@
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +25,9 @@ public class PollAccessor {
             String description=request.getParameter("description-newPolicy");
             String expiration=(String)request.getParameter("expiration-newPolicy");
             String time = request.getParameter("expTime-newPolicy");
-            //expiration=expiration;
+            time =time+ ":00";
+            String newexpiration=expiration+" "+time;
+           
             User user=(User)request.getSession(true).getAttribute("user");
             String creator= user.getUserName();
             if (user!=null){
@@ -34,7 +37,7 @@ public class PollAccessor {
                 initiative.setDescription(description);
                 initiative.setStatus(status);
                 if (expiration != null && !expiration.isEmpty()) {
-                    Date expDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expiration);
+                    Date expDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(newexpiration);
                     initiative.setExpires(expDate);
                 }
                 InitiativeDB.addInitiative(initiative);
