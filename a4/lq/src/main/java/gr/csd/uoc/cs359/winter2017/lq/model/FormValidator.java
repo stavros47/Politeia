@@ -178,7 +178,7 @@ public class FormValidator {
          String expDate= (String)request.getParameter("expiration-newPolicy");
          String status = (String) request.getParameter("status-newPolicy");
          String time = (String) request.getParameter("expTime-newPolicy");
-          
+         String timeregex= "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"; 
          Date expiration=null;
          if (expDate!=null){
          expiration = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expDate);
@@ -200,25 +200,15 @@ public class FormValidator {
                  this.invalidFields.add("expiration-newPolicy");
                 }
          }
-       
-            
-
-         String regex= "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
          if ( time!=null){
-            if (time.matches(regex)){
-            
+            if (time.matches(timeregex)){
+            ;
             }
          }
          else{
               this.invalidFields.add("EmptyexpTime-newPolicy");
          }
 
-            
-        
-    
-        
-                
-        
         return this.invalidFields;
     }
     public ArrayList<String> ValidatePollEditFields (HttpServletRequest request){
@@ -240,7 +230,7 @@ public class FormValidator {
         if (expDate == null || title.trim().isEmpty()){
                  this.invalidFields.add("Emptyexpiration-editPolicy");
         }
-        
+     
         return this.invalidFields;
     }
          
