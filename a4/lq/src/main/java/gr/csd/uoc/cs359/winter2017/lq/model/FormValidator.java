@@ -6,7 +6,10 @@
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.UserDB;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -165,14 +168,20 @@ public class FormValidator {
      *
      * @param request
      * @return
+     * @throws java.text.ParseException
      */
-    public ArrayList<String> ValidatePollFields (HttpServletRequest request){
-        
+    public ArrayList<String> ValidatePollFields (HttpServletRequest request) throws ParseException{
+         Date today = new Date();
          String description = (String) request.getParameter("description-newPolicy"); 
          String category =(String) request.getParameter("category-newPolicy");
          String title = (String) request.getParameter("title-newPolicy");
          String expDate= (String)request.getParameter("expiration-newPolicy");
-           
+         String status = (String) request.getParameter("status-newPolicy");
+         System.out.println("status is " + status);
+         Date expiration=null;
+         if (expDate!=null){
+         expiration = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expDate);
+         }
         if (description == null || description.trim().isEmpty()){
                  this.invalidFields.add("Emptydescription-newPolicy");
              }
@@ -182,9 +191,16 @@ public class FormValidator {
         if (title == null || title.trim().isEmpty()){
                  this.invalidFields.add("Emptytitle-newPolicy");
         }
-        if (expDate == null || title.trim().isEmpty()){
+        if (status.equals("1")){
+                if ( expDate==null){
                  this.invalidFields.add("Emptyexpiration-newPolicy");
+                }
+                else if ( expiration.getTime()<= today.getTime()){
+                 this.invalidFields.add("invalidexpiration-newPolicy");
+                }
+                
         }
+                
         
         return this.invalidFields;
     }

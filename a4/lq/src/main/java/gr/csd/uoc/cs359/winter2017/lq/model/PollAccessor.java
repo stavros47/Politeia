@@ -23,9 +23,7 @@ public class PollAccessor {
             int status=Integer.parseInt(request.getParameter("status-newPolicy"));
             String description=request.getParameter("description-newPolicy");
             String expiration=(String)request.getParameter("expiration-newPolicy");
-            Date expDate=(Date)new SimpleDateFormat("yyyy-MM-dd").parse(expiration);
-            
-            
+         
             User user=(User)request.getSession(true).getAttribute("user");
             String creator= user.getUserName();
             if (user!=null){
@@ -34,7 +32,10 @@ public class PollAccessor {
                 initiative.setCategory(category);
                 initiative.setDescription(description);
                 initiative.setStatus(status);
-                initiative.setExpires(expDate);
+                if (expiration != null && !expiration.isEmpty()) {
+                    Date expDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expiration);
+                    initiative.setExpires(expDate);
+                }
                 InitiativeDB.addInitiative(initiative);
             }
             else {
@@ -113,12 +114,9 @@ public class PollAccessor {
             for (Initiative iterator : activeInitiatives) {
 
                 if (iterator.getExpires() != null) {
-                    count += 1;
                     if (iterator.getExpires().getTime() <= today.getTime()) {
                         iterator.setStatus(2);
                         InitiativeDB.updateInitiative(iterator);
-                        System.out.println("New:" + iterator);
-
                     }
                 }
 
