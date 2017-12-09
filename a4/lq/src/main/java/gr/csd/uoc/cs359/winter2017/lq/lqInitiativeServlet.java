@@ -8,6 +8,7 @@ import gr.csd.uoc.cs359.winter2017.lq.model.PollAccessor;
 import gr.csd.uoc.cs359.winter2017.lq.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,7 +40,7 @@ public class lqInitiativeServlet extends HttpServlet {
      * @throws java.lang.ClassNotFoundException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException, ClassNotFoundException {
+    throws ServletException, IOException, ClassNotFoundException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
              List<Initiative> myPollsList=null;
@@ -52,6 +53,7 @@ public class lqInitiativeServlet extends HttpServlet {
             System.out.println("Poll Process");
             
             if (request.getParameter("poll") != null) {
+                 
                  switch (request.getParameter("poll")) {
                      case "new":
                          invalidFields = validator.ValidatePollFields(request);
@@ -71,10 +73,9 @@ public class lqInitiativeServlet extends HttpServlet {
                      case "mypolls":
                          status="my_polls";
                          response.setStatus(200);
-                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          PollAccessor.endExpiredPolicies();
+                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
-
                          break;
                      case "active_polls":
                          status="active_polls";
@@ -89,6 +90,7 @@ public class lqInitiativeServlet extends HttpServlet {
                              initiative=PollAccessor.updateInitiative(request);
                              status="update_success";
                              response.setStatus(200);
+                             PollAccessor.endExpiredPolicies();
                              myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
                              activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          }
@@ -127,6 +129,8 @@ public class lqInitiativeServlet extends HttpServlet {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(lqInitiativeServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(lqInitiativeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -144,6 +148,8 @@ public class lqInitiativeServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(lqInitiativeServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(lqInitiativeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
