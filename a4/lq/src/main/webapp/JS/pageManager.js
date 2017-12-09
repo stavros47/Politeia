@@ -1294,7 +1294,7 @@ function generatePoliciesPage(resp) {
                         '</h6>',
                         '<h5 class="col-md-2">Time:</h5>',
                         '<h6 class="col-md-4" id="expTimeEditPolicy">',
-                        '<input required type="time" class="form-control" name="expTime-newPolicy" id="expTime-newPolicy" title="">',
+                        '<input required type="time" class="form-control" name="expTime-newPolicy" id="expTime-newPolicy" title="This is not a valid Time format">',
                         '<div id="expTime-newPolicy-feedback" class="invalid-feedback">',
                         'Invalid input -',
                         '</h6>',
@@ -1346,35 +1346,54 @@ function generatePoliciesPage(resp) {
         ].join("");
 
 
+
+
+        function populateInitiative(responseArray){
+                var htmlStringArray = []
+          
+                var policyStatus;
+                var colorClass;
+                if (responseArray.status == "0") {
+                        colorClass = "cyanClass";
+                        policyStatus = "Inactive";
+                } else if (responseArray.status == "1") {
+                        colorClass = "greenClass";
+                        policyStatus = "Active";
+                } else {
+                        colorClass = "redClass";
+                        policyStatus = "Ended";
+                }
+                htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
+                htmlStringArray.push('<div class="row">');               
+                if (responseArray.status == "1") {
+                    htmlStringArray.push('<div class="vote chev col-md-1">');
+                    htmlStringArray.push('<div class="increment up"></div>');
+                    htmlStringArray.push('<div class="increment down"></div>');               
+                    htmlStringArray.push('<div class="count">0</div></div>');
+                    htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
+                    htmlStringArray.push('<div class="col-md-2">');
+                } else {
+                     htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
+                     htmlStringArray.push('<div class="col-md-3">');
+                }                
+                htmlStringArray.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
+                htmlStringArray.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
+                htmlStringArray.push('<div class="col-md-1"></div>');
+                htmlStringArray.push('<h5 class="col-md-10" id="category-Policy"">' + responseArray.category + '</h5></div></div>');
+                htmlStringArray.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
+                htmlStringArray.push('<p id="expiration-Policy" style="float:right"><strong>' + responseArray.expires + '</strong></p></small></div></div>');
+                htmlStringArray.push('<div class="d-flex w-100 justify-content-between">');
+                htmlStringArray.push('<p class="mb-1" id="description-Policy">' + responseArray.description + '</p>');
+                htmlStringArray.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
+                htmlStringArray.push('<p id="creator-Policy"><strong>' + responseArray.creator + '</strong></p></small>');
+                htmlStringArray.push('</div></div>');
+                
+                return htmlStringArray.join("");
+                   
+        }    
         var activeRows = [];
         for (var i = 0; i < resp.activeInitiatives.length; i++) {
-                var colorClass = "greenClass"
-                var policyStatus = "Active";
-
-                activeRows.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="activeInitiatives' + '">');
-                activeRows.push('<div class="row">');
-                   if ( resp.activeInitiatives[i].status == "1") {
-                    activeRows.push('<div class="vote chev col-md-1">');
-                    activeRows.push('<div class="increment up"></div>');
-                    activeRows.push('<div class="increment down"></div>');               
-                    activeRows.push('<div class="count">0</div></div>');
-                    activeRows.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + resp.activeInitiatives[i].title + '</h5>');
-                    activeRows.push('<div class="col-md-2">');
-                } else {
-                     activeRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + resp.activeInitiatives[i].title + '</h5>');
-                     activeRows.push('<div class="col-md-3">');
-                }  
-                activeRows.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
-                activeRows.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
-                activeRows.push('<div class="col-md-1"></div>');
-                activeRows.push('<h5 class="col-md-10" id="category-Policy">' + resp.activeInitiatives[i].category + '</h5></div></div>');
-                activeRows.push('<div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
-                activeRows.push('<p id="expiration-Policy" style="float:right"><strong>' + resp.activeInitiatives[i].expires + '</strong></p></small></div></div>');
-                activeRows.push('<div class="d-flex w-100 justify-content-between">');
-                activeRows.push('<p class="mb-1" id="description-Policy">' + resp.activeInitiatives[i].description + '</p>');
-                activeRows.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
-                activeRows.push('<p id="creator-Policy"><strong>' + resp.activeInitiatives[i].creator + '</strong></p></small>');
-                activeRows.push('</div></div>');
+                activeRows.push(populateInitiative(resp.activeInitiatives[i]));
         }
 
         var allPoliciesBottom = ['</div>',
@@ -1386,45 +1405,12 @@ function generatePoliciesPage(resp) {
 
         var policyRows = [];
         for (var i = 0; i < resp.initiative.length; i++) {
-                var policyStatus;
-                var colorClass;
-                if (resp.initiative[i].status == "0") {
-                        colorClass = "cyanClass";
-                        policyStatus = "Inactive";
-                } else if (resp.initiative[i].status == "1") {
-                        colorClass = "greenClass";
-                        policyStatus = "Active";
-                } else {
-                        colorClass = "redClass";
-                        policyStatus = "Ended";
-                }
-                policyRows.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + resp.initiative[i].id + '">');
-                policyRows.push('<div class="row">');               
-                if ( resp.initiative[i].status == "1") {
-                    policyRows.push('<div class="vote chev col-md-1">');
-                    policyRows.push('<div class="increment up"></div>');
-                    policyRows.push('<div class="increment down"></div>');               
-                    policyRows.push('<div class="count">0</div></div>');
-                    policyRows.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + resp.initiative[i].title + '</h5>');
-                    policyRows.push('<div class="col-md-2">');
-                } else {
-                     policyRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + resp.initiative[i].title + '</h5>');
-                     policyRows.push('<div class="col-md-3">');
-                }                
-                policyRows.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
-                policyRows.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
-                policyRows.push('<div class="col-md-1"></div>');
-                policyRows.push('<h5 class="col-md-10" id="category-Policy"">' + resp.initiative[i].category + '</h5></div></div>');
-                policyRows.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
-                policyRows.push('<p id="expiration-Policy" style="float:right"><strong>' + resp.initiative[i].expires + '</strong></p></small></div></div>');
-                policyRows.push('<div class="d-flex w-100 justify-content-between">');
-                policyRows.push('<p class="mb-1" id="description-Policy">' + resp.initiative[i].description + '</p>');
-                policyRows.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
-                policyRows.push('<p id="creator-Policy"><strong>' + resp.initiative[i].creator + '</strong></p></small>');
-                policyRows.push('</div></div>');
+            policyRows.push(populateInitiative(resp.initiative[i]));
         }
+        
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
         document.getElementById("allPolicies").innerHTML=activeRows.join("");
+        
         for (var i = 0; i < resp.initiative.length; i++) {
                 let element = document.getElementById("policyID" + resp.initiative[i].id);
                 let id = element.id;

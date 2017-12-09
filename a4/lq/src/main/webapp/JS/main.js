@@ -213,6 +213,8 @@
             msg = "Passwords do not match!";
         } else if (validity == "unknown") {
             msg = "We could not find this user - Sign up for a new account to continue!";
+        } else if(validity == "badDate"){
+            msg = "Must be a valid future date!";
         }
 
         if (document.getElementById(elementName + "-feedback") != null) {
@@ -252,6 +254,9 @@
             } else if (resp.fields[i].substring(0, 7) === "unknown"){
                 field = resp.fields[i].slice(7, resp.fields[i].length);
                 showFeedBack(field, "unknown");
+            }else if (resp.fields[i].substring(0, 7) === "badDate"){
+                field = resp.fields[i].slice(7, resp.fields[i].length);
+                showFeedBack(field, "badDate");
             }else {
                 field = resp.fields[i];
                 showFeedBack(field, "invalid");

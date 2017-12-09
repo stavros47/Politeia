@@ -179,10 +179,7 @@ public class FormValidator {
          String status = (String) request.getParameter("status-newPolicy");
          String time = (String) request.getParameter("expTime-newPolicy");
          String timeregex= "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"; 
-         Date expiration=null;
-         if (expDate!=null){
-         expiration = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expDate);
-         }
+
         if (description == null || description.trim().isEmpty()){
                  this.invalidFields.add("Emptydescription-newPolicy");
              }
@@ -193,20 +190,22 @@ public class FormValidator {
                  this.invalidFields.add("Emptytitle-newPolicy");
         }
         if (status.equals("1")){
-                if ( expDate==null){
-                 this.invalidFields.add("expiration-newPolicy");
+            if (expDate == null || expDate.trim().isEmpty()) {
+                this.invalidFields.add("expiration-newPolicy");
+            } else {
+                Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expDate);
+                if (expiration.getTime() <= today.getTime()) {
+                    this.invalidFields.add("badDateexpiration-newPolicy");
                 }
-                else if ( expiration.getTime()<= today.getTime()){
-                 this.invalidFields.add("expiration-newPolicy");
-                }
-         }
-         if ( time!=null){
-            if (time.matches(timeregex)){
-            ;
             }
          }
-         else{
-              this.invalidFields.add("EmptyexpTime-newPolicy");
+        if (time == null || time.trim().isEmpty()) {
+            this.invalidFields.add("EmptyexpTime-newPolicy");
+        } else {
+            if (!time.matches(timeregex)) {
+                this.invalidFields.add("expTime-newPolicy");
+            }
+
          }
 
         return this.invalidFields;
