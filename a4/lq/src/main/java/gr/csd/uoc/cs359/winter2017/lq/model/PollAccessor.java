@@ -23,7 +23,8 @@ public class PollAccessor {
             int status=Integer.parseInt(request.getParameter("status-newPolicy"));
             String description=request.getParameter("description-newPolicy");
             String expiration=(String)request.getParameter("expiration-newPolicy");
-         
+            String time = request.getParameter("expTime-newPolicy");
+            //expiration=expiration;
             User user=(User)request.getSession(true).getAttribute("user");
             String creator= user.getUserName();
             if (user!=null){
