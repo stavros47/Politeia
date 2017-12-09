@@ -1351,9 +1351,19 @@ function generatePoliciesPage(resp) {
                 var colorClass = "greenClass"
                 var policyStatus = "Active";
 
-                activeRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="activeInitiatives' + '">');
+                activeRows.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="activeInitiatives' + '">');
                 activeRows.push('<div class="row">');
-                activeRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + resp.activeInitiatives[i].title + '</h5> <div class="col-md-3">');
+                   if ( resp.activeInitiatives[i].status == "1") {
+                    activeRows.push('<div class="vote chev col-md-1">');
+                    activeRows.push('<div class="increment up"></div>');
+                    activeRows.push('<div class="increment down"></div>');               
+                    activeRows.push('<div class="count">0</div></div>');
+                    activeRows.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + resp.activeInitiatives[i].title + '</h5>');
+                    activeRows.push('<div class="col-md-2">');
+                } else {
+                     activeRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + resp.activeInitiatives[i].title + '</h5>');
+                     activeRows.push('<div class="col-md-3">');
+                }  
                 activeRows.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
                 activeRows.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
                 activeRows.push('<div class="col-md-1"></div>');
@@ -1364,7 +1374,7 @@ function generatePoliciesPage(resp) {
                 activeRows.push('<p class="mb-1" id="description-Policy">' + resp.activeInitiatives[i].description + '</p>');
                 activeRows.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
                 activeRows.push('<p id="creator-Policy"><strong>' + resp.activeInitiatives[i].creator + '</strong></p></small>');
-                activeRows.push('</div></a>');
+                activeRows.push('</div></div>');
         }
 
         var allPoliciesBottom = ['</div>',
@@ -1388,20 +1398,30 @@ function generatePoliciesPage(resp) {
                         colorClass = "redClass";
                         policyStatus = "Ended";
                 }
-                policyRows.push('<a href="#" class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + resp.initiative[i].id + '">');
-                policyRows.push('<div class="row">');
-                policyRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + resp.initiative[i].title + '</h5> <div class="col-md-3">');
+                policyRows.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + resp.initiative[i].id + '">');
+                policyRows.push('<div class="row">');               
+                if ( resp.initiative[i].status == "1") {
+                    policyRows.push('<div class="vote chev col-md-1">');
+                    policyRows.push('<div class="increment up"></div>');
+                    policyRows.push('<div class="increment down"></div>');               
+                    policyRows.push('<div class="count">0</div></div>');
+                    policyRows.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + resp.initiative[i].title + '</h5>');
+                    policyRows.push('<div class="col-md-2">');
+                } else {
+                     policyRows.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + resp.initiative[i].title + '</h5>');
+                     policyRows.push('<div class="col-md-3">');
+                }                
                 policyRows.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
                 policyRows.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
                 policyRows.push('<div class="col-md-1"></div>');
-                policyRows.push('<h5 class="col-md-10" id="category-Policy">' + resp.initiative[i].category + '</h5></div></div>');
+                policyRows.push('<h5 class="col-md-10" id="category-Policy"">' + resp.initiative[i].category + '</h5></div></div>');
                 policyRows.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
                 policyRows.push('<p id="expiration-Policy" style="float:right"><strong>' + resp.initiative[i].expires + '</strong></p></small></div></div>');
                 policyRows.push('<div class="d-flex w-100 justify-content-between">');
                 policyRows.push('<p class="mb-1" id="description-Policy">' + resp.initiative[i].description + '</p>');
                 policyRows.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
                 policyRows.push('<p id="creator-Policy"><strong>' + resp.initiative[i].creator + '</strong></p></small>');
-                policyRows.push('</div></a>');
+                policyRows.push('</div></div>');
         }
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
         document.getElementById("allPolicies").innerHTML=activeRows.join("");

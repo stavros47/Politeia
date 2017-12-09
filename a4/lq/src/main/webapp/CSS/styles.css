@@ -43,6 +43,14 @@ h1 {
     color: #1565C0;
     font-weight: 700;
 }
+.policy {
+    cursor:pointer;
+}
+
+.policy:hover {
+    background-color: #ebf0f6;
+}
+
 /* 
 #InputEmail:valid{
     border: 2px #3c763d solid;
@@ -52,6 +60,71 @@ InputUsername:valid{
     border: 2px #3c763d solid;
     
 } */
+/*
+Upvote Downvote CSS
+*/
+
+/* try 50% */
+.vote {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  font-family: "Noto Sans";
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+
+}
+
+.increment {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 0;
+          flex: 1 0 0;
+  text-align: center;
+  opacity: .5;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.increment.up {
+  background: #4BC35F;
+  height: 50%;
+
+}
+.increment.down {
+  background: #C15044;
+  height: 50%;
+}
+.increment:hover {
+  opacity: 1;
+}
+
+.count {
+  position: absolute;
+  top: 0;
+  left: 20%;
+  border-radius: 0.5rem;
+  margin: 1.0rem;
+  background: #F6F3E4;
+  width: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 0.7rem;
+  text-align: center;
+  box-shadow: 0 0 0 0.5rem #F6F3E4;
+  pointer-events: none;
+}
+.count.upvoted {
+  color: #4BC35F;
+}
+.count.downvoted {
+  color: #C15044;
+}
+
 /*
 UserPage
 */

@@ -203,10 +203,6 @@ public class InitiativeDB {
 
             // If we have added an expire date
             if (expireDate != null) {
-<<<<<<< HEAD
-                //insQuery.append("'").append(expireDate).append("',");
-=======
->>>>>>> master
                 insQuery.append("'").append(expireDate).append("',");
             }
             insQuery.append("'").append(initiative.getStatus()).append("');");
