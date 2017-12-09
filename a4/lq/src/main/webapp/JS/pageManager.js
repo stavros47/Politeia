@@ -1337,6 +1337,9 @@ function generatePoliciesPage(resp) {
                 '<a class="nav-link" data-toggle="pill" href="#allPolicies">Active Policies</a>',
                 '</li>',
                 '<li class="nav-item">',
+                '<a class="nav-link" data-toggle="pill" href="#endedPolicies">Ended Policies</a>',
+                '</li>',
+                '<li class="nav-item">',
                 '<a class="nav-link" data-toggle="pill" href="#newPolicy">New Policy</a>',
                 '</li>',
                 '</ul>',
@@ -1395,10 +1398,14 @@ function generatePoliciesPage(resp) {
         for (var i = 0; i < resp.activeInitiatives.length; i++) {
                 activeRows.push(populateInitiative(resp.activeInitiatives[i]));
         }
-
+        var endedRows = [];
+        for (var i = 0; i < resp.endedInitiatives.length; i++) {
+                endedRows.push(populateInitiative(resp.endedInitiatives[i]));
+        }
         var allPoliciesBottom = ['</div>',
                 '</div>',
                 '<div class="tab-pane" id="allPolicies" role="tabpanel"></div>',
+                '<div class="tab-pane" id="endedPolicies" role="tabpanel"></div>',   
                 '<div class="tab-pane" id="newPolicy" role="tabpanel"></div>',
                 '</div>'
         ].join("");
@@ -1410,7 +1417,7 @@ function generatePoliciesPage(resp) {
         
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
         document.getElementById("allPolicies").innerHTML=activeRows.join("");
-        
+        document.getElementById("endedPolicies").innerHTML=endedRows.join("");
         for (var i = 0; i < resp.initiative.length; i++) {
                 let element = document.getElementById("policyID" + resp.initiative[i].id);
                 let id = element.id;

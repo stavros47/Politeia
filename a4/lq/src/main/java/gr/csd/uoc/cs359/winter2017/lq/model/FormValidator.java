@@ -194,7 +194,7 @@ public class FormValidator {
                 this.invalidFields.add("expiration-newPolicy");
             } else {
                 Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expDate);
-                if (expiration.getTime() <= today.getTime()) {
+                if (expiration.getTime()<= today.getTime()) {
                     this.invalidFields.add("badDateexpiration-newPolicy");
                 }
             }

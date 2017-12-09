@@ -39,7 +39,7 @@ public class JsonResponse {
         return jsonResponseString;
     }
 
-    public static String initiativeResponse(ArrayList < String > invalidFields, List < Initiative > initiative,List < Initiative > activeInitiatives, String status) {
+    public static String initiativeResponse(ArrayList < String > invalidFields, List < Initiative > initiative,List < Initiative > activeInitiatives,List < Initiative > endedPollsList, String status) {
         String jsonResponseString = "";
         // Gson gson = new GsonBuilder().create();
         Gson gson = new Gson();
@@ -51,9 +51,9 @@ public class JsonResponse {
         if (invalidFields == null || invalidFields.isEmpty()) {
             if (initiative != null) {
                 String initiativeResult = "\"initiative\":" + gson.toJson(initiative);
-             
+                String endedInitiativeResult = "\"endedInitiatives\":" + gson.toJson(endedPollsList);
                 String activeIni = "\"activeInitiatives\":" + gson.toJson(activeInitiatives);
-                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + statusObject+ "," +activeIni + "}";
+                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + statusObject+ "," +activeIni +"," +statusObject+ "," +endedInitiativeResult + "}";
                 return jsonResponseString;
             }
 

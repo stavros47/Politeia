@@ -45,7 +45,8 @@ public class lqInitiativeServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
              List<Initiative> myPollsList=null;
              List<Initiative> activePollsList=null;
-            String status = "";
+             List<Initiative> endedPollsList=null;
+             String status = "";
             User curentUser= (User)request.getSession(true).getAttribute("user");
             ArrayList< String> invalidFields = new ArrayList<>();
             FormValidator validator = new FormValidator();
@@ -69,6 +70,7 @@ public class lqInitiativeServlet extends HttpServlet {
                          }    
                          myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                         endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          break;
                      case "mypolls":
                          status="my_polls";
@@ -76,12 +78,19 @@ public class lqInitiativeServlet extends HttpServlet {
                          PollAccessor.endExpiredPolicies();
                          myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                         endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          break;
                      case "active_polls":
                          status="active_polls";
                          response.setStatus(200);
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                         endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          break;
+                     case "ended_polls":
+                         status="ended_polls";
+                         response.setStatus(200);
+                         endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
+                         break;     
                      case "update":
                          status="update_polls";
                          response.setStatus(200);
@@ -93,6 +102,7 @@ public class lqInitiativeServlet extends HttpServlet {
                              PollAccessor.endExpiredPolicies();
                              myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
                              activePollsList=InitiativeDB.getInitiativesWithStatus(1);
+                             endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          }
                          else{
                              status = "update_polls_failed";
@@ -106,7 +116,7 @@ public class lqInitiativeServlet extends HttpServlet {
             }
             
            
-            String jsonResponse = initiativeResponse(invalidFields, myPollsList,activePollsList, status);
+            String jsonResponse = initiativeResponse(invalidFields, myPollsList,activePollsList, endedPollsList, status);
            
             out.print(jsonResponse);
            
