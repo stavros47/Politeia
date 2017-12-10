@@ -56,7 +56,11 @@
             elementsArray.push(document.getElementById("category-newPolicy"));
             elementsArray.push(document.getElementById("expiration-newPolicy"));
             elementsArray.push(document.getElementById("description-newPolicy"));
-          
+            elementsArray.push(document.getElementById("expTime-newPolicy"));
+            
+        }else if (context == "editPolicies"){
+            elementsArray.push(document.getElementById("expiration-editPolicy"));
+            elementsArray.push(document.getElementById("expTime-editPolicy"));
         }
 
         return elementsArray;
@@ -317,7 +321,7 @@
                 generatePoliciesPage(resp);
                 setNewPolicyPageListeners();
              
-            }
+            } 
             
             
 
@@ -341,6 +345,8 @@
 
             } else if (resp.status == "initiative_failed") {
                 checkResponse(resp, "Policies");
+            } else if (resp.status == "update_polls_failed"){
+                checkResponse(resp, "editPolicies");
             }
 
         }
