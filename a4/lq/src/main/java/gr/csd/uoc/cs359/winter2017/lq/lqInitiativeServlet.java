@@ -94,7 +94,7 @@ public class lqInitiativeServlet extends HttpServlet {
                      case "update":
                          status="update_polls";
                          response.setStatus(200);
-                         //invalidFields = validator.ValidatePollEditFields(request);
+                         invalidFields = validator.ValidatePollEditFields(request);
                          if (invalidFields.isEmpty()) {
                              initiative=PollAccessor.updateInitiative(request);
                              status="update_success";

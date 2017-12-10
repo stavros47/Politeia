@@ -25,7 +25,7 @@ public class PollAccessor {
             String description=request.getParameter("description-newPolicy");
             String expiration=(String)request.getParameter("expiration-newPolicy");
             String time = request.getParameter("expTime-newPolicy");
-            time =time+ ":00";
+            time =time+ ":26";
             String newexpiration=expiration+" "+time;
            
             User user=(User)request.getSession(true).getAttribute("user");
@@ -56,23 +56,22 @@ public class PollAccessor {
        
     }
     
-     public static Initiative updateInitiative( HttpServletRequest request) throws ClassNotFoundException {
-        try {
+     public static Initiative updateInitiative( HttpServletRequest request) throws ClassNotFoundException, ParseException {
+       
             Initiative initiative= new Initiative ();
             String category=request.getParameter("category-editPolicy");
             String title=request.getParameter("title-editPolicy");
             int status=Integer.parseInt(request.getParameter("status-editPolicy"));
             String description=request.getParameter("description-editPolicy");
-            String expiration = (String) request.getParameter("expiration-editPolicy");
-
+            String expDate = (String) request.getParameter("expiration-editPolicy");
+            String time = request.getParameter("expTime-editPolicy");
+            String dateTime= expDate + " " + time; 
             User user=(User)request.getSession(true).getAttribute("user");
-           
             String id = request.getParameter("policyId");
             id = id.substring(8);
-            
             Date date = new Date();
-            
-             int intid=Integer.parseInt(id);
+            int intid=Integer.parseInt(id);
+           
             if (user != null) {
 
                 initiative = InitiativeDB.getInitiative(intid);
@@ -83,38 +82,34 @@ public class PollAccessor {
                 if (description != null && !description.isEmpty()) {
                     initiative.setDescription(description);
                 }
-                if (expiration != null && !expiration.isEmpty()) {
-                    Date expDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expiration);
-                    initiative.setExpires(expDate);
-                }
-
+              
                 if (request.getParameter("status-editPolicy") != null && !request.getParameter("status-editPolicy").isEmpty()) {
                     initiative.setStatus(status);
                 }
                 if (title != null && !title.isEmpty()) {
                     initiative.setTitle(title);
                 }
+                if (expDate!=null && time!=null){
+                 Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
+                    initiative.setExpires(expiration);
+                }
+                 
                 initiative.setModified(date);
-
                 InitiativeDB.updateInitiative(initiative);
-
             }
             else {
                 System.out.println("No session found.");
             }
             
             return initiative;
-        } catch (ParseException ex) {
-            Logger.getLogger(PollAccessor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-          return null;
+       
     }
 
     public static void endExpiredPolicies() {
         Date today = new Date();
         try {
             List<Initiative> activeInitiatives = InitiativeDB.getInitiativesWithStatus(1);
-            int count = 0;
+            
             for (Initiative iterator : activeInitiatives) {
 
                 if (iterator.getExpires() != null) {
@@ -125,7 +120,7 @@ public class PollAccessor {
                 }
 
             }
-            System.out.println("Count:" + count);
+           
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PollAccessor.class.getName()).log(Level.SEVERE, null, ex);
         }

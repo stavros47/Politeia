@@ -179,7 +179,7 @@ public class FormValidator {
          String status = (String) request.getParameter("status-newPolicy");
          String time = (String) request.getParameter("expTime-newPolicy");
          String timeregex= "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"; 
-
+         String dateTime= expDate + " " + time; 
         if (description == null || description.trim().isEmpty()){
                  this.invalidFields.add("Emptydescription-newPolicy");
              }
@@ -190,47 +190,60 @@ public class FormValidator {
                  this.invalidFields.add("Emptytitle-newPolicy");
         }
         if (status.equals("1")){
+             if (time == null || time.trim().isEmpty()) {
+                 this.invalidFields.add("EmptyexpTime-newPolicy");
+             } 
+             else {
+                 if (!time.matches(timeregex)) {
+                    this.invalidFields.add("expTime-newPolicy");
+                  }
+            }
             if (expDate == null || expDate.trim().isEmpty()) {
                 this.invalidFields.add("expiration-newPolicy");
             } else {
-                Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(expDate);
-                if (expiration.getTime()<= today.getTime()) {
+                Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
+                
+                if (expiration.getTime()< today.getTime()) {
                     this.invalidFields.add("badDateexpiration-newPolicy");
                 }
             }
-         }
-        if (time == null || time.trim().isEmpty()) {
-            this.invalidFields.add("EmptyexpTime-newPolicy");
-        } else {
-            if (!time.matches(timeregex)) {
-                this.invalidFields.add("expTime-newPolicy");
-            }
-
-         }
-
+        }
         return this.invalidFields;
     }
-    public ArrayList<String> ValidatePollEditFields (HttpServletRequest request){
-        
-         String description = (String) request.getParameter("description-editPolicy"); 
-         String category =(String) request.getParameter("category-editPolicy");
-         String title = (String) request.getParameter("title-editPolicy");
+       
+    
+    
+    
+    public ArrayList<String> ValidatePollEditFields (HttpServletRequest request) throws ParseException{
+         Date today = new Date();
+         String time =(String) request.getParameter("expTime-editPolicy");
+         String status = (String) request.getParameter("status-editPolicy");
          String expDate= (String)request.getParameter("expiration-editPolicy");
+         String timeregex= "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"; 
+         String dateTime= expDate + " " + time; 
            
-        if (description == null || description.trim().isEmpty()){
-                 this.invalidFields.add("Emptydescription-editPolicy");
-             }
-         if (category == null || category.trim().isEmpty()){
-                 this.invalidFields.add("Emptycategory-editPolicy");
-         }
-        if (title == null || title.trim().isEmpty()){
-                 this.invalidFields.add("Emptytitle-editPolicy");
+        if (status.equals("1")){
+             if (time == null || time.trim().isEmpty()) {
+                 this.invalidFields.add("EmptyexpTime-editPolicy");
+             } 
+             else {
+                 if (!time.matches(timeregex)) {
+                    this.invalidFields.add("expTime-editPolicy");
+                  }
+            }
+            if (expDate == null || expDate.trim().isEmpty()) {
+                this.invalidFields.add("expiration-editPolicy");
+            } else {
+                Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
+                
+                if (expiration.getTime()< today.getTime()) {
+                    this.invalidFields.add("badDateexpiration-editPolicy");
+                }
+            }
+         
+       
         }
-        if (expDate == null || title.trim().isEmpty()){
-                 this.invalidFields.add("Emptyexpiration-editPolicy");
-        }
-     
         return this.invalidFields;
     }
-         
+    
 }
