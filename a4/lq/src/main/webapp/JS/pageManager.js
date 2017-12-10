@@ -1369,10 +1369,13 @@ function generatePoliciesPage(resp) {
                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
                 htmlStringArray.push('<div class="row">');               
                 if (responseArray.status == "1") {
+                    var votes = getVotes(responseArray.id);
+                    var voteCount = (votes) ? votes : 0;
+                    
                     htmlStringArray.push('<div class="vote chev col-md-1">');
-                    htmlStringArray.push('<div class="increment up"></div>');
-                    htmlStringArray.push('<div class="increment down"></div>');               
-                    htmlStringArray.push('<div class="count">0</div></div>');
+                    htmlStringArray.push('<div class="increment up" id="upvote'+ responseArray.id +'"></div>');
+                    htmlStringArray.push('<div class="increment down" id="downvote'+ responseArray.id +'"></div>');               
+                    htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
                     htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
                     htmlStringArray.push('<div class="col-md-2">');
                 } else {
@@ -1393,22 +1396,25 @@ function generatePoliciesPage(resp) {
                 
                 return htmlStringArray.join("");
                    
-        }    
+        }   
+        
+        var allPoliciesBottom = ['</div>',
+            '</div>',
+            '<div class="tab-pane" id="allPolicies" role="tabpanel"></div>',
+            '<div class="tab-pane" id="endedPolicies" role="tabpanel"></div>',   
+            '<div class="tab-pane" id="newPolicy" role="tabpanel"></div>',
+            '</div>'
+        ].join("");
+        
         var activeRows = [];
         for (var i = 0; i < resp.activeInitiatives.length; i++) {
                 activeRows.push(populateInitiative(resp.activeInitiatives[i]));
         }
+        
         var endedRows = [];
         for (var i = 0; i < resp.endedInitiatives.length; i++) {
                 endedRows.push(populateInitiative(resp.endedInitiatives[i]));
         }
-        var allPoliciesBottom = ['</div>',
-                '</div>',
-                '<div class="tab-pane" id="allPolicies" role="tabpanel"></div>',
-                '<div class="tab-pane" id="endedPolicies" role="tabpanel"></div>',   
-                '<div class="tab-pane" id="newPolicy" role="tabpanel"></div>',
-                '</div>'
-        ].join("");
 
         var policyRows = [];
         for (var i = 0; i < resp.initiative.length; i++) {
@@ -1418,20 +1424,74 @@ function generatePoliciesPage(resp) {
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
         document.getElementById("allPolicies").innerHTML=activeRows.join("");
         document.getElementById("endedPolicies").innerHTML=endedRows.join("");
+        
+        //Listeners
         for (var i = 0; i < resp.initiative.length; i++) {
                 let element = document.getElementById("policyID" + resp.initiative[i].id);
                 let id = element.id;
+                let idNum = resp.initiative[i].id;
                 let status = resp.initiative[i].status;
+                let upvote = document.getElementById("upvote" + resp.initiative[i].id);
+                let downvote = document.getElementById("downvote" + resp.initiative[i].id);
                 element.addEventListener('click', function () {
                         if (status == "0") {
                                 showEditPolicy(id);
                         }
 
                 });
+                
+                if(upvote && downvote){
+                    let voteState = "none";// should do this logic in the server somehow
+                    upvote.addEventListener('click', function() {
+                        if(voteState != "up"){
+                            voteState = "up";
+                            let count = parseInt(document.getElementById("count" + idNum).innerHTML);
+                            count++;
+                            document.getElementById("count" + idNum).innerHTML = count;
+                            console.log(count);
+                            
+                            sendVoteRequest(ididNum, voteState);
+                            console.log(voteState);
+                        }else {
+                            console.log("up already pressed!");
+                        }
+                    }); 
+                
+
+                    downvote.addEventListener('click', function() {
+                        if(voteState != "down"){
+                            voteState = "down";
+                            let count = parseInt(document.getElementById("count" + idNum).innerHTML);
+                            count--;
+                            document.getElementById("count" + idNum).innerHTML = count;
+                            console.log(count);
+                            sendVoteRequest(id, voteState);
+                            console.log(voteState);
+                        }else {
+                            console.log("down already pressed!");
+                        }
+                    });
+                }
+                
         }
         var newPolicyContent = document.getElementById("newPolicy");
         newPolicyContent.innerHTML = newPolicyPage;
+        
+        function getVotes(){
+            return null;
+        }
+}
 
+function sendVoteRequest(policyId, voteState){
+        let data = new FormData();
+        data.append("poll", "vote");
+        data.append("policyId", policyId);
+        data.append("vote", voteState); //"up" or "down"
+        console.log("Vote on Policy request");
+        var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+        if (data) {
+                sendToServer('POST', url, data);
+        }
 }
 
 function showEditPolicy(policyId) {
