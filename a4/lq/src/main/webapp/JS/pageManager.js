@@ -1425,14 +1425,16 @@ function generatePoliciesPage(resp) {
         document.getElementById("allPolicies").innerHTML=activeRows.join("");
         document.getElementById("endedPolicies").innerHTML=endedRows.join("");
         
-        //Listeners
-        for (var i = 0; i < resp.initiative.length; i++) {
-                let element = document.getElementById("policyID" + resp.initiative[i].id);
+       
+       function setListeners(arrays){
+            //Listeners
+        for (var i = 0; i < arrays.length; i++) {
+                let element = document.getElementById("policyID" + arrays[i].id);
                 let id = element.id;
-                let idNum = resp.initiative[i].id;
-                let status = resp.initiative[i].status;
-                let upvote = document.getElementById("upvote" + resp.initiative[i].id);
-                let downvote = document.getElementById("downvote" + resp.initiative[i].id);
+                let idNum = arrays[i].id;
+                let status = arrays[i].status;
+                let upvote = document.getElementById("upvote" + arrays[i].id);
+                let downvote = document.getElementById("downvote" + arrays[i].id);
                 
                 element.addEventListener('click', function () {
                         if (status == "0") {
@@ -1446,13 +1448,13 @@ function generatePoliciesPage(resp) {
                     upvote.addEventListener('click', function() {
                         if(voteState != "UpVote"){
                             voteState = "UpVote";
-                            let count = parseInt(document.getElementById("count" + idNum).innerHTML);
-                            count++;
-                            document.getElementById("count" + idNum).innerHTML = count;
-                            console.log(count);
-                            
+                          
+                           
+                         //   console.log(count);
+                             
                             sendVoteRequest(idNum, voteState);
-                            console.log(voteState);
+                            
+                         //   console.log(voteState);
                         }else {
                             console.log("UpVote already pressed!");
                         }
@@ -1462,12 +1464,12 @@ function generatePoliciesPage(resp) {
                     downvote.addEventListener('click', function() {
                         if(voteState != "DownVote"){
                             voteState = "DownVote";
-                            let count = parseInt(document.getElementById("count" + idNum).innerHTML);
-                            count--;
-                            document.getElementById("count" + idNum).innerHTML = count;
-                            console.log(count);
+                          
+                            
                             sendVoteRequest(idNum, voteState);
-                            console.log(voteState);
+                            document.getElementById("count" + idNum).innerHTML = getVotes(idNum);
+                           // console.log(count);
+                            //console.log(voteState);
                         }else {
                             console.log("DownVote already pressed!");
                         }
@@ -1475,11 +1477,15 @@ function generatePoliciesPage(resp) {
                 }
                 
         }
+           
+       }
+        setListeners(resp.initiative);
+        setListeners(resp.activeInitiatives);
         var newPolicyContent = document.getElementById("newPolicy");
         newPolicyContent.innerHTML = newPolicyPage;
         
-        function getVotes(){
-            return null;
+        function getVotes(id){
+            return resp.voteCount[id];
         }
 }
 

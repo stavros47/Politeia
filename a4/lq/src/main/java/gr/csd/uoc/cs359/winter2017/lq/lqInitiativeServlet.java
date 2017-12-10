@@ -83,7 +83,7 @@ public class lqInitiativeServlet extends HttpServlet {
                          endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          break;
                      case "vote":
-                         status = "active_polls";
+                         status = "vote_success";
                          response.setStatus(200);
                          myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
