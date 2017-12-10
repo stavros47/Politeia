@@ -57,7 +57,7 @@ public class PollAccessor {
     }
     
      public static Initiative updateInitiative( HttpServletRequest request) throws ClassNotFoundException, ParseException {
-       
+       try{
             Initiative initiative= new Initiative ();
             String category=request.getParameter("category-editPolicy");
             String title=request.getParameter("title-editPolicy");
@@ -96,12 +96,19 @@ public class PollAccessor {
                  
                 initiative.setModified(date);
                 InitiativeDB.updateInitiative(initiative);
+                
             }
             else {
                 System.out.println("No session found.");
             }
             
-            return initiative;
+              return initiative;
+            } catch (ParseException ex) {
+            Logger.getLogger(PollAccessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+            
+        
        
     }
 
