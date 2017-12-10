@@ -27,27 +27,32 @@ public class VoteAccessor {
         String userVoteString = request.getParameter("vote");
         Boolean userVote = userVoteString.equals("UpVote") ? true : false;
 
-        //System.out.println("vote:" + userVote);
         try {
             List<Vote> voteList = VoteDB.getVotes(currentUser.getUserName());
+            int countLoop = 0;
             Vote currentVote = null;
             for (Vote vote : voteList) {
                 if (vote.getInitiativeID() == policyID) {
+
                     currentVote = vote;
                 }
             }
 
             if (currentVote != null) {
+                System.out.println("current vote:" + currentVote.getVoteAsString());
+                System.out.println("user vote:" + userVoteString);
                 if (!currentVote.getVoteAsString().equals(userVoteString)) {
-                    System.out.println("condition" + currentVote.getVoteAsString().equals(userVoteString));
+                    System.out.println("hello!");
                     currentVote.setVote(userVote, true);
+                    VoteDB.addVote(currentVote);
                 }
             } else {
                 currentVote = new Vote(currentUser.getUserName(), "", policyID, userVote, true);
-
+                VoteDB.addVote(currentVote);
+                countLoop++;
             }
+            System.out.println("Count" + countLoop);
 
-            VoteDB.addVote(currentVote);
 
 
         } catch (ClassNotFoundException ex) {
@@ -58,8 +63,12 @@ public class VoteAccessor {
     public HashMap<Integer, Integer> generateCountMap() {
         try {
             List<Vote> voteList = VoteDB.getAllVotes();
+
             for (Vote vote : voteList) {
-                addToCountMap(vote);
+                if (vote != null) {
+                    addToCountMap(vote);
+                }
+
             }
 
         } catch (ClassNotFoundException ex) {
