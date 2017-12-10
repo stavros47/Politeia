@@ -1433,6 +1433,7 @@ function generatePoliciesPage(resp) {
                 let status = resp.initiative[i].status;
                 let upvote = document.getElementById("upvote" + resp.initiative[i].id);
                 let downvote = document.getElementById("downvote" + resp.initiative[i].id);
+                
                 element.addEventListener('click', function () {
                         if (status == "0") {
                                 showEditPolicy(id);

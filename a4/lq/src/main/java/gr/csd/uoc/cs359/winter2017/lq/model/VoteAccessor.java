@@ -22,12 +22,12 @@ public class VoteAccessor {
 
     public static void voteAction(HttpServletRequest request) {
         User currentUser = (User) request.getSession(true).getAttribute("user");
-        String id = request.getParameter("policyId").substring(8);
+        String id = request.getParameter("policyId");
         int policyID = Integer.parseInt(id);
         String userVoteString = request.getParameter("vote");
-        Boolean userVote;
-        userVote = (request.getParameter("vote") == "UpVote") ? true : false;
+        Boolean userVote = userVoteString.equals("UpVote") ? true : false;
 
+        //System.out.println("vote:" + userVote);
         try {
             List<Vote> voteList = VoteDB.getVotes(currentUser.getUserName());
             Vote currentVote = null;
@@ -38,7 +38,8 @@ public class VoteAccessor {
             }
 
             if (currentVote != null) {
-                if (currentVote.getVoteAsString() != userVoteString) {
+                if (!currentVote.getVoteAsString().equals(userVoteString)) {
+                    System.out.println("condition" + currentVote.getVoteAsString().equals(userVoteString));
                     currentVote.setVote(userVote, true);
                 }
             } else {
@@ -70,10 +71,10 @@ public class VoteAccessor {
     public void addToCountMap(Vote vote) {
 
         if (this.countMap.get(vote.getInitiativeID()) != null) {
-            if (this.countMap.get(vote.getVote()) == 1) {
-                this.countMap.put(vote.getInitiativeID(), vote.getInitiativeID() + 1);
+            if (vote.getVote() == 1) {
+                this.countMap.put(vote.getInitiativeID(), this.countMap.get(vote.getInitiativeID()) + 1);
             } else {
-                this.countMap.put(vote.getInitiativeID(), vote.getInitiativeID() - 1);
+                this.countMap.put(vote.getInitiativeID(), this.countMap.get(vote.getInitiativeID()) - 1);
             }
         } else {
             if (vote.getVote() == 1) {

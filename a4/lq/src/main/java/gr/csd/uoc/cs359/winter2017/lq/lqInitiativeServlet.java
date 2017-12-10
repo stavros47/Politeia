@@ -52,7 +52,7 @@ public class lqInitiativeServlet extends HttpServlet {
             ArrayList< String> invalidFields = new ArrayList<>();
             FormValidator validator = new FormValidator();
             Initiative initiative = null;
-            VoteAccessor voteAccessor = new VoteAccessor();
+            //VoteAccessor voteAccessor = new VoteAccessor();
             System.out.println("Poll Process");
             
             if (request.getParameter("poll") != null) {
