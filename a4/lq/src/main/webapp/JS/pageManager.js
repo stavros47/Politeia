@@ -1443,32 +1443,32 @@ function generatePoliciesPage(resp) {
                 if(upvote && downvote){
                     let voteState = "none";// should do this logic in the server somehow
                     upvote.addEventListener('click', function() {
-                        if(voteState != "up"){
-                            voteState = "up";
+                        if(voteState != "UpVote"){
+                            voteState = "UpVote";
                             let count = parseInt(document.getElementById("count" + idNum).innerHTML);
                             count++;
                             document.getElementById("count" + idNum).innerHTML = count;
                             console.log(count);
                             
-                            sendVoteRequest(ididNum, voteState);
+                            sendVoteRequest(idNum, voteState);
                             console.log(voteState);
                         }else {
-                            console.log("up already pressed!");
+                            console.log("UpVote already pressed!");
                         }
                     }); 
                 
 
                     downvote.addEventListener('click', function() {
-                        if(voteState != "down"){
-                            voteState = "down";
+                        if(voteState != "DownVote"){
+                            voteState = "DownVote";
                             let count = parseInt(document.getElementById("count" + idNum).innerHTML);
                             count--;
                             document.getElementById("count" + idNum).innerHTML = count;
                             console.log(count);
-                            sendVoteRequest(id, voteState);
+                            sendVoteRequest(idNum, voteState);
                             console.log(voteState);
                         }else {
-                            console.log("down already pressed!");
+                            console.log("DownVote already pressed!");
                         }
                     });
                 }

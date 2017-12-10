@@ -6,6 +6,7 @@ import gr.csd.uoc.cs359.winter2017.lq.model.Initiative;
 import static gr.csd.uoc.cs359.winter2017.lq.model.JsonResponse.initiativeResponse;
 import gr.csd.uoc.cs359.winter2017.lq.model.PollAccessor;
 import gr.csd.uoc.cs359.winter2017.lq.model.User;
+import gr.csd.uoc.cs359.winter2017.lq.model.VoteAccessor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -51,6 +52,7 @@ public class lqInitiativeServlet extends HttpServlet {
             ArrayList< String> invalidFields = new ArrayList<>();
             FormValidator validator = new FormValidator();
             Initiative initiative = null;
+            VoteAccessor voteAccessor = new VoteAccessor();
             System.out.println("Poll Process");
             
             if (request.getParameter("poll") != null) {
@@ -80,17 +82,15 @@ public class lqInitiativeServlet extends HttpServlet {
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          break;
-                     case "active_polls":
-                         status="active_polls";
+                     case "vote":
+                         status = "active_polls";
                          response.setStatus(200);
+                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
-                         endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
+                         endedPollsList = InitiativeDB.getInitiativesWithStatus(2);
+                         VoteAccessor.voteAction(request);
+
                          break;
-                     case "ended_polls":
-                         status="ended_polls";
-                         response.setStatus(200);
-                         endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
-                         break;     
                      case "update":
                          status="update_polls";
                          response.setStatus(200);

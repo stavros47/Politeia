@@ -41,6 +41,7 @@ public class JsonResponse {
 
     public static String initiativeResponse(ArrayList < String > invalidFields, List < Initiative > initiative,List < Initiative > activeInitiatives,List < Initiative > endedPollsList, String status) {
         String jsonResponseString = "";
+        VoteAccessor voteAccessor = new VoteAccessor();
         // Gson gson = new GsonBuilder().create();
         Gson gson = new Gson();
 
@@ -50,10 +51,11 @@ public class JsonResponse {
 
         if (invalidFields == null || invalidFields.isEmpty()) {
             if (initiative != null) {
+                String voteCountArray = "\"voteCount\":" + gson.toJson(voteAccessor.generateCountMap());
                 String initiativeResult = "\"initiative\":" + gson.toJson(initiative);
                 String endedInitiativeResult = "\"endedInitiatives\":" + gson.toJson(endedPollsList);
                 String activeIni = "\"activeInitiatives\":" + gson.toJson(activeInitiatives);
-                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + statusObject+ "," +activeIni +"," +statusObject+ "," +endedInitiativeResult + "}";
+                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + activeIni + "," + endedInitiativeResult + "," + voteCountArray + "" + "}";
                 return jsonResponseString;
             }
 
