@@ -321,7 +321,9 @@
                 generatePoliciesPage(resp);
                 setNewPolicyPageListeners();
              
-            } 
+            } if (resp.status === "all_polls"){
+                generateAllPoliciesPage(resp);
+            }
             
             
 
@@ -696,8 +698,7 @@
         }
     }
     
-    function createNewPolicyPage(){
-        console.log("Sending Sign In request");
+    function createNewPolicyPage(){  
             let pollData = new FormData();
             pollData.append("poll", "mypolls");
          
@@ -707,6 +708,18 @@
             }
         
     }
+    
+    function createAllPoliciesPage(){  
+            console.log("ALLLLL!");
+            let pollData = new FormData();
+            pollData.append("poll", "allpolls");         
+            var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+            if (pollData) {
+                sendToServer('POST', url, pollData);
+            }
+        
+    }
+    
     //Set listener functions
     function setRegistrationEventListeners() {
         document.getElementById("InputCity").addEventListener('blur', checkCityGeocode);
@@ -715,8 +728,7 @@
         document.getElementById("InputUsername").addEventListener('blur', checkExistingUsername);
         document.getElementById("InputEmail").addEventListener('blur', checkExistingEmail);
         document.getElementById('InputUsername').addEventListener('keyup', toggleFaceIdCheckbox);
-        document.getElementById('faceIDcheck').addEventListener('change', openFaceID);
-       
+        document.getElementById('faceIDcheck').addEventListener('change', openFaceID);       
         document.getElementById("home").addEventListener('click', LoginForm);
         document.getElementById("submit").addEventListener('click',submitRegistrationForm);
 
@@ -728,6 +740,7 @@
         document.getElementById('showUsers').addEventListener('click',showUsersRequest);
         document.getElementById("username-login").addEventListener('click',UserHome);
         document.getElementById('userPolicies').addEventListener('click', createNewPolicyPage);
+        document.getElementById('allInitiatives').addEventListener('click', createAllPoliciesPage);
     }
 
     function setUpdatePageEventListeners(){

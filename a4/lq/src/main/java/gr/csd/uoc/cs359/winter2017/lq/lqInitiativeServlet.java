@@ -56,8 +56,9 @@ public class lqInitiativeServlet extends HttpServlet {
             System.out.println("Poll Process");
             
             if (request.getParameter("poll") != null) {
-                 
-                 switch (request.getParameter("poll")) {
+                System.out.println("POLL REQUEST:" + request.getParameter("poll"));
+                switch (request.getParameter("poll")) {
+
                      case "new":
                          invalidFields = validator.ValidatePollFields(request);
                          if (invalidFields.isEmpty()){
@@ -81,6 +82,14 @@ public class lqInitiativeServlet extends HttpServlet {
                          myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
+                         break;
+                     case "allpolls":
+                         status = "all_polls";
+                         response.setStatus(200);
+                         PollAccessor.endExpiredPolicies();
+                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
+                         activePollsList = InitiativeDB.getInitiativesWithStatus(1);
+                         endedPollsList = InitiativeDB.getInitiativesWithStatus(2);
                          break;
                      case "vote":
                          status = "vote_success";

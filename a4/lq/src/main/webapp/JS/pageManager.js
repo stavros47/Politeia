@@ -631,8 +631,16 @@ function showUserPage() {
                 '<div class="col-md-6 buttons">',
                 '<input id="SignOut" type="button" style="float:right;" class="btn btn-secondary" value="Sign out" />',
                 '<input id="edit" type="button" style="float:right;" class="btn btn-primary" value="Edit Info" />',
-                '<input id="showUsers" type="button" style="float:right;" class="btn btn-primary" value="View Users" />',
-                '<input id="userPolicies" type="button" style="float:right;" class="btn btn-primary" value="Policies" />',
+                '<input id="showUsers" type="button" style="float:right;" class="btn btn-primary" value="View Users" />',                
+                '<div class="dropdown">',
+                '<button class="btn btn-primary dropdown-toggle" style="float:right; margin-right:5px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                'Policies',
+                '</button>',
+                '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">',
+                '<a class="dropdown-item" href="#" id="userPolicies">My Policies</a>',
+                '<a class="dropdown-item" href="#" id="allInitiatives">All Policies</a>',
+                '</div>',
+                '</div>',
                 '</div>',
                 '</div>'
         ].join("");
@@ -1231,6 +1239,98 @@ function generateAllUsersPage(resp) {
         main.innerHTML = userArrayTop + userRows.join("") + userArrayBottom;
 }
 
+    function populateInitiative(responseArray, voteCountArray){
+            function getVotes(id){
+                return voteCountArray[id];
+            }
+            var htmlStringArray = []
+
+            var policyStatus;
+            var colorClass;
+            if (responseArray.status == "0") {
+                    colorClass = "cyanClass";
+                    policyStatus = "Inactive";
+            } else if (responseArray.status == "1") {
+                    colorClass = "greenClass";
+                    policyStatus = "Active";
+            } else {
+                    colorClass = "redClass";
+                    policyStatus = "Ended";
+            }
+            htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
+            htmlStringArray.push('<div class="row">');               
+            if (responseArray.status == "1") {
+                var votes = getVotes(responseArray.id);
+                var voteCount = (votes) ? votes : 0;
+
+                htmlStringArray.push('<div class="vote chev col-md-1">');
+                htmlStringArray.push('<div class="increment up" id="upvote'+ responseArray.id +'"></div>');
+                htmlStringArray.push('<div class="increment down" id="downvote'+ responseArray.id +'"></div>');               
+                htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
+                htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
+                htmlStringArray.push('<div class="col-md-2">');
+            } else {
+                 htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
+                 htmlStringArray.push('<div class="col-md-3">');
+            }                
+            htmlStringArray.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
+            htmlStringArray.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
+            htmlStringArray.push('<div class="col-md-1"></div>');
+            htmlStringArray.push('<h5 class="col-md-10" id="category-Policy"">' + responseArray.category + '</h5></div></div>');
+            htmlStringArray.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
+            htmlStringArray.push('<p id="expiration-Policy" style="float:right"><strong>' + responseArray.expires + '</strong></p></small></div></div>');
+            htmlStringArray.push('<div class="d-flex w-100 justify-content-between">');
+            htmlStringArray.push('<p class="mb-1" id="description-Policy">' + responseArray.description + '</p>');
+            htmlStringArray.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
+            htmlStringArray.push('<p id="creator-Policy"><strong>' + responseArray.creator + '</strong></p></small>');
+            htmlStringArray.push('</div></div>');
+
+            return htmlStringArray.join("");
+
+    } 
+
+    function setListeners(arrays){       
+            //Listeners
+        for (var i = 0; i < arrays.length; i++) {
+                let element = document.getElementById("policyID" + arrays[i].id);
+                let id = element.id;
+                let idNum = arrays[i].id;
+                let status = arrays[i].status;
+                let upvote = document.getElementById("upvote" + arrays[i].id);
+                let downvote = document.getElementById("downvote" + arrays[i].id);
+                
+                element.addEventListener('click', function () {
+                        if (status == "0") {
+                                showEditPolicy(id);
+                        }
+
+                });
+                
+                if(upvote && downvote){
+                    let voteState = "none";// should do this logic in the server somehow
+                    upvote.addEventListener('click', function() {
+                        if(voteState != "UpVote"){
+                            voteState = "UpVote"; 
+                            sendVoteRequest(idNum, voteState);
+                        }else {
+                            console.log("UpVote already pressed!");
+                        }
+                    }); 
+
+                    downvote.addEventListener('click', function() {
+                        if(voteState != "DownVote"){
+                            voteState = "DownVote";                          
+                            sendVoteRequest(idNum, voteState);
+                      
+                        }else {
+                            console.log("DownVote already pressed!");
+                        }
+                    });
+                }
+        }
+    }
+
+
 function generatePoliciesPage(resp) {
         var main = document.getElementById('mainContent');
 
@@ -1332,13 +1432,7 @@ function generatePoliciesPage(resp) {
         var allPoliciesTop = ['<ul class="nav nav-pills">',
                 '<li class="nav-item">',
                 '<a class="nav-link active" data-toggle="pill" href="#myPolicies">My Policies</a>',
-                '</li>',
-                '<li class="nav-item">',
-                '<a class="nav-link" data-toggle="pill" href="#allPolicies">Active Policies</a>',
-                '</li>',
-                '<li class="nav-item">',
-                '<a class="nav-link" data-toggle="pill" href="#endedPolicies">Ended Policies</a>',
-                '</li>',
+                '</li>',              
                 '<li class="nav-item">',
                 '<a class="nav-link" data-toggle="pill" href="#newPolicy">New Policy</a>',
                 '</li>',
@@ -1348,145 +1442,61 @@ function generatePoliciesPage(resp) {
                 '<div class="list-group" id="mydiv">'
         ].join("");
 
-
-
-
-        function populateInitiative(responseArray){
-                var htmlStringArray = []
-          
-                var policyStatus;
-                var colorClass;
-                if (responseArray.status == "0") {
-                        colorClass = "cyanClass";
-                        policyStatus = "Inactive";
-                } else if (responseArray.status == "1") {
-                        colorClass = "greenClass";
-                        policyStatus = "Active";
-                } else {
-                        colorClass = "redClass";
-                        policyStatus = "Ended";
-                }
-                htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
-                htmlStringArray.push('<div class="row">');               
-                if (responseArray.status == "1") {
-                    var votes = getVotes(responseArray.id);
-                    var voteCount = (votes) ? votes : 0;
-                    
-                    htmlStringArray.push('<div class="vote chev col-md-1">');
-                    htmlStringArray.push('<div class="increment up" id="upvote'+ responseArray.id +'"></div>');
-                    htmlStringArray.push('<div class="increment down" id="downvote'+ responseArray.id +'"></div>');               
-                    htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
-                    htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
-                    htmlStringArray.push('<div class="col-md-2">');
-                } else {
-                     htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
-                     htmlStringArray.push('<div class="col-md-3">');
-                }                
-                htmlStringArray.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
-                htmlStringArray.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
-                htmlStringArray.push('<div class="col-md-1"></div>');
-                htmlStringArray.push('<h5 class="col-md-10" id="category-Policy"">' + responseArray.category + '</h5></div></div>');
-                htmlStringArray.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
-                htmlStringArray.push('<p id="expiration-Policy" style="float:right"><strong>' + responseArray.expires + '</strong></p></small></div></div>');
-                htmlStringArray.push('<div class="d-flex w-100 justify-content-between">');
-                htmlStringArray.push('<p class="mb-1" id="description-Policy">' + responseArray.description + '</p>');
-                htmlStringArray.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
-                htmlStringArray.push('<p id="creator-Policy"><strong>' + responseArray.creator + '</strong></p></small>');
-                htmlStringArray.push('</div></div>');
-                
-                return htmlStringArray.join("");
-                   
-        }   
-        
         var allPoliciesBottom = ['</div>',
-            '</div>',
-            '<div class="tab-pane" id="allPolicies" role="tabpanel"></div>',
-            '<div class="tab-pane" id="endedPolicies" role="tabpanel"></div>',   
+            '</div>', 
             '<div class="tab-pane" id="newPolicy" role="tabpanel"></div>',
             '</div>'
         ].join("");
         
-        var activeRows = [];
+
+        var policyRows = [];
+        for (var i = 0; i < resp.initiative.length; i++) {
+            policyRows.push(populateInitiative(resp.initiative[i], resp.voteCount));
+        }
+        
+        main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
+
+        setListeners(resp.initiative);
+        var newPolicyContent = document.getElementById("newPolicy");
+        newPolicyContent.innerHTML = newPolicyPage;
+        
+       
+}
+
+function generateAllPoliciesPage(resp) {
+     var main = document.getElementById('mainContent');
+     
+     var allPoliciesTop = ['<ul class="nav nav-pills">',            
+                '<li class="nav-item">',
+                '<a class="nav-link active" data-toggle="pill" href="#allPolicies">Active Policies</a>',
+                '</li>',
+                '<li class="nav-item">',
+                '<a class="nav-link" data-toggle="pill" href="#endedPolicies">Ended Policies</a>',
+                '</li>',               
+                '</ul>',
+                '<div class="tab-content">',
+                '<div class="tab-pane active" id="allPolicies" role="tabpanel">',
+                '<div class="list-group" id="mydiv">'
+        ].join("");
+          var activeRows = [];
         for (var i = 0; i < resp.activeInitiatives.length; i++) {
-                activeRows.push(populateInitiative(resp.activeInitiatives[i]));
+                activeRows.push(populateInitiative(resp.activeInitiatives[i], resp.voteCount));
         }
         
         var endedRows = [];
         for (var i = 0; i < resp.endedInitiatives.length; i++) {
-                endedRows.push(populateInitiative(resp.endedInitiatives[i]));
+                endedRows.push(populateInitiative(resp.endedInitiatives[i], resp.voteCount));
         }
-
-        var policyRows = [];
-        for (var i = 0; i < resp.initiative.length; i++) {
-            policyRows.push(populateInitiative(resp.initiative[i]));
-        }
+          var allPoliciesBottom = ['</div>',
+            '</div>',            
+            '<div class="tab-pane" id="endedPolicies" role="tabpanel"></div>',           
+            '</div>'
+        ].join("");
         
-        main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
+        main.innerHTML = allPoliciesTop + allPoliciesBottom;
         document.getElementById("allPolicies").innerHTML=activeRows.join("");
         document.getElementById("endedPolicies").innerHTML=endedRows.join("");
-        
-       
-       function setListeners(arrays){
-            //Listeners
-        for (var i = 0; i < arrays.length; i++) {
-                let element = document.getElementById("policyID" + arrays[i].id);
-                let id = element.id;
-                let idNum = arrays[i].id;
-                let status = arrays[i].status;
-                let upvote = document.getElementById("upvote" + arrays[i].id);
-                let downvote = document.getElementById("downvote" + arrays[i].id);
-                
-                element.addEventListener('click', function () {
-                        if (status == "0") {
-                                showEditPolicy(id);
-                        }
-
-                });
-                
-                if(upvote && downvote){
-                    let voteState = "none";// should do this logic in the server somehow
-                    upvote.addEventListener('click', function() {
-                        if(voteState != "UpVote"){
-                            voteState = "UpVote";
-                          
-                           
-                         //   console.log(count);
-                             
-                            sendVoteRequest(idNum, voteState);
-                            
-                         //   console.log(voteState);
-                        }else {
-                            console.log("UpVote already pressed!");
-                        }
-                    }); 
-                
-
-                    downvote.addEventListener('click', function() {
-                        if(voteState != "DownVote"){
-                            voteState = "DownVote";
-                          
-                            
-                            sendVoteRequest(idNum, voteState);
-                            document.getElementById("count" + idNum).innerHTML = getVotes(idNum);
-                           // console.log(count);
-                            //console.log(voteState);
-                        }else {
-                            console.log("DownVote already pressed!");
-                        }
-                    });
-                }
-                
-        }
-           
-       }
-        setListeners(resp.initiative);
         setListeners(resp.activeInitiatives);
-        var newPolicyContent = document.getElementById("newPolicy");
-        newPolicyContent.innerHTML = newPolicyPage;
-        
-        function getVotes(id){
-            return resp.voteCount[id];
-        }
 }
 
 function sendVoteRequest(policyId, voteState){
