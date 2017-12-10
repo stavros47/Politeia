@@ -1490,6 +1490,7 @@ function generatePoliciesPage(resp) {
 }
 
 function sendVoteRequest(policyId, voteState){
+        console.log(voteState);
         let data = new FormData();
         data.append("poll", "vote");
         data.append("policyId", policyId);

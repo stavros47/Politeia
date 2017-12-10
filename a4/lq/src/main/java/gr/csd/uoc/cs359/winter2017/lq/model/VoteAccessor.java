@@ -44,7 +44,8 @@ public class VoteAccessor {
                 if (!currentVote.getVoteAsString().equals(userVoteString)) {
                     System.out.println("hello!");
                     currentVote.setVote(userVote, true);
-                    VoteDB.addVote(currentVote);
+                    // VoteDB.addVote(currentVote);
+                    VoteDB.updateVote(currentVote);
                 }
             } else {
                 currentVote = new Vote(currentUser.getUserName(), "", policyID, userVote, true);
