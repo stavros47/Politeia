@@ -1239,6 +1239,20 @@ function generateAllUsersPage(resp) {
         main.innerHTML = userArrayTop + userRows.join("") + userArrayBottom;
 }
 
+function updateVoteCounters(resp){
+    function updateCount(array){
+        for(var i = 0; i < array.length; i++){
+            if(document.getElementById("count"+array[i].id)){
+                document.getElementById("count"+array[i].id).innerHTML = resp.voteCount[array[i].id];
+            }
+            
+        }
+    }
+    
+    updateCount(resp.initiative);
+    updateCount(resp.activeInitiatives);
+}
+
     function populateInitiative(responseArray, voteCountArray){
             function getVotes(id){
                 return voteCountArray[id];

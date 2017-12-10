@@ -321,10 +321,14 @@
                 generatePoliciesPage(resp);
                 setNewPolicyPageListeners();
              
-            } if (resp.status === "all_polls"){
+            } 
+            if (resp.status === "all_polls"){
                 generateAllPoliciesPage(resp);
             }
             
+            if (resp.status === "vote_success"){
+                updateVoteCounters(resp);
+            }
             
 
         } else if (reqObj.status === 409) {
