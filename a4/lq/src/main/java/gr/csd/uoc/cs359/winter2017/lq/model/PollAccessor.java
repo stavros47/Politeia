@@ -76,17 +76,17 @@ public class PollAccessor {
 
                 initiative = InitiativeDB.getInitiative(intid);
 
-                if (category != null && !category.isEmpty()) {
+                 if (category != null && !category.trim().isEmpty()){
                     initiative.setCategory(category);
                 }
-                if (description != null && !description.isEmpty()) {
+                if (description != null && !description.trim().isEmpty()) {
                     initiative.setDescription(description);
                 }
               
                 if (request.getParameter("status-editPolicy") != null && !request.getParameter("status-editPolicy").isEmpty()) {
                     initiative.setStatus(status);
                 }
-                if (title != null && !title.isEmpty()) {
+                if (title != null && !title.trim().isEmpty()) {
                     initiative.setTitle(title);
                 }
                 if (expDate!=null && time!=null){

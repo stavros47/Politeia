@@ -714,7 +714,7 @@
     }
     
     function createAllPoliciesPage(){  
-            console.log("ALLLLL!");
+            
             let pollData = new FormData();
             pollData.append("poll", "allpolls");         
             var url = 'http://localhost:8084/lq/lqInitiativeServlet';
