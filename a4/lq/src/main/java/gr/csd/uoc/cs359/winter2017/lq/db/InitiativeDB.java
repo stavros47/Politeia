@@ -192,20 +192,29 @@ public class InitiativeDB {
                 expireDate = new Timestamp(initiative.getExpires().getTime());
             }
 
-            insQuery.append("INSERT INTO ")
-                    .append(" initiatives (CREATORID, TITLE, CATEGORY, DESCRIPTION, EXPIRES,"
-                            + "STATUS) ")
-                    .append(" VALUES (")
-                    .append("'").append(initiative.getCreator()).append("',")
-                    .append("'").append(initiative.getTitle()).append("',")
-                    .append("'").append(initiative.getCategory()).append("',")
-                    .append("'").append(initiative.getDescription()).append("',");
-
-            // If we have added an expire date
             if (expireDate != null) {
-                insQuery.append("'").append(expireDate).append("',");
+                insQuery.append("INSERT INTO ")
+                        .append(" initiatives (CREATORID, TITLE, CATEGORY, DESCRIPTION, EXPIRES,"
+                                + "STATUS) ")
+                        .append(" VALUES (")
+                        .append("'").append(initiative.getCreator()).append("',")
+                        .append("'").append(initiative.getTitle()).append("',")
+                        .append("'").append(initiative.getCategory()).append("',")
+                        .append("'").append(initiative.getDescription()).append("',")
+                        .append("'").append(expireDate).append("',")
+                        .append("'").append(initiative.getStatus()).append("');");
+            } else {
+                insQuery.append("INSERT INTO ")
+                        .append(" initiatives (CREATORID, TITLE, CATEGORY, DESCRIPTION,"
+                                + "STATUS) ")
+                        .append(" VALUES (")
+                        .append("'").append(initiative.getCreator()).append("',")
+                        .append("'").append(initiative.getTitle()).append("',")
+                        .append("'").append(initiative.getCategory()).append("',")
+                        .append("'").append(initiative.getDescription()).append("',")
+                        .append("'").append(initiative.getStatus()).append("');");
+
             }
-            insQuery.append("'").append(initiative.getStatus()).append("');");
 
             String generatedColumns[] = {"ID"};
             PreparedStatement stmtIns = con.prepareStatement(insQuery.toString(), generatedColumns);

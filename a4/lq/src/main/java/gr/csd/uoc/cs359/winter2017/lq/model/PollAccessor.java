@@ -23,11 +23,15 @@ public class PollAccessor {
             String title=request.getParameter("title-newPolicy");
             int status=Integer.parseInt(request.getParameter("status-newPolicy"));
             String description=request.getParameter("description-newPolicy");
-            String expiration=(String)request.getParameter("expiration-newPolicy");
+            String expDate=(String)request.getParameter("expiration-newPolicy");
             String time = request.getParameter("expTime-newPolicy");
-            time =time+ ":26";
-            String newexpiration=expiration+" "+time;
-           
+            String timeregex = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
+            String dateTime= expDate + " " + time; 
+             if (time!=null){
+                if (!time.matches(timeregex)){
+                    time=null;
+                }
+             }
             User user=(User)request.getSession(true).getAttribute("user");
             String creator= user.getUserName();
             if (user!=null){
@@ -36,9 +40,9 @@ public class PollAccessor {
                 initiative.setCategory(category);
                 initiative.setDescription(description);
                 initiative.setStatus(status);
-                if (expiration != null && !expiration.isEmpty()) {
-                    Date expDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(newexpiration);
-                    initiative.setExpires(expDate);
+               if (expDate!=null && time!=null){
+                 Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
+                    initiative.setExpires(expiration);
                 }
                 InitiativeDB.addInitiative(initiative);
             }
@@ -66,12 +70,18 @@ public class PollAccessor {
             String expDate = (String) request.getParameter("expiration-editPolicy");
             String time = request.getParameter("expTime-editPolicy");
             String dateTime= expDate + " " + time; 
+            String timeregex = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
+            
             User user=(User)request.getSession(true).getAttribute("user");
             String id = request.getParameter("policyId");
             id = id.substring(8);
             Date date = new Date();
             int intid=Integer.parseInt(id);
-           
+            if (time!=null){
+                 if (!time.matches(timeregex)){
+                    time=null;
+                }
+            }
             if (user != null) {
 
                 initiative = InitiativeDB.getInitiative(intid);
