@@ -1493,8 +1493,6 @@ function generatePoliciesPage(resp) {
         var newPolicyContent = document.getElementById("newPolicy");
         newPolicyContent.innerHTML = newPolicyPage;
  
-        document.getElementById("").onclick = function () {}
- 
 }
 
 function generateAllPoliciesPage(resp) {
