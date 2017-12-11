@@ -1243,9 +1243,11 @@ function updateVoteCounters(resp){
     function updateCount(array){
         for(var i = 0; i < array.length; i++){
             if(document.getElementById("count"+array[i].id)){
-                document.getElementById("count"+array[i].id).innerHTML = resp.voteCount[array[i].id];
-            }
-            
+                console.log(resp.voteCount[array[i].id]);
+                if(resp.voteCount[array[i].id]){
+                    document.getElementById("count"+array[i].id).innerHTML = resp.voteCount[array[i].id];
+                }                
+            }            
         }
     }
     
@@ -1255,7 +1257,10 @@ function updateVoteCounters(resp){
 
     function populateInitiative(responseArray, voteCountArray){
             function getVotes(id){
-                return voteCountArray[id];
+                if (voteCountArray[id]){
+                    return voteCountArray[id];
+                }
+                return null;
             }
             var htmlStringArray = []
 
@@ -1271,22 +1276,32 @@ function updateVoteCounters(resp){
                     colorClass = "redClass";
                     policyStatus = "Ended";
             }
-            htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
-            htmlStringArray.push('<div class="row">');               
-            if (responseArray.status == "1") {
-                var votes = getVotes(responseArray.id);
+   
+              var votes = getVotes(responseArray.id);
                 var voteCount = (votes) ? votes : 0;
-
+            if (responseArray.status == "1") { //active
+              
+                htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
+                htmlStringArray.push('<div class="row">');  
                 htmlStringArray.push('<div class="vote chev col-md-1">');
                 htmlStringArray.push('<div class="increment up" id="upvote'+ responseArray.id +'"></div>');
                 htmlStringArray.push('<div class="increment down" id="downvote'+ responseArray.id +'"></div>');               
                 htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
                 htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
                 htmlStringArray.push('<div class="col-md-2">');
-            } else {
+            } else if(responseArray.status == "0"){ //inactive
+                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyInactive" id="policyID' + responseArray.id + '"data-toggle="tooltip" data-placement="top" title="Click to Edit!">');
+                 htmlStringArray.push('<div class="row">');  
                  htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
                  htmlStringArray.push('<div class="col-md-3">');
-            }                
+            } else { //ended
+                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyEnded" id="policyID' + responseArray.id + '">');
+                htmlStringArray.push('<div class="row">');  
+                htmlStringArray.push('<div class="vote chev col-md-1">');                          
+                htmlStringArray.push('<div class="count endedCount" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
+                htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
+                htmlStringArray.push('<div class="col-md-2">');
+            }               
             htmlStringArray.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
             htmlStringArray.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
             htmlStringArray.push('<div class="col-md-1"></div>');
@@ -1443,7 +1458,11 @@ function generatePoliciesPage(resp) {
                 '</form>'
         ].join("");
 
-        var allPoliciesTop = ['<ul class="nav nav-pills">',
+        var allPoliciesTop = ['<div class="alert alert-info alert-dismissable fade show">',
+                '<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>',
+                '<strong>Tip:</strong> You may click on any <strong>Inactive</strong> Initiatives to edit and/or activate them.',
+                '</div>',
+                '<ul class="nav nav-pills">',
                 '<li class="nav-item">',
                 '<a class="nav-link active" data-toggle="pill" href="#myPolicies">My Policies</a>',
                 '</li>',              
@@ -1473,8 +1492,9 @@ function generatePoliciesPage(resp) {
         setListeners(resp.initiative);
         var newPolicyContent = document.getElementById("newPolicy");
         newPolicyContent.innerHTML = newPolicyPage;
-        
-       
+ 
+        document.getElementById("").onclick = function () {}
+ 
 }
 
 function generateAllPoliciesPage(resp) {
