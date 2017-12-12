@@ -109,9 +109,7 @@ public class Vote implements Serializable {
     }
 
     public void setModified(Date modified) {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         this.modified = modified;
-        sdfDate.format(modified);
     }
 
     public String getUser() {

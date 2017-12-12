@@ -116,7 +116,7 @@ public class VoteDB {
 
     /**
      * Get votes voted by
-       *
+     *
      * @param status, 0 for delegators, 1 for users
      * @return
      * @throws ClassNotFoundException
@@ -185,7 +185,9 @@ public class VoteDB {
                     .append(" VALUES (")
                     .append("'").append(vote.getUser()).append("',");
             // If there is a delegator
-            if (vote.getDelegator() != null) {
+            if (vote.getDelegator() != null && !vote.getDelegator().trim().equals("")) {
+                insQuery.append("'").append(vote.getDelegator()).append("',");
+            } else {
                 insQuery.append("'").append(vote.getUser()).append("',");
             }
 
@@ -220,14 +222,14 @@ public class VoteDB {
     }
 
     /**
-     * Establish a database connection and get vote with id
+     * Establish a database connection and get vote with specific id
      *
      * @param id
      * @return
      * @throws ClassNotFoundException
      */
     public static Vote getVote(int id) throws ClassNotFoundException {
-        Vote vote = new Vote();
+        Vote vote = null;
         try {
             Connection con = CS359DB.getConnection();
             StringBuilder insQuery = new StringBuilder();
@@ -242,7 +244,8 @@ public class VoteDB {
 
             ResultSet res = stmtIns.getResultSet();
 
-            while (res.next() == true) {
+            if (res.next() == true) {
+                vote = new Vote();
                 vote.setId(res.getInt("id"));
                 vote.setUser(res.getString("userID"));
                 vote.setDelegator(res.getString("delegatorID"));
@@ -264,6 +267,54 @@ public class VoteDB {
         return vote;
     }
 
+    /**
+     * Establish a database connection and get vote for initiative with id for
+     * user with username
+     *
+     * @param name userName
+     * @param initiativeID initiative id
+     * @return
+     * @throws ClassNotFoundException
+     */
+    public static Vote getVote(String userName, int initiativeID) throws ClassNotFoundException {
+        Vote vote = null;
+        try {
+            Connection con = CS359DB.getConnection();
+            StringBuilder insQuery = new StringBuilder();
+
+            insQuery.append("SELECT * FROM votes ")
+                    .append(" WHERE ")
+                    .append(" INITIATIVEID = ").append("'").append(initiativeID).append("'")
+                    .append(" AND USERID = ").append("'").append(userName).append("';");
+
+            String generatedColumns[] = {"ID"};
+            PreparedStatement stmtIns = con.prepareStatement(insQuery.toString(), generatedColumns);
+            stmtIns.executeUpdate();
+
+            ResultSet res = stmtIns.getResultSet();
+
+            if (res.next() == true) {
+                vote = new Vote();
+                vote.setId(res.getInt("id"));
+                vote.setUser(res.getString("userID"));
+                vote.setDelegator(res.getString("delegatorID"));
+                vote.setVote(res.getInt("vote") == 1, res.getInt("votedBy") == 1);
+                vote.setInitiativeID(res.getInt("initiativeID"));
+                vote.setCreated(res.getTimestamp("created"));
+                vote.setModified(res.getTimestamp("updated"));
+            }
+
+            System.out.println("#DB: The vote was successfully retrieved from the database.");
+
+            // Close connection
+            stmtIns.close();
+
+        } catch (SQLException ex) {
+            // Log exception
+            Logger.getLogger(VoteDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vote;
+    }
 
     /**
      * Updates information for specific initiative
@@ -286,8 +337,16 @@ public class VoteDB {
 
             insQuery.append("UPDATE votes ")
                     .append(" SET ")
-                    .append(" VOTE = ").append("'").append(vote.getVote()).append("'")
-                    .append(" WHERE ID = ").append("'").append(vote.getId()).append("';");
+                    .append(" VOTE = ").append("'").append(vote.getVote()).append("',")
+                    .append(" VOTEDBY = ").append("'").append(vote.getVotedBy()).append("',");
+            // If there is a delegator
+            if (vote.getDelegator() != null && !vote.getDelegator().trim().equals("")) {
+                insQuery.append(" DELEGATORID = ").append("'").append(vote.getDelegator()).append("'");
+            } else {
+                insQuery.append(" DELEGATORID = ").append("'").append(vote.getUser()).append("'");
+            }
+
+            insQuery.append(" WHERE ID = ").append("'").append(vote.getId()).append("';");
 
             PreparedStatement stmtUpdate = con.prepareStatement(insQuery.toString());
 
