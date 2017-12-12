@@ -1,4 +1,4 @@
-package gr.csd.uoc.cs359.winter2017.lq;
+package gr.csd.uoc.cs359.winter2017.lq.Servlets;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
 import gr.csd.uoc.cs359.winter2017.lq.model.FormValidator;
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Kyriacos
  */
-@WebServlet(name = "lqPollServlet", urlPatterns = {
+@WebServlet(name = "lqInitiativeServlet", urlPatterns = {
     "/lqInitiativeServlet"
 })@MultipartConfig
 public class lqInitiativeServlet extends HttpServlet {
@@ -48,7 +48,7 @@ public class lqInitiativeServlet extends HttpServlet {
              List<Initiative> activePollsList=null;
              List<Initiative> endedPollsList=null;
              String status = "";
-            User curentUser= (User)request.getSession(true).getAttribute("user");
+            User currentUser= (User)request.getSession(true).getAttribute("user");
             ArrayList< String> invalidFields = new ArrayList<>();
             FormValidator validator = new FormValidator();
             Initiative initiative = null;
@@ -71,7 +71,7 @@ public class lqInitiativeServlet extends HttpServlet {
                              status="initiative_failed";
                              response.setStatus(409);
                          }    
-                         myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
+                         myPollsList=InitiativeDB.getInitiatives(currentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          break;
@@ -79,7 +79,7 @@ public class lqInitiativeServlet extends HttpServlet {
                          status="my_polls";
                          response.setStatus(200);
                          PollAccessor.endExpiredPolicies();
-                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
+                         myPollsList = InitiativeDB.getInitiatives(currentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          break;
@@ -87,14 +87,14 @@ public class lqInitiativeServlet extends HttpServlet {
                          status = "all_polls";
                          response.setStatus(200);
                          PollAccessor.endExpiredPolicies();
-                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
+                         myPollsList = InitiativeDB.getInitiatives(currentUser.getUserName());
                          activePollsList = InitiativeDB.getInitiativesWithStatus(1);
                          endedPollsList = InitiativeDB.getInitiativesWithStatus(2);
                          break;
                      case "vote":
                          status = "vote_success";
                          response.setStatus(200);
-                         myPollsList = InitiativeDB.getInitiatives(curentUser.getUserName());
+                         myPollsList = InitiativeDB.getInitiatives(currentUser.getUserName());
                          activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                          endedPollsList = InitiativeDB.getInitiativesWithStatus(2);
                          VoteAccessor.voteAction(request);
@@ -109,7 +109,7 @@ public class lqInitiativeServlet extends HttpServlet {
                              status="update_success";
                              response.setStatus(200);
                              PollAccessor.endExpiredPolicies();
-                             myPollsList=InitiativeDB.getInitiatives(curentUser.getUserName());
+                             myPollsList=InitiativeDB.getInitiatives(currentUser.getUserName());
                              activePollsList=InitiativeDB.getInitiativesWithStatus(1);
                              endedPollsList=InitiativeDB.getInitiativesWithStatus(2);
                          }
@@ -124,8 +124,7 @@ public class lqInitiativeServlet extends HttpServlet {
                
             }
             
-           
-            String jsonResponse = initiativeResponse(invalidFields, myPollsList,activePollsList, endedPollsList, status);
+            String jsonResponse = initiativeResponse(invalidFields, myPollsList, activePollsList, endedPollsList, currentUser, status);
            
             out.print(jsonResponse);
            

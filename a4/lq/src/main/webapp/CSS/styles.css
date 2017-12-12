@@ -57,6 +57,17 @@ InputUsername:valid{
 Upvote Downvote CSS
 */
 
+.circle .up {
+  border-radius: 7rem 7rem 0 0;
+}
+
+.circle .down {
+  border-radius: 0 0 7rem 7rem;
+}
+
+.circle .count {
+  border-radius: 50%;
+}
 /* try 50% */
 .vote {
   display: -webkit-box;
@@ -68,8 +79,8 @@ Upvote Downvote CSS
           flex-direction: column;
   font-family: "Noto Sans";
   position: relative;
-  width: 3rem;
-  height: 3rem;
+  width: 5rem;
+  height: 5rem;
 
 }
 
@@ -95,10 +106,15 @@ Upvote Downvote CSS
 .increment:hover {
   opacity: 1;
 }
+.pressed{
+    opacity: 1;
+    
+}
+
 
 .count {
   position: absolute;
-  top: 0;
+  top: 0.8rem;
   left: 20%;
   border-radius: 0.5rem;
   margin: 1.0rem;
@@ -106,7 +122,7 @@ Upvote Downvote CSS
   width: 1.5rem;
   font-size: 1.5rem;
   font-weight: bold;
-  line-height: 0.7rem;
+  line-height: 1.5rem;
   text-align: center;
   box-shadow: 0 0 0 0.5rem #F6F3E4;
   pointer-events: none;
@@ -118,6 +134,9 @@ Upvote Downvote CSS
   color: #C15044;
 }
 
+.endedCount {
+    font-size:2em;
+}
 /*
 UserPage
 */
@@ -137,7 +156,7 @@ UserPage
 
 .policy {
     cursor:pointer;
-    border: 3px #33691E solid;
+    border: 2px #33691E solid;
     
 }
 
@@ -145,16 +164,16 @@ UserPage
 
 .policyInactive {
     cursor:pointer;
-     border: 3px #1565C0 solid;
+     border: 2px #1565C0 solid;
 }
 
 .policyInactive:hover {
-   border: 4px #1565C0 solid;
+   border: 3px #1565C0 solid;
    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 11px 11px rgba(0,0,0,0.22);
 }
 
 .policyEnded {
-    border: 3px #D50000 solid;
+    border: 2px #D50000 solid;
 }
 
 /*

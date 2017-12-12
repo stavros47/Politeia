@@ -5,6 +5,7 @@
  */
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
+import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
 import gr.csd.uoc.cs359.winter2017.lq.db.VoteDB;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,6 @@ public class VoteAccessor {
                 if (!currentVote.getVoteAsString().equals(userVoteString)) {
                     System.out.println("hello!");
                     currentVote.setVote(userVote, true);
-                    // VoteDB.addVote(currentVote);
                     VoteDB.updateVote(currentVote);
                 }
             } else {
@@ -95,4 +95,27 @@ public class VoteAccessor {
         }
 
     }
+
+    public HashMap<Integer, Integer> generateUsersVoteIndicationMap(User currentUser) {
+        HashMap<Integer, Integer> userVoteIndicationMap = new HashMap<>();
+
+        try {
+            List<Initiative> activeInitiatives = InitiativeDB.getInitiativesWithStatus(1);
+            List<Vote> userVotes = VoteDB.getVotes(currentUser.getUserName());
+            //Loop all the active initiatives to find all the Initiatives this user has voted on
+            for (Initiative activeInitiative : activeInitiatives) {
+                for (Vote currentVote : userVotes) {
+                    if (currentVote.getInitiativeID() == activeInitiative.getId()) {
+                        userVoteIndicationMap.put(currentVote.getInitiativeID(), currentVote.getVote());
+                    }
+                }
+
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(VoteAccessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return userVoteIndicationMap;
+    }
+
 }

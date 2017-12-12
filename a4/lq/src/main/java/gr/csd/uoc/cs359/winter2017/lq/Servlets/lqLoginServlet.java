@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gr.csd.uoc.cs359.winter2017.lq;
+package gr.csd.uoc.cs359.winter2017.lq.Servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

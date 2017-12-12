@@ -7,6 +7,7 @@ package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,10 +40,10 @@ public class JsonResponse {
         return jsonResponseString;
     }
 
-    public static String initiativeResponse(ArrayList < String > invalidFields, List < Initiative > initiative,List < Initiative > activeInitiatives,List < Initiative > endedPollsList, String status) {
+    public static String initiativeResponse(ArrayList< String> invalidFields, List< Initiative> initiative, List< Initiative> activeInitiatives, List< Initiative> endedPollsList, User currentUser, String status) {
         String jsonResponseString = "";
         VoteAccessor voteAccessor = new VoteAccessor();
-        // Gson gson = new GsonBuilder().create();
+        HashMap<Integer, Integer> userVotesMap = voteAccessor.generateUsersVoteIndicationMap(currentUser);
         Gson gson = new Gson();
 
         String invalidFieldsResponse = "";
@@ -51,11 +52,12 @@ public class JsonResponse {
 
         if (invalidFields == null || invalidFields.isEmpty()) {
             if (initiative != null) {
+                String userVoteMapArray = "\"userVotes\":" + gson.toJson(userVotesMap);
                 String voteCountArray = "\"voteCount\":" + gson.toJson(voteAccessor.generateCountMap());
                 String initiativeResult = "\"initiative\":" + gson.toJson(initiative);
                 String endedInitiativeResult = "\"endedInitiatives\":" + gson.toJson(endedPollsList);
                 String activeIni = "\"activeInitiatives\":" + gson.toJson(activeInitiatives);
-                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + activeIni + "," + endedInitiativeResult + "," + voteCountArray + "" + "}";
+                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + activeIni + "," + endedInitiativeResult + "," + voteCountArray + "," + userVoteMapArray + "" + "}";//","
                 return jsonResponseString;
             }
 

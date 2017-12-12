@@ -1242,20 +1242,35 @@ function generateAllUsersPage(resp) {
 function updateVoteCounters(resp){
     function updateCount(array){
         for(var i = 0; i < array.length; i++){
-            if(document.getElementById("count"+array[i].id)){
-                console.log(resp.voteCount[array[i].id]);
-                if(resp.voteCount[array[i].id]){
+            if(document.getElementById("count"+array[i].id)){                
+                if(resp.voteCount[array[i].id] != null){
                     document.getElementById("count"+array[i].id).innerHTML = resp.voteCount[array[i].id];
                 }                
             }            
         }
     }
     
+    function showPressed(array){
+        for (var i = 0; i < array.length; i++){
+            if (resp.userVotes[array[i].id] != null){
+                if(resp.userVotes[array[i].id] == "0"){
+                    document.getElementById("downvote"+array[i].id).classList.add("pressed");
+                    document.getElementById("upvote"+array[i].id).classList.remove("pressed");
+                }else {
+                    document.getElementById("upvote"+array[i].id).classList.add("pressed");
+                    document.getElementById("downvote"+array[i].id).classList.remove("pressed");
+                }
+            }
+        }
+    }
+    
     updateCount(resp.initiative);
     updateCount(resp.activeInitiatives);
+    showPressed(resp.initiative);
+    showPressed(resp.activeInitiatives);
 }
 
-    function populateInitiative(responseArray, voteCountArray){
+    function populateInitiative(responseArray, voteCountArray, userVotesArray){
             function getVotes(id){
                 if (voteCountArray[id]){
                     return voteCountArray[id];
@@ -1276,16 +1291,30 @@ function updateVoteCounters(resp){
                     colorClass = "redClass";
                     policyStatus = "Ended";
             }
-   
+            
+            var downVoteClass = "";
+            var upVoteClass = "";
+            if (userVotesArray){
+                if(userVotesArray[responseArray.id] != null){
+                    console.log("vote:" + userVotesArray[responseArray.id] + "policy:" + responseArray.id);
+                    if(userVotesArray[responseArray.id] == "0"){
+                        downVoteClass = "pressed";
+                        upVoteClass = "";
+                    }else {
+                        upVoteClass = "pressed";
+                        downVoteClass = "";
+                    }
+                }
+            }
               var votes = getVotes(responseArray.id);
                 var voteCount = (votes) ? votes : 0;
             if (responseArray.status == "1") { //active
               
                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
                 htmlStringArray.push('<div class="row">');  
-                htmlStringArray.push('<div class="vote chev col-md-1">');
-                htmlStringArray.push('<div class="increment up" id="upvote'+ responseArray.id +'"></div>');
-                htmlStringArray.push('<div class="increment down" id="downvote'+ responseArray.id +'"></div>');               
+                htmlStringArray.push('<div class="vote circle col-md-1">');
+                htmlStringArray.push('<div class="increment up '+ upVoteClass+'" id="upvote'+ responseArray.id +'"></div>');
+                htmlStringArray.push('<div class="increment down '+ downVoteClass +'" id="downvote'+ responseArray.id +'"></div>');               
                 htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
                 htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
                 htmlStringArray.push('<div class="col-md-2">');
@@ -1484,7 +1513,7 @@ function generatePoliciesPage(resp) {
 
         var policyRows = [];
         for (var i = 0; i < resp.initiative.length; i++) {
-            policyRows.push(populateInitiative(resp.initiative[i], resp.voteCount));
+            policyRows.push(populateInitiative(resp.initiative[i], resp.voteCount, resp.userVotes));
         }
         
         main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
@@ -1512,12 +1541,12 @@ function generateAllPoliciesPage(resp) {
         ].join("");
           var activeRows = [];
         for (var i = 0; i < resp.activeInitiatives.length; i++) {
-                activeRows.push(populateInitiative(resp.activeInitiatives[i], resp.voteCount));
+                activeRows.push(populateInitiative(resp.activeInitiatives[i], resp.voteCount, resp.userVotes));
         }
         
         var endedRows = [];
         for (var i = 0; i < resp.endedInitiatives.length; i++) {
-                endedRows.push(populateInitiative(resp.endedInitiatives[i], resp.voteCount));
+                endedRows.push(populateInitiative(resp.endedInitiatives[i], resp.voteCount, resp.userVotes));
         }
           var allPoliciesBottom = ['</div>',
             '</div>',            
