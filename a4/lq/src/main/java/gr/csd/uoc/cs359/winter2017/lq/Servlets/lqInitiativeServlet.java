@@ -125,7 +125,6 @@ public class lqInitiativeServlet extends HttpServlet {
             }
             
             String jsonResponse = initiativeResponse(invalidFields, myPollsList, activePollsList, endedPollsList, currentUser, status);
-           
             out.print(jsonResponse);
            
         }

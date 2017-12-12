@@ -24,6 +24,7 @@ import gr.csd.uoc.cs359.winter2017.lq.model.User;
  *
  * @author Stavr
  */
+
 @WebServlet(name = "lqRegisterServlet", urlPatterns = {"/mainServlet"})
 @MultipartConfig
 public class lqRegisterServlet extends HttpServlet {

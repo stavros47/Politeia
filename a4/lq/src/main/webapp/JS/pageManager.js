@@ -606,7 +606,6 @@ function showLoginPage() {
 
 }
 
-
 function showUserPage() {
         var main = document.getElementById('mainContent');
         var headerN = document.getElementById('header-container');
