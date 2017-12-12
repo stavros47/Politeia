@@ -1602,7 +1602,7 @@ function showEditPolicy(policyId) {
                        '<h5 class="col-md-2">Date:</h5>',
                         '<h6 class="col-md-4" id="expirationEditPolicy">',
                         '<input required type="date" class="form-control" name="expiration-editPolicy" id="expiration-editPolicy" title="This is required when setting active status">',
-                        '<div id="expiration-newPolicy-feedback" class="invalid-feedback">',
+                        '<div id="expiration-editPolicy-feedback" class="invalid-feedback">',
                         'Invalid input -',
                         '</h6>',
                         '<h5 class="col-md-2">Time:</h5>',

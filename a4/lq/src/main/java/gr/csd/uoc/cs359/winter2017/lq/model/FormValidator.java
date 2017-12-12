@@ -180,9 +180,9 @@ public class FormValidator {
         String time = (String) request.getParameter("expTime-newPolicy");
         String timeregex = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
         String dateTime = expDate + " " + time;
-        
-        
-        if (status.equals("1")) {
+       
+      
+       if (status.equals("1")) {
             if (time==null){
                 this.invalidFields.add("EmptyexpTime-newPolicy");
             }
@@ -195,10 +195,13 @@ public class FormValidator {
             if (expDate==null || expDate.trim().isEmpty()) {
                 this.invalidFields.add("expiration-newPolicy");
             } else {
-                if (time!=null){
-                Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
-                if (expiration.getTime() < today.getTime()) {
-                    this.invalidFields.add("badDateexpiration-newPolicy");
+                 if (expDate.length()>10){
+                    this.invalidFields.add("expiration-newPolicy");
+                 }
+                 else if (time!=null){
+                    Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
+                    if (expiration.getTime() < today.getTime()) {
+                        this.invalidFields.add("badDateexpiration-newPolicy");
                     }
                 }
             }
@@ -212,7 +215,7 @@ public class FormValidator {
         if (title == null || title.trim().isEmpty()) {
             this.invalidFields.add("Emptytitle-newPolicy");
         }
-        
+      
         return this.invalidFields;
     }
 
@@ -224,6 +227,7 @@ public class FormValidator {
         String expDate = (String) request.getParameter("expiration-editPolicy");
         String timeregex = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
         String dateTime = expDate + " " + time;
+        
         if (status.equals("1")) {
             if (time==null){
                 this.invalidFields.add("EmptyexpTime-editPolicy");
@@ -237,10 +241,13 @@ public class FormValidator {
             if (expDate==null || expDate.trim().isEmpty()) {
                 this.invalidFields.add("expiration-editPolicy");
             } else {
-                if (time!=null){
-                Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
-                if (expiration.getTime() < today.getTime()) {
-                    this.invalidFields.add("badDateexpiration-editPolicy");
+                 if (expDate.length()>10){
+                    this.invalidFields.add("expiration-editPolicy");
+                 }
+                 else if (time!=null){
+                    Date expiration = (Date) new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTime);
+                    if (expiration.getTime() < today.getTime()) {
+                        this.invalidFields.add("badDateexpiration-editPolicy");
                     }
                 }
             }
