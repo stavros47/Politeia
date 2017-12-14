@@ -1239,6 +1239,7 @@ function generateAllUsersPage(resp) {
 }
 
 function updateVoteCounters(resp){
+    
     function updateCount(array){
         for(var i = 0; i < array.length; i++){
             if(document.getElementById("count"+array[i].id)){                
@@ -1248,16 +1249,20 @@ function updateVoteCounters(resp){
             }            
         }
     }
-    
+       
     function showPressed(array){
         for (var i = 0; i < array.length; i++){
             if (resp.userVotes[array[i].id] != null){
-                if(resp.userVotes[array[i].id] == "0"){
-                    document.getElementById("downvote"+array[i].id).classList.add("pressed");
-                    document.getElementById("upvote"+array[i].id).classList.remove("pressed");
-                }else {
-                    document.getElementById("upvote"+array[i].id).classList.add("pressed");
-                    document.getElementById("downvote"+array[i].id).classList.remove("pressed");
+                if(document.getElementById("downvote"+array[i].id) && document.getElementById("upvote"+array[i].id)){
+                    if(resp.userVotes[array[i].id] == "0"){                   
+                            document.getElementById("downvote"+array[i].id).classList.add("pressed");
+                            document.getElementById("upvote"+array[i].id).classList.remove("pressed");
+
+
+                    }else {
+                        document.getElementById("upvote"+array[i].id).classList.add("pressed");
+                        document.getElementById("downvote"+array[i].id).classList.remove("pressed");
+                    }
                 }
             }
         }
@@ -1295,7 +1300,7 @@ function updateVoteCounters(resp){
             var upVoteClass = "";
             if (userVotesArray){
                 if(userVotesArray[responseArray.id] != null){
-                    console.log("vote:" + userVotesArray[responseArray.id] + "policy:" + responseArray.id);
+                    //console.log("vote:" + userVotesArray[responseArray.id] + "policy:" + responseArray.id);
                     if(userVotesArray[responseArray.id] == "0"){
                         downVoteClass = "pressed";
                         upVoteClass = "";
@@ -1515,8 +1520,10 @@ function generatePoliciesPage(resp) {
             policyRows.push(populateInitiative(resp.initiative[i], resp.voteCount, resp.userVotes));
         }
         
-        main.innerHTML = allPoliciesTop + policyRows.join("") + allPoliciesBottom;
+        main.innerHTML = allPoliciesTop + allPoliciesBottom;
 
+        
+        document.getElementById("myPolicies").innerHTML = policyRows.join("");
         setListeners(resp.initiative);
         var newPolicyContent = document.getElementById("newPolicy");
         newPolicyContent.innerHTML = newPolicyPage;
