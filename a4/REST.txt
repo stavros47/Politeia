@@ -152,7 +152,7 @@ Method: GET
 
 URL: /initiatives/:username
 
-URL Params: id=[string] 
+URL Params: username=[string] 
 
 Success Response: code 200
 Content:  
