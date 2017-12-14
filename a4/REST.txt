@@ -1,0 +1,309 @@
+REST
+
+Recourses: 
+Users, Poll Initiatives, Votes
+
+
+Action: Create User
+
+Method: POST  
+
+ULR: /users
+
+Data Params:
+ {
+  user : {
+    username : [string],
+    email : [string],
+    name : [string],
+    surname : [string],
+    password : [string],
+    gender : [string],
+    country : [string],
+    city : [string],
+    address : [string],
+    occupation : [string],
+    interests : [string],
+    generalInfo : [string]
+   
+  }
+}
+ 
+Success Response: code 201
+
+Error Response : Code: 400 Bad Request 
+Content: { error : "Invalid data" }	
+---------------------------------------------------------
+
+Action: Show User
+
+Method: GET
+
+URL: /users/:id
+
+URL Params: id=[integer] 
+
+Success Response: code 200
+Content:  
+{
+  user : {
+    username : [string],
+    email : [string],
+    name : [string],
+    surname : [string],
+    password : [string],
+    gender : [string],
+    country : [string],
+    city : [string],
+    address : [string],
+    occupation : [string],
+    interests : [string],
+    generalInfo : [string]
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : User not found" }	
+---------------------------------------------------------
+
+Action: Update User
+
+Method: PUT
+
+URL: /users/:id
+
+URL Params: id=[integer] 
+
+Data Params:
+ {
+  user : {
+    username : [string],
+    email : [string],
+    name : [string],
+    surname : [string],
+    password : [string],
+    gender : [string],
+    country : [string],
+    city : [string],
+    address : [string],
+    occupation : [string],
+    interests : [string],
+    generalInfo : [string]
+  }
+}
+
+Success Response: code 202
+
+Error Response : Code: 400 Bad Request 
+Content: { error : "Invalid data" }	
+---------------------------------------------------------
+
+Action: Create Initiative
+
+Method: POST  
+
+ULR: /initiatives
+
+Data Params:
+ {
+  initiative : {
+    title: [string],
+    category : [string],
+    status : [string],
+    description : [string],
+    expirationDate : [string]
+  }
+}
+ 
+Success Response: code 201
+
+Error Response : Code: 400 Bad Request 
+Content: { error : "Invalid data" }	
+---------------------------------------------------------
+Action: Update Initiative
+
+Method: PUT
+
+URL: /initiatives/:id
+
+URL Params: id=[integer] 
+
+Data Params:
+ {
+  initiative : {
+    title: [string],
+    category : [string],
+    status : [string],
+    description : [string],
+    expirationDate : [string]
+  }
+}
+ 
+
+Success Response: code 202
+
+Error Response : Code: 400 Bad Request 
+Content: { error : "Invalid data" }
+---------------------------------------------------------	
+
+Action: Show User Initiatives
+
+Method: GET
+
+URL: /initiatives/:username
+
+URL Params: id=[string] 
+
+Success Response: code 200
+Content:  
+{
+  {
+    initiative[]: { //list of initiatives
+    title: [string],
+    category : [string],
+    status : [string],
+    description : [string],
+    expirationDate : [string]
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Initiative(s) not found" }
+---------------------------------------------------------
+
+Action: Show Active Initiatives
+
+Method: GET
+
+URL: /initiatives/:status
+
+URL Params: status=[integer=1] 
+
+Success Response: code 200
+Content:  
+{
+  {
+    initiative[] : { 
+    title: [string],
+    category : [string],
+    status : [string],
+    description : [string],
+    expirationDate : [string]
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Initiative(s) not found" }
+---------------------------------------------------------
+
+
+Action: Show Inactive Initiatives
+
+Method: GET
+
+URL: /initiatives/:status
+
+URL Params: status=[integer=0] 
+
+Success Response: code 200
+Content:  
+{
+  {
+    initiative[] : { 
+    title: [string],
+    category : [string],
+    status : [string],
+    description : [string],
+    expirationDate : [string]
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Initiative(s) not found" }
+---------------------------------------------------------
+
+Action: Show Ended Initiatives
+
+Method: GET
+
+URL: /initiatives/:status
+
+URL Params: status=[integer=2] 
+
+Success Response: code 200
+Content:  
+{
+  {
+    initiative[] : { 
+    title: [string],
+    category : [string],
+    status : [string],
+    description : [string],
+    expirationDate : [string]
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Initiative(s) not found" }
+---------------------------------------------------------
+
+Action: Create Vote
+
+Method: POST  
+
+ULR: /votes
+
+Data Params:
+ {
+  vote: {
+    policyID: [string],
+    voteState: [string]
+  }
+}
+ 
+Success Response: code 201
+
+Error Response : Code: 400 Bad Request 
+Content: { error : "Invalid data" }	
+---------------------------------------------------------
+	
+Action: Update Vote
+
+Method: PUT
+
+URL: /votes/:id
+
+URL Params: id=[integer] 
+
+Data Params:
+ {
+  vote: {
+    policyID: [string],
+    voteState: [string]
+  }
+}
+ 
+
+Success Response: code 202
+
+Error Response : Code: 400 Bad Request 
+Content: { error : "Invalid data" }
+---------------------------------------------------------
+Action: Show Votes
+
+Method: GET
+
+URL: /votes
+
+Success Response: code 200
+Content:  
+ {
+  vote: {
+    policyID: [string],
+    voteState: [string]
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Vote(s) not found" }
+---------------------------------------------------------
