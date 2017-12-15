@@ -8,7 +8,7 @@ Action: Create User
 
 Method: POST  
 
-ULR: /users
+URL: /users
 
 Data Params:
  {
@@ -18,6 +18,7 @@ Data Params:
     name : [string],
     surname : [string],
     password : [string],
+    dateOfBirth : [string],
     gender : [string],
     country : [string],
     city : [string],
@@ -52,6 +53,7 @@ Content:
     name : [string],
     surname : [string],
     password : [string],
+    dateOfBirth : [string],
     gender : [string],
     country : [string],
     city : [string],
@@ -59,8 +61,10 @@ Content:
     occupation : [string],
     interests : [string],
     generalInfo : [string]
+   
   }
 }
+ 
 
 Error Response : Code: 404 Not Found
 Content: { error : User not found" }	
@@ -82,6 +86,7 @@ Data Params:
     name : [string],
     surname : [string],
     password : [string],
+    dateOfBirth : [string],
     gender : [string],
     country : [string],
     city : [string],
@@ -106,7 +111,7 @@ ULR: /initiatives
 
 Data Params:
  {
-  initiative : {
+    initiative : {
     title: [string],
     category : [string],
     status : [string],
@@ -158,10 +163,12 @@ Success Response: code 200
 Content:  
 {
   {
-    initiative[]: { //list of initiatives
+    initiative[]: { 
     title: [string],
     category : [string],
     status : [string],
+    dateModified : [string],
+    dateCreated : [string],	
     description : [string],
     expirationDate : [string]
   }
@@ -169,6 +176,33 @@ Content:
 
 Error Response : Code: 404 Not Found
 Content: { error : Initiative(s) not found" }
+---------------------------------------------------------
+
+Action: Show Initiative
+
+Method: GET
+
+URL: /initiatives/:id
+
+URL Params: id=[integer] 
+
+Success Response: code 200
+Content:  
+{
+  {
+    initiative : { 
+    title: [string],
+    category : [string],
+    dateModified : [string],
+    dateCreated : [string],	
+    status : [string],
+    description : [string],
+    expirationDate : [string]
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Initiative not found" }
 ---------------------------------------------------------
 
 Action: Show Active Initiatives
@@ -186,6 +220,8 @@ Content:
     initiative[] : { 
     title: [string],
     category : [string],
+    dateModified : [string],
+    dateCreated : [string],	
     status : [string],
     description : [string],
     expirationDate : [string]
@@ -212,6 +248,8 @@ Content:
     initiative[] : { 
     title: [string],
     category : [string],
+    dateModified : [string],
+    dateCreated : [string],	
     status : [string],
     description : [string],
     expirationDate : [string]
@@ -237,6 +275,8 @@ Content:
     initiative[] : { 
     title: [string],
     category : [string],
+    dateModified : [string],
+    dateCreated : [string],	
     status : [string],
     description : [string],
     expirationDate : [string]
@@ -254,10 +294,13 @@ Method: POST
 ULR: /votes
 
 Data Params:
- {
+  {
   vote: {
-    policyID: [string],
-    voteState: [string]
+    vote: [string],     
+    user: [string],        
+    delegator: [string],    
+    votedBy: [string], 
+    initiativeID: [string]
   }
 }
  
@@ -278,8 +321,11 @@ URL Params: id=[integer]
 Data Params:
  {
   vote: {
-    policyID: [string],
-    voteState: [string]
+    vote: [string],    
+    user: [string],        
+    delegator: [string],    
+    votedBy: [string], 
+    initiativeID: [string]
   }
 }
  
@@ -299,11 +345,98 @@ Success Response: code 200
 Content:  
  {
   vote: {
-    policyID: [string],
-    voteState: [string]
+    vote: [string],
+    id: [string],             
+    user: [string],        
+    delegator: [string],    
+    votedBy: [string], 
+    initiativeID: [string],   
+    created: [string],     
+    modified: [string]   
   }
 }
 
 Error Response : Code: 404 Not Found
 Content: { error : Vote(s) not found" }
+---------------------------------------------------------
+
+Action: Show Vote
+
+Method: GET
+
+URL: /votes/:id
+
+URL Params: id=[integer] 
+
+Success Response: code 200
+Content:  
+ {
+  vote: {
+    vote: [string],
+    id: [string],             
+    user: [string],        
+    delegator: [string],    
+    votedBy: [string], 
+    initiativeID: [string],   
+    created: [string],     
+    modified: [string]   
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Vote not found" }
+---------------------------------------------------------
+
+Action: Show Vote for an Initiative
+
+Method: GET
+
+URL: /votes/:initiativeId
+
+URL Params: initiativeId=[integer] 
+
+Success Response: code 200
+Content:  
+ {
+  vote: {
+    vote: [string],
+    id: [string],             
+    user: [string],        
+    delegator: [string],    
+    votedBy: [string], 
+    initiativeID: [string],   
+    created: [string],     
+    modified: [string]   
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Vote not found" }
+---------------------------------------------------------
+
+Action: Show the Vote of a User for an Initiative
+
+Method: GET
+
+URL: /votes/:initiativeId/users/:userId
+
+URL Params: initiativeId=[integer] , userId=[integer] 
+
+Success Response: code 200
+Content:  
+ {
+  vote: {
+    vote: [string],
+    id: [string],             
+    user: [string],        
+    delegator: [string],    
+    votedBy: [string], 
+    initiativeID: [string],   
+    created: [string],     
+    modified: [string]   
+  }
+}
+
+Error Response : Code: 404 Not Found
+Content: { error : Vote not found" }
 ---------------------------------------------------------

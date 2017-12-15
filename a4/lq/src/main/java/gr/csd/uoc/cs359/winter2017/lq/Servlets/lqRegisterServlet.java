@@ -54,12 +54,12 @@ public class lqRegisterServlet extends HttpServlet {
                 if (request.getParameter("check").equals("username")) {
                     invalidFields = validator.checkDuplicate(request.getParameter("username"), 0, "username");
                 } else if (request.getParameter("check").equals("email")) {
-                    System.out.println("Checking. . . ");
+                 
                     if (request.getParameter("email") == null) {
-                        System.out.println("Email:" + request.getParameter("email-edit"));
+                      
                         invalidFields = validator.checkDuplicate(request.getParameter("email-edit"), 1, "email-edit");
                     } else {
-                        System.out.println("Email:" + request.getParameter("email"));
+                       
                         invalidFields = validator.checkDuplicate(request.getParameter("email"), 1, "email");
                     }
 

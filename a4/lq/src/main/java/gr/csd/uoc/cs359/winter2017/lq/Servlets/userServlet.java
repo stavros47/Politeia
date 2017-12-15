@@ -47,16 +47,16 @@ public class userServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             User currentUser = (User) request.getSession(true).getAttribute("user");
-            // System.out.println("Current User:" + currentUser.toString());
+         
             ArrayList<String> invalidFields = null;
             JsonResponse responder = new JsonResponse();
             String status = "";
             String jsonResponse = "";
             FormValidator validator = new FormValidator();
-            System.out.println("Button:" + request.getParameter("button"));
+         
 
             if (request.getParameter("button") != null) {
-                System.out.println("Button Pressed!");
+              
                 String button = (String) request.getParameter("button");
 
                 if (button.equals("edit")) {

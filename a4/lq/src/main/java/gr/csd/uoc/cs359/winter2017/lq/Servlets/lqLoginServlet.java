@@ -92,7 +92,7 @@ public class lqLoginServlet extends HttpServlet {
             }
 
             if (!invalidFields.isEmpty()) {
-                System.out.println("STATUS:" + status);
+          
                 if (status.equals("")) {
                     status = "Invalid_login";
                 }
