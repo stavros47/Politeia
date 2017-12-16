@@ -31,8 +31,8 @@ public class FormValidator {
         //Registration Fields
         this.fieldRegexMap.put("username", ".{8,}");
         this.fieldRegexMap.put("email", "(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)");
-        this.fieldRegexMap.put("password", "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}");
-        this.fieldRegexMap.put("confirmPassword", "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}");
+//        this.fieldRegexMap.put("password", "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}");
+//        this.fieldRegexMap.put("confirmPassword", "(?=.*([0-9]{1,}))(?=.*([!@#$%^&*()_+=\\-`~?.]{1,}))[A-Za-z0-9!@#$%^&*()_+=\\-`~?.]{8,10}");
         this.fieldRegexMap.put("firstname", ".{1,20}");
         this.fieldRegexMap.put("lastname", ".{4,20}");
         // this.fieldRegexMap.put("DOB", "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)");
@@ -115,11 +115,7 @@ public class FormValidator {
             this.invalidFields.add("EmptylgnUsername");
         }
 
-        if (password != null && !password.isEmpty()) {
-            if (!password.matches(passwordRegex)) {
-                this.invalidFields.add("lgnPassword");
-            }
-        } else {
+        if (password == null || password.isEmpty()) {
             this.invalidFields.add("EmptylgnPassword");
         }
 
