@@ -138,17 +138,13 @@ public class lqInitiativeServlet extends HttpServlet {
                          case "showUserInitiatives":
                              
                          String username=request.getParameter("username"); 
-                         List<Initiative> userInitiativesList =PollAccessor.showUserInitiatives(request);
-                         System.out.println("usernitiative list is "+userInitiativesList);
-                         if (userInitiativesList!=null){
-                            response.setStatus(200);
-                            status="user_initiatives";
-                         }
-                         else {
-                            response.setStatus(409);
-                            status="user_initiatives_failed";
-                         }
-                          jsonResponse = JsonResponse.userInitiativeResponse(userInitiativesList,status,username);
+                         ArrayList<Initiative> userActiveInitiativesList =PollAccessor.showUserActiveInitiatives(request);
+                         System.out.print(" active ="+userActiveInitiativesList);
+                         List<Initiative> userEndedInitiativesList =PollAccessor.showUserEndedInitiatives(request); 
+                         response.setStatus(200);
+                         status="user_initiatives";
+                         
+                         jsonResponse = JsonResponse.userInitiativeResponse(userActiveInitiativesList,userEndedInitiativesList,status,username);
                          break;
                      default:
                          break;
