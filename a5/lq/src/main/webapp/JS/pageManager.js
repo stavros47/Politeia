@@ -1322,8 +1322,7 @@ function updateVoteCounters(resp){
                 }
                 return null;
             }
-            var htmlStringArray = []
-
+            var htmlStringArray = [];
             var policyStatus;
             var colorClass;
             if (responseArray.status == "0") {
@@ -1351,8 +1350,8 @@ function updateVoteCounters(resp){
                     }
                 }
             }
-              var votes = getVotes(responseArray.id);
-                var voteCount = (votes) ? votes : 0;
+            var votes = getVotes(responseArray.id);
+            var voteCount = (votes) ? votes : 0;
             if (responseArray.status == "1") { //active
               
                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
@@ -1371,7 +1370,7 @@ function updateVoteCounters(resp){
                  htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
                  htmlStringArray.push('<div class="col-md-3">');
             } else { //ended
-                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyEnded" id="policyID' + responseArray.id + '">');
+                htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyEnded" id="policyID' + responseArray.id + '">');
                 htmlStringArray.push('<div class="row">');  
                 htmlStringArray.push('<div class="vote chev col-md-1">');                          
                 htmlStringArray.push('<div class="count endedCount" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
@@ -1393,7 +1392,7 @@ function updateVoteCounters(resp){
             return htmlStringArray.join("");
 
     } 
-
+    
     function setListeners(arrays){       
             //Listeners
         for (var i = 0; i < arrays.length; i++) {
@@ -1405,7 +1404,15 @@ function updateVoteCounters(resp){
                 let downvote = document.getElementById("downvote" + arrays[i].id);
                 
                 element.addEventListener('click', function () {
-                       console.log("Clicked");
+                       console.log("Initiative More info");
+                       var data = new FormData();
+                       data.append("poll", "showInitiative");
+                       data.append("id", id);
+                       var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+                       if (data) {
+                           sendToServer('POST', url, data);
+                       }
+                       
 
                 });
                 var editButton = document.getElementById("editPolicy"+arrays[i].id);
@@ -1625,6 +1632,17 @@ function generateAllPoliciesPage(resp) {
         document.getElementById("allPolicies").innerHTML=activeRows.join("");
         document.getElementById("endedPolicies").innerHTML=endedRows.join("");
         setListeners(resp.activeInitiatives);
+}
+
+function generateInitiativePage(resp){
+     var main = document.getElementById('mainContent');
+      var initiative = [];    
+       
+      initiative.push(populateInitiative(resp.initiative[i], resp.voteCount, resp.userVotes));    
+      
+      initiative.push()
+        
+        main.innerHTML = initiative.join("");
 }
 
 function generateUserPoliciesPage(resp) {

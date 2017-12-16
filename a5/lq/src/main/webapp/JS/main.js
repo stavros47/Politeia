@@ -341,6 +341,9 @@
             if (resp.status === "user_initiatives"){
                 generateUserPoliciesPage(resp);
             }
+            if(resp.status == "initiative_info"){
+                generateInitiativePage(resp);
+            }
             
 
         } else if (reqObj.status === 409) {
