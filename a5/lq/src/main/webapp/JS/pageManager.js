@@ -1226,15 +1226,18 @@ function generateAllUsersPage(resp) {
 
         var userRows = [];
         for (var i = 0; i < userCount; i++) {
-            var userStatus;
-            var classColor;
-         if(resp.onlineUsers[resp.user[i].userName]){
+            var userStatus = "offline";
+            var classColor = "redClass";
+         if(resp.onlineUsers){
+               if(resp.onlineUsers[resp.user[i].userName]){
              userStatus = "Online";
              classColor = "greenClass";
           } else {
              userStatus = "Offline";
              classColor = "redClass";
-          }   
+          } 
+        }
+         
                 userRows.push('<tr id="user'+resp.user[i].userName+'">');
                 userRows.push("<td class='" + classColor +"'>" + userStatus + "</td>");
                 userRows.push("<th scope='row'>" + (i + 1) + "</th>");

@@ -85,8 +85,8 @@ public class JsonResponse {
             
                 String userVoteMapArray = "\"userVotes\":" + gson.toJson(userVotesMap);
                 String voteCountArray = "\"voteCount\":" + gson.toJson(voteAccessor.generateCountMap());
-                String activeInitiatives = "\"active initiatives\":" + gson.toJson(UserActiveInitiatives);
-                String endedInitiatives = "\"ended initiatives\":" + gson.toJson(UserEndedInitiatives);
+        String activeInitiatives = "\"activeInitiatives\":" + gson.toJson(UserActiveInitiatives);
+        String endedInitiatives = "\"endedInitiatives\":" + gson.toJson(UserEndedInitiatives);
                 jsonResponseString = "{" + statusObject + "," + activeInitiatives + "," + endedInitiatives+"," + voteCountArray + "," + userVoteMapArray + "" + "}";//","
                 return jsonResponseString;
           
