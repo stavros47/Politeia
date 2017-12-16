@@ -85,7 +85,6 @@ public class lqInitiativeServlet extends HttpServlet {
                          status = "vote_success";
                          response.setStatus(200);
                          VoteAccessor.voteAction(request);
-
                          break;
                      case "update":
                          status="update_polls";
@@ -102,6 +101,12 @@ public class lqInitiativeServlet extends HttpServlet {
                              status = "update_polls_failed";
                              response.setStatus(409);
                          }   
+                         break;
+                         case "delete":
+                         response.setStatus(200);
+                         status="delete_poll";
+                      
+                         PollAccessor.deleteInitiative(request);
                          break;
                      default:
                          break;

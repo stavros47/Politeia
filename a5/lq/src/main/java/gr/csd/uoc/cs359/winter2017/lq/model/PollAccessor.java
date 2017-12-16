@@ -143,5 +143,20 @@ public class PollAccessor {
         }
 
     }
+    
+    public static void deleteInitiative(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        id = id.substring(8);
+        int initiativeId=Integer.parseInt(id);
+        try {
+            
+            InitiativeDB.deleteInitiative(initiativeId);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PollAccessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    
+    }
+    
 
 }

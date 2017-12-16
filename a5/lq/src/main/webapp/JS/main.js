@@ -329,6 +329,11 @@
             if (resp.status === "vote_success"){
                 updateVoteCounters(resp);
             }
+            if (resp.status === "delete_poll"){
+                generatePoliciesPage(resp);
+                setNewPolicyPageListeners();;
+            }
+            
             
 
         } else if (reqObj.status === 409) {

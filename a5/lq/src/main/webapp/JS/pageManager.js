@@ -1379,7 +1379,7 @@ function updateVoteCounters(resp){
                     deleteButton.addEventListener('click',function(){
                         var data = new FormData();
                         data.append("poll", "delete");
-                        data.append("id", arrays[i].id);
+                        data.append("id", id);
                         var url = 'http://localhost:8084/lq/lqInitiativeServlet';
                         if (data) {
                             sendToServer('POST', url, data);
