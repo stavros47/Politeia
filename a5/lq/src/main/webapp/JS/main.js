@@ -342,7 +342,7 @@
                 generateUserPoliciesPage(resp);
             }
             if(resp.status == "initiative_info"){
-                generateInitiativePage(resp);
+                //generateInitiativePage(resp);
             }
             
 

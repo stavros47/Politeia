@@ -1355,12 +1355,16 @@ function updateVoteCounters(resp){
             if (responseArray.status == "1") { //active
               
                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
+                
                 htmlStringArray.push('<div class="row">');  
-                htmlStringArray.push('<div class="vote circle col-md-1">');
+                htmlStringArray.push('<div class="vote circle col-md-1">');               
                 htmlStringArray.push('<div class="increment up '+ upVoteClass+'" id="upvote'+ responseArray.id +'"></div>');
                 htmlStringArray.push('<div class="increment down '+ downVoteClass +'" id="downvote'+ responseArray.id +'"></div>');               
                 htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
-                htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
+                htmlStringArray.push('<h5 class="mb-2 col-md-8" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
+                htmlStringArray.push('<div class="col-md-1">'); 
+                htmlStringArray.push('<input required type="text" class="form-control has-success has-feedback" name="rating" id="rating'+responseArray.id+'" title="1 to 5" placeholder="Rate"></div>');
+                 htmlStringArray.push('<input id="rateButton'+responseArray.id+'" type="button" style="float:right;" class="btn btn-secondary" value="Rate" />');
                 htmlStringArray.push('<div class="col-md-2">');
             } else if(responseArray.status == "0"){ //inactive
                  htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyInactive" id="policyID' + responseArray.id + '"data-toggle="tooltip" data-placement="top" title="">');
@@ -1371,6 +1375,7 @@ function updateVoteCounters(resp){
                  htmlStringArray.push('<div class="col-md-3">');
             } else { //ended
                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyEnded" id="policyID' + responseArray.id + '">');
+                htmlStringArray.push('<input id="heatMapPolicy'+responseArray.id+'" type="button" style="float:right;" class="btn btn-primary" value="HeatMap" />');
                 htmlStringArray.push('<div class="row">');  
                 htmlStringArray.push('<div class="vote chev col-md-1">');                          
                 htmlStringArray.push('<div class="count endedCount" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
@@ -1404,6 +1409,7 @@ function updateVoteCounters(resp){
         for (var i = 0; i < arrays.length; i++) {
                 let element = document.getElementById("policyID" + arrays[i].id);
                 let id = element.id;
+                let rating = document.getElementById("rating"+arrays[i].id).value;
                 let idNum = arrays[i].id;
                 let status = arrays[i].status;
                 let upvote = document.getElementById("upvote" + arrays[i].id);
@@ -1424,7 +1430,13 @@ function updateVoteCounters(resp){
                 var editButton = document.getElementById("editPolicy"+arrays[i].id);
                 if(editButton){
                     editButton.addEventListener('click',function(){
-                         showEditPolicy(id);
+                         showEditPolicy(id, value);
+                    });
+                }
+                var rateButton = document.getElementById("rateButton"+responseArray.id);
+                 if(rateButton){
+                    rateButton.addEventListener('click',function(){
+                         sendRatingRequest(id,rating);
                     });
                 }
                 
@@ -1463,6 +1475,19 @@ function updateVoteCounters(resp){
                         }
                     });
                 }
+                
+                function showEditPolicy(id, rating){
+                    let data = new FormData();
+                    data.append("poll", "rating");
+                    data.append("sendRatingRequest", rating);
+                    data.append("id", id);                   
+                    console.log("Vote on Policy request");
+                    var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+                    if (data) {
+                        sendToServer('POST', url, data);
+                    }
+                }
+                
         }
     }
 
@@ -1644,9 +1669,9 @@ function generateInitiativePage(resp){
      var main = document.getElementById('mainContent');
       var initiative = [];    
        
-      initiative.push(populateInitiative(resp.initiative[i], resp.voteCount, resp.userVotes));    
+      initiative.push(populateInitiative(resp.initiative, resp.voteCount, resp.userVotes));    
       
-      initiative.push()
+      initiative.push();
         
         main.innerHTML = initiative.join("");
 }

@@ -172,7 +172,7 @@ public class PollAccessor {
               }
             
             return activeInitiatives;
-}
+    }
      public static ArrayList<Initiative> showUserEndedInitiatives(HttpServletRequest request) throws ClassNotFoundException {
       
          String username = request.getParameter("username");
