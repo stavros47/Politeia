@@ -40,7 +40,7 @@
 
         if (context == "register") {
             elementsArray.push(document.getElementById('InputUsername'));
-            elementsArray.push(document.getElementById('InputEmail'));
+            elementsArray.push(document.getElementById('InputEmail'));          
             elementsArray.push(document.getElementById('InputPassword'));
             elementsArray.push(document.getElementById('InputPassword2'));
             elementsArray.push(document.getElementById('InputName'));
@@ -172,7 +172,8 @@
        
     }
 
-
+    //This function is used to validate the fields front-end and also to collect the data we want to send
+    //in a request
     function collectFormData(form) {
         let data = new FormData();
         var form = document.getElementById(form);
@@ -187,7 +188,11 @@
                 if ((e.getAttribute("type") === "radio") && !(e.checked)) {
                     continue;
                 } else {
-                     console.log("Name: " + e.name + " Val: " + value + "ID:" + e.id);
+                    if(e.getAttribute("type") === "password"){
+                        value = hash = hex_md5(value);
+                        console.log("PASS:"+value);
+                    }
+                    console.log("Name: " + e.name + " Val: " + value + "ID:" + e.id);
                     elementsArray.push(document.getElementById(e.id));
                     data.append(e.name, value);
                 }
@@ -697,7 +702,9 @@
             console.log("Sending Sign In request");
             let loginData = new FormData();
             loginData.append(loginUsername.name, loginUsername.value);
-            loginData.append(loginPassword.name, loginPassword.value);
+            var hashedPass = hex_md5(loginPassword.value);
+            console.log("HASHED:"+hashedPass);
+            loginData.append(loginPassword.name, hashedPass);
             var url = 'http://localhost:8084/lq/lqLoginServlet';
             if (loginData) {
                 sendToServer('POST', url, loginData);
