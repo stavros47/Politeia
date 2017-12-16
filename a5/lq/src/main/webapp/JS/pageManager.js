@@ -1237,21 +1237,32 @@ function generateAllUsersPage(resp) {
         //console.log(userArrayTop + userRows + userArrayBottom);                  
         main.innerHTML = userArrayTop + userRows.join("") + userArrayBottom;
         
-        for(var i = 0; i < resp.user.length;i++){
+        function sendRequestForUsersInitiatives(element, username){
+            var username = username;
+            element.addEventListener('click', function(){                   
+                var data = new FormData();
+                data.append("poll", "showUserInitiatives");
+                data.append("username", username);
+                var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+                if (data) {
+                    sendToServer('POST', url, data);
+                }
+            });
+        }
+        
+        function setUserListListeners(){
+            
+            for(var i = 0; i < resp.user.length;i++){
             var userRow = document.getElementById("user"+resp.user[i].userName);
             var username= resp.user[i].userName;
-            if(userRow){
-                userRow.addEventListener('click', function(){
-                    var data = new FormData();
-                    data.append("poll", "showUserInitiatives");
-                    data.append("username", username);
-                    var url = 'http://localhost:8084/lq/lqInitiativeServlet';
-                    if (data) {
-                        sendToServer('POST', url, data);
-                    }
-                });
-            }
+             if(userRow){
+               sendRequestForUsersInitiatives(userRow, username);                
+            }      
+           
         }
+    }
+        setUserListListeners();
+      
 }
 
 function updateVoteCounters(resp){

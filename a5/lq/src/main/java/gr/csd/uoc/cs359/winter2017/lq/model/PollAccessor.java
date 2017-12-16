@@ -1,10 +1,8 @@
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -159,7 +157,7 @@ public class PollAccessor {
     }
      public static List<Initiative> showUserInitiatives(HttpServletRequest request) {
       
-         String username=request.getParameter("username");
+         String username = request.getParameter("username");
          System.out.println("username is "+ username);
         try {
             List<Initiative> initiatives = InitiativeDB.getInitiatives(username);
