@@ -189,7 +189,7 @@
                     continue;
                 } else {
                     if(e.getAttribute("type") === "password"){
-                        value = hash = hex_md5(value);
+                        value = hex_md5(value);
                         console.log("PASS:"+value);
                     }
                     console.log("Name: " + e.name + " Val: " + value + "ID:" + e.id);
