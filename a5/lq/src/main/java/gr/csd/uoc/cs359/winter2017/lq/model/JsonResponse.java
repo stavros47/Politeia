@@ -70,7 +70,7 @@ public class JsonResponse {
         return jsonResponseString;
     }
     
-    public static String userInitiativeResponse(List< Initiative> UserInitiatives, String status, String username) throws ClassNotFoundException {
+    public static String userInitiativeResponse(List< Initiative> UserActiveInitiatives,List< Initiative> UserEndedInitiatives , String status, String username) throws ClassNotFoundException {
         String jsonResponseString = "";
         VoteAccessor voteAccessor = new VoteAccessor();
         User user = UserDB.getUser(username);
@@ -85,9 +85,9 @@ public class JsonResponse {
             
                 String userVoteMapArray = "\"userVotes\":" + gson.toJson(userVotesMap);
                 String voteCountArray = "\"voteCount\":" + gson.toJson(voteAccessor.generateCountMap());
-                String initiativeResult = "\"initiative\":" + gson.toJson(UserInitiatives);
-            
-                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + voteCountArray + "," + userVoteMapArray + "" + "}";//","
+                String activeInitiatives = "\"active initiatives\":" + gson.toJson(UserActiveInitiatives);
+                String endedInitiatives = "\"ended initiatives\":" + gson.toJson(UserEndedInitiatives);
+                jsonResponseString = "{" + statusObject + "," + activeInitiatives + "," + endedInitiatives+"," + voteCountArray + "," + userVoteMapArray + "" + "}";//","
                 return jsonResponseString;
           
        
