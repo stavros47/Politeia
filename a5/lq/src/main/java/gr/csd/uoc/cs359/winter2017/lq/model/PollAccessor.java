@@ -160,6 +160,7 @@ public class PollAccessor {
      public static List<Initiative> showUserInitiatives(HttpServletRequest request) {
       
          String username=request.getParameter("username");
+         System.out.println("username is "+ username);
         try {
             List<Initiative> initiatives = InitiativeDB.getInitiatives(username);
             return initiatives;

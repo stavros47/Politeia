@@ -1239,11 +1239,12 @@ function generateAllUsersPage(resp) {
         
         for(var i = 0; i < resp.user.length;i++){
             var userRow = document.getElementById("user"+resp.user[i].userName);
+            var username= resp.user[i].userName;
             if(userRow){
                 userRow.addEventListener('click', function(){
                     var data = new FormData();
                     data.append("poll", "showUserInitiatives");
-                    data.append("username", resp.user[i].userName);
+                    data.append("username", username);
                     var url = 'http://localhost:8084/lq/lqInitiativeServlet';
                     if (data) {
                         sendToServer('POST', url, data);

@@ -139,6 +139,7 @@ public class lqInitiativeServlet extends HttpServlet {
                              
                          String username=request.getParameter("username"); 
                          List<Initiative> userInitiativesList =PollAccessor.showUserInitiatives(request);
+                         System.out.println("usernitiative list is "+userInitiativesList);
                          if (userInitiativesList!=null){
                             response.setStatus(200);
                             status="user_initiatives";
