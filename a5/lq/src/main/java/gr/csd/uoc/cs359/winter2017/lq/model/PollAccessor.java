@@ -190,6 +190,13 @@ public class PollAccessor {
             
             return endedInitiatives;
 } 
-     
+      public static Initiative showInitiativeInfo(HttpServletRequest request) throws ClassNotFoundException{
+       
+          
+           int initiativeId=Integer.parseInt(request.getParameter("id"));
+         
+           Initiative initiative= InitiativeDB.getInitiative(initiativeId);
+           return initiative;
+      }
      
 }
