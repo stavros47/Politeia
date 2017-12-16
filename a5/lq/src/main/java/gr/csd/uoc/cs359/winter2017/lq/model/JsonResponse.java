@@ -6,6 +6,7 @@
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import com.google.gson.Gson;
+import gr.csd.uoc.cs359.winter2017.lq.db.UserDB;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,30 @@ public class JsonResponse {
 
 
         return jsonResponseString;
+    }
+    
+    public static String userInitiativeResponse(List< Initiative> UserInitiatives, String status, String username) throws ClassNotFoundException {
+        String jsonResponseString = "";
+        VoteAccessor voteAccessor = new VoteAccessor();
+        User user = UserDB.getUser(username);
+        HashMap<Integer, Integer> userVotesMap = voteAccessor.generateUsersVoteIndicationMap(user);
+        Gson gson = new Gson();
+
+        
+        //create json response
+        String statusObject = "\"status\":\"" + status + "\"";
+
+        
+            
+                String userVoteMapArray = "\"userVotes\":" + gson.toJson(userVotesMap);
+                String voteCountArray = "\"voteCount\":" + gson.toJson(voteAccessor.generateCountMap());
+                String initiativeResult = "\"initiative\":" + gson.toJson(UserInitiatives);
+            
+                jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + voteCountArray + "," + userVoteMapArray + "" + "}";//","
+                return jsonResponseString;
+          
+       
+      
     }
 
     public String userPageResponseAll(ArrayList < String > invalidFields, List < User > allUsers, String status) {
