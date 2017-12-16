@@ -1385,8 +1385,14 @@ function updateVoteCounters(resp){
             htmlStringArray.push('<p id="expiration-Policy" style="float:right"><strong>' + responseArray.expires + '</strong></p></small></div></div>');
             htmlStringArray.push('<div class="d-flex w-100 justify-content-between">');
             htmlStringArray.push('<p class="mb-1" id="description-Policy">' + responseArray.description + '</p>');
-            htmlStringArray.push('<small class="justify-content-between"> <p style="float:right; margin:0;">Creator:</p>');
+            htmlStringArray.push('<small class="justify-content-between"> <p style="float:left  ; margin:0;">Creator:</p>');
             htmlStringArray.push('<p id="creator-Policy"><strong>' + responseArray.creator + '</strong></p></small>');
+            htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">Created:</p>');
+            htmlStringArray.push('<p id="created-Policy"><strong>' + responseArray.created + '</strong></p></small>');
+            htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">Modified:</p>');
+            htmlStringArray.push('<p id="modified-Policy"><strong>' + responseArray.modified + '</strong></p></small>');
+            htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">id:</p>');
+            htmlStringArray.push('<p id="id-Policy"><strong>' + responseArray.id + '</strong></p></small>');
             htmlStringArray.push('</div></div>');
 
             return htmlStringArray.join("");
