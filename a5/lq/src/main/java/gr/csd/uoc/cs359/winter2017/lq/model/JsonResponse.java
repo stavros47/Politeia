@@ -7,6 +7,7 @@ package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import com.google.gson.Gson;
 import gr.csd.uoc.cs359.winter2017.lq.db.UserDB;
+import gr.csd.uoc.cs359.winter2017.lq.db.VoteDB;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,8 +86,8 @@ public class JsonResponse {
             
                 String userVoteMapArray = "\"userVotes\":" + gson.toJson(userVotesMap);
                 String voteCountArray = "\"voteCount\":" + gson.toJson(voteAccessor.generateCountMap());
-        String activeInitiatives = "\"activeInitiatives\":" + gson.toJson(UserActiveInitiatives);
-        String endedInitiatives = "\"endedInitiatives\":" + gson.toJson(UserEndedInitiatives);
+                String activeInitiatives = "\"activeInitiatives\":" + gson.toJson(UserActiveInitiatives);
+                String endedInitiatives = "\"endedInitiatives\":" + gson.toJson(UserEndedInitiatives);
                 jsonResponseString = "{" + statusObject + "," + activeInitiatives + "," + endedInitiatives+"," + voteCountArray + "," + userVoteMapArray + "" + "}";//","
                 return jsonResponseString;
           
@@ -117,5 +118,12 @@ public class JsonResponse {
 
         return jsonResponseString;
     }
+     public static String initiativeInfo(Initiative initiative , String status) throws ClassNotFoundException {
+         String statusObject = "\"status\":\"" + status + "\"";
+         List <Vote> votes=VoteDB.getVotedBy(initiative.getId());
+         String jsonResponseString = "{" + statusObject + "," + initiative + votes+ "}";
+         return jsonResponseString;
 
+     }
+     
 }

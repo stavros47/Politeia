@@ -146,6 +146,16 @@ public class lqInitiativeServlet extends HttpServlet {
                          
                          jsonResponse = JsonResponse.userInitiativeResponse(userActiveInitiativesList,userEndedInitiativesList,status,username);
                          break;
+                         
+                         case "showInitiative":
+                             
+                         Initiative initiativeInfo=PollAccessor.showInitiativeInfo(request);
+                         response.setStatus(200);
+                         status="initiative_info";
+                         
+                         jsonResponse =JsonResponse.initiativeInfo(initiativeInfo, status);
+                           break;
+                         
                      default:
                          break;
                  }
