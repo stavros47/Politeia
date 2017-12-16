@@ -94,7 +94,7 @@ public class JsonResponse {
       
     }
 
-    public String userPageResponseAll(ArrayList < String > invalidFields, List < User > allUsers, String status) {
+    public String userPageResponseAll(ArrayList< String> invalidFields, List< User> allUsers, HashMap<String, String> onlineUsers, String status) {
         String jsonResponseString = "";
         // Gson gson = new GsonBuilder().create();
         Gson gson = new Gson();
@@ -105,9 +105,9 @@ public class JsonResponse {
 
         if (invalidFields == null || invalidFields.isEmpty()) {
             if (allUsers != null) {
-
+                String onlineUsersResult = "\"onlineUsers\":" + gson.toJson(onlineUsers);
                 String userResult = "\"user\":" + gson.toJson(allUsers);
-                jsonResponseString = "{" + statusObject + "," + userResult + "}";
+                jsonResponseString = "{" + statusObject + "," + userResult + "," + onlineUsersResult + "}";
             }
 
         } else {

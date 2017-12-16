@@ -22,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 /**
  *
@@ -114,7 +115,9 @@ public class userServlet extends HttpServlet {
                     response.setStatus(200);
                     try {
                         List<User> allUsers = UserDB.getUsers();
-                        jsonResponse = responder.userPageResponseAll(invalidFields, allUsers, status);
+                        HashMap<String, String> onlineUsers = (HashMap) request.getSession().getServletContext().getAttribute("usersOnline");
+
+                        jsonResponse = responder.userPageResponseAll(invalidFields, allUsers, onlineUsers, status);
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(userServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }

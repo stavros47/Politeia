@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import java.util.HashMap;
 /**
  *
  * @author Stavr
@@ -46,7 +46,7 @@ public class lqLoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
+            HashMap<String, String> usersOnlineList;
             String status = "";
             User resultUser = null;
             ArrayList<String> invalidFields = null;
@@ -71,9 +71,17 @@ public class lqLoginServlet extends HttpServlet {
                                 HttpSession session = request.getSession(true);
                                 session.setAttribute("user", resultUser);
                                 session.setMaxInactiveInterval(3600);
+                                //Persisten session after browser closes
                                 Cookie newcookie = new Cookie("JSESSIONID", session.getId());
                                 newcookie.setMaxAge(1800);
                                 response.addCookie(newcookie);
+                                //Update the onlineUsersMap
+                                usersOnlineList = (HashMap) request.getSession().getServletContext().getAttribute("usersOnline");
+                                if (usersOnlineList == null) {
+                                    usersOnlineList = new HashMap<>();
+                                }
+                                usersOnlineList.put(resultUser.getUserName(), "Active");
+                                request.getSession().getServletContext().setAttribute("usersOnline", usersOnlineList);
 
                             } else {
                                 invalidFields.add("invalidlgnPassword");

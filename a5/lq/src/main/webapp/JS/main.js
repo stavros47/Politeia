@@ -338,7 +338,9 @@
                 generatePoliciesPage(resp);
                 setNewPolicyPageListeners();;
             }
-            
+            if (resp.status === "user_initiatives"){
+                generateUserPoliciesPage(resp);
+            }
             
 
         } else if (reqObj.status === 409) {

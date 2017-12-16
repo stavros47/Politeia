@@ -1210,6 +1210,7 @@ function generateAllUsersPage(resp) {
         var userArrayTop = ['<table class="table table-hover">',
                 '<thead>',
                 '<tr>',
+                '<th>Status</th>',
                 '<th>#</th>',
                 '<th>Username</th>',
                 '<th>First Name</th>',
@@ -1225,7 +1226,17 @@ function generateAllUsersPage(resp) {
 
         var userRows = [];
         for (var i = 0; i < userCount; i++) {
+            var userStatus;
+            var classColor;
+         if(resp.onlineUsers[resp.user[i].userName]){
+             userStatus = "Online";
+             classColor = "greenClass";
+          } else {
+             userStatus = "Offline";
+             classColor = "redClass";
+          }   
                 userRows.push('<tr id="user'+resp.user[i].userName+'">');
+                userRows.push("<td class='" + classColor +"'>" + userStatus + "</td>");
                 userRows.push("<th scope='row'>" + (i + 1) + "</th>");
                 userRows.push("<td>" + resp.user[i].userName + "</td>");
                 userRows.push("<td>" + resp.user[i].firstName + "</td>");
@@ -1592,6 +1603,43 @@ function generateAllPoliciesPage(resp) {
                 '<div class="tab-pane active" id="allPolicies" role="tabpanel">',
                 '<div class="list-group" id="mydiv">'
         ].join("");
+          var activeRows = [];
+        for (var i = 0; i < resp.activeInitiatives.length; i++) {
+                activeRows.push(populateInitiative(resp.activeInitiatives[i], resp.voteCount, resp.userVotes));
+        }
+        
+        var endedRows = [];
+        for (var i = 0; i < resp.endedInitiatives.length; i++) {
+                endedRows.push(populateInitiative(resp.endedInitiatives[i], resp.voteCount, resp.userVotes));
+        }
+          var allPoliciesBottom = ['</div>',
+            '</div>',            
+            '<div class="tab-pane" id="endedPolicies" role="tabpanel"></div>',           
+            '</div>'
+        ].join("");
+        
+        main.innerHTML = allPoliciesTop + allPoliciesBottom;
+        document.getElementById("allPolicies").innerHTML=activeRows.join("");
+        document.getElementById("endedPolicies").innerHTML=endedRows.join("");
+        setListeners(resp.activeInitiatives);
+}
+
+function generateUserPoliciesPage(resp) {
+     var main = document.getElementById('mainContent');
+     
+     var allPoliciesTop = ['<ul class="nav nav-pills">',            
+                '<li class="nav-item">',
+                '<a class="nav-link active" data-toggle="pill" href="#allPolicies">Active Policies</a>',
+                '</li>',
+                '<li class="nav-item">',
+                '<a class="nav-link" data-toggle="pill" href="#endedPolicies">Ended Policies</a>',
+                '</li>',               
+                '</ul>',
+                '<div class="tab-content">',
+                '<div class="tab-pane active" id="allPolicies" role="tabpanel">',
+                '<div class="list-group" id="mydiv">'
+        ].join("");
+        
           var activeRows = [];
         for (var i = 0; i < resp.activeInitiatives.length; i++) {
                 activeRows.push(populateInitiative(resp.activeInitiatives[i], resp.voteCount, resp.userVotes));
