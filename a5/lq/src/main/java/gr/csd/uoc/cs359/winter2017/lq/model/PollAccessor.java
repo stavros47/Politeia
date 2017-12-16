@@ -1,6 +1,7 @@
 package gr.csd.uoc.cs359.winter2017.lq.model;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
+import gr.csd.uoc.cs359.winter2017.lq.db.RatingDB;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -200,4 +201,19 @@ public class PollAccessor {
            return initiative;
       }
      
+    public static void createRating(HttpServletRequest request) throws ClassNotFoundException{
+        User user=(User)request.getSession().getAttribute("user");
+         String username=user.getUserName();
+//int id= Integer.parseInt(request.getParameter("id"));
+         int initiativeID= Integer.parseInt(request.getParameter("id").substring(8));
+         int rate= Integer.parseInt(request.getParameter("rating"));
+         Rating rating= new Rating();
+         
+         rating.setInitiativeID(initiativeID);
+         rating.setRate(rate);
+         rating.setUserName(username);
+         //rating.setID(id);
+         RatingDB.addRating(rating);
+   
+    }
 }

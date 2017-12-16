@@ -1,11 +1,13 @@
 package gr.csd.uoc.cs359.winter2017.lq.Servlets;
 
 import gr.csd.uoc.cs359.winter2017.lq.db.InitiativeDB;
+import gr.csd.uoc.cs359.winter2017.lq.db.RatingDB;
 import gr.csd.uoc.cs359.winter2017.lq.model.FormValidator;
 import gr.csd.uoc.cs359.winter2017.lq.model.Initiative;
 import gr.csd.uoc.cs359.winter2017.lq.model.JsonResponse;
 import static gr.csd.uoc.cs359.winter2017.lq.model.JsonResponse.initiativeResponse;
 import gr.csd.uoc.cs359.winter2017.lq.model.PollAccessor;
+import gr.csd.uoc.cs359.winter2017.lq.model.Rating;
 import gr.csd.uoc.cs359.winter2017.lq.model.User;
 import gr.csd.uoc.cs359.winter2017.lq.model.VoteAccessor;
 import java.io.IOException;
@@ -67,7 +69,6 @@ public class lqInitiativeServlet extends HttpServlet {
                              status="initiative_success";
                              response.setStatus(200);
                              
-                             
                          }
                          else{
                              status="initiative_failed";
@@ -112,6 +113,7 @@ public class lqInitiativeServlet extends HttpServlet {
                          if (invalidFields.isEmpty()) {
                              initiative=PollAccessor.updateInitiative(request);
                              status="update_success";
+                             
                              response.setStatus(200);
                              PollAccessor.endExpiredPolicies();
                              
@@ -155,7 +157,16 @@ public class lqInitiativeServlet extends HttpServlet {
                          
                          jsonResponse =JsonResponse.initiativeInfo(initiativeInfo, status);
                            break;
+                           
+                          case "rating":
                          
+                         PollAccessor.createInitiative(request);
+                         
+                         response.setStatus(200);
+                         status="rating";
+                         
+                       
+                           break;
                      default:
                          break;
                  }
