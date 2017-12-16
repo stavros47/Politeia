@@ -1323,7 +1323,9 @@ function updateVoteCounters(resp){
                 htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
                 htmlStringArray.push('<div class="col-md-2">');
             } else if(responseArray.status == "0"){ //inactive
-                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyInactive" id="policyID' + responseArray.id + '"data-toggle="tooltip" data-placement="top" title="Click to Edit!">');
+                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyInactive" id="policyID' + responseArray.id + '"data-toggle="tooltip" data-placement="top" title="">');
+                 htmlStringArray.push('<input id="deletePolicy'+responseArray.id+'" type="button" style="float:right;margin-left:5px;" class="btn btn-danger" value="Delete" />');
+                 htmlStringArray.push('<input id="editPolicy'+responseArray.id+'" type="button" style="float:right;" class="btn btn-primary" value="Edit" />');                 
                  htmlStringArray.push('<div class="row">');  
                  htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
                  htmlStringArray.push('<div class="col-md-3">');
@@ -1362,12 +1364,30 @@ function updateVoteCounters(resp){
                 let downvote = document.getElementById("downvote" + arrays[i].id);
                 
                 element.addEventListener('click', function () {
-                        if (status == "0") {
-                                showEditPolicy(id);
-                        }
+                       console.log("Clicked");
 
                 });
+                var editButton = document.getElementById("editPolicy"+arrays[i].id);
+                if(editButton){
+                    editButton.addEventListener('click',function(){
+                         showEditPolicy(id);
+                    });
+                }
                 
+                var deleteButton = document.getElementById("deletePolicy"+arrays[i].id);
+                if(deleteButton){
+                    deleteButton.addEventListener('click',function(){
+                        var data = new FormData();
+                        data.append("poll", "delete");
+                        data.append("id", arrays[i].id);
+                        var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+                        if (data) {
+                            sendToServer('POST', url, data);
+                        }
+                    });
+                }
+                
+                document.getElementById("");
                 if(upvote && downvote){
                     let voteState = "none";// should do this logic in the server somehow
                     upvote.addEventListener('click', function() {
@@ -1493,7 +1513,7 @@ function generatePoliciesPage(resp) {
 
         var allPoliciesTop = ['<div class="alert alert-info alert-dismissable fade show">',
                 '<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>',
-                '<strong>Tip:</strong> You may click on any <strong>Inactive</strong> Initiatives to edit and/or activate them.',
+                '<strong>Tip:</strong> You may click on any <strong>Initiative</strong> for more information.',
                 '</div>',
                 '<ul class="nav nav-pills">',
                 '<li class="nav-item">',
