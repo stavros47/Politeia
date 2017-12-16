@@ -1225,7 +1225,7 @@ function generateAllUsersPage(resp) {
 
         var userRows = [];
         for (var i = 0; i < userCount; i++) {
-                userRows.push("<tr>");
+                userRows.push('<tr id="user'+resp.user[i].userName+'">');
                 userRows.push("<th scope='row'>" + (i + 1) + "</th>");
                 userRows.push("<td>" + resp.user[i].userName + "</td>");
                 userRows.push("<td>" + resp.user[i].firstName + "</td>");
@@ -1236,6 +1236,21 @@ function generateAllUsersPage(resp) {
 
         //console.log(userArrayTop + userRows + userArrayBottom);                  
         main.innerHTML = userArrayTop + userRows.join("") + userArrayBottom;
+        
+        for(var i = 0; i < resp.user.length;i++){
+            var userRow = document.getElementById("user"+resp.user[i].userName);
+            if(userRow){
+                userRow.addEventListener('click', function(){
+                    var data = new FormData();
+                    data.append("poll", "showUserInitiatives");
+                    data.append("username", resp.user[i].userName);
+                    var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+                    if (data) {
+                        sendToServer('POST', url, data);
+                    }
+                });
+            }
+        }
 }
 
 function updateVoteCounters(resp){
