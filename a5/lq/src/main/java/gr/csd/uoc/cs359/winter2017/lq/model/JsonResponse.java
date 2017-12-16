@@ -119,9 +119,12 @@ public class JsonResponse {
         return jsonResponseString;
     }
      public static String initiativeInfo(Initiative initiative , String status) throws ClassNotFoundException {
+         Gson gson = new Gson();
+         List<Vote> votes = VoteDB.getVotedBy(initiative.getId());
          String statusObject = "\"status\":\"" + status + "\"";
-         List <Vote> votes=VoteDB.getVotedBy(initiative.getId());
-         String jsonResponseString = "{" + statusObject + "," + initiative + votes+ "}";
+         String voteResult = "\"voteCount\":" + gson.toJson(votes);
+         String initiativeResult = "\"initiative\":" + gson.toJson(initiative);
+         String jsonResponseString = "{" + statusObject + "," + initiativeResult + "," + voteResult + "}";
          return jsonResponseString;
 
      }

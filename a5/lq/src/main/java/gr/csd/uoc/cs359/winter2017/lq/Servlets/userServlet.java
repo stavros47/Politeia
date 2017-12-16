@@ -111,7 +111,10 @@ public class userServlet extends HttpServlet {
                     User user = (User) request.getSession().getAttribute("user");
                     //Remove the user from the online users list
                     onlineUsersList = (HashMap) request.getSession().getServletContext().getAttribute("usersOnline");
-                    onlineUsersList.remove(user.getUserName());
+                    if (user != null) {
+                        onlineUsersList.remove(user.getUserName());
+                    }
+
                     request.getSession().getServletContext().setAttribute("usersOnline", onlineUsersList);
 
                     request.getSession(true).invalidate();
