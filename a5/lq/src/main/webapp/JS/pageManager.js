@@ -1315,181 +1315,189 @@ function updateVoteCounters(resp){
     showPressed(resp.activeInitiatives);
 }
 
-    function populateInitiative(responseArray, voteCountArray, userVotesArray){
-            function getVotes(id){
-                if (voteCountArray[id]){
-                    return voteCountArray[id];
+function populateInitiative(responseArray, voteCountArray, userVotesArray){
+        function getVotes(id){
+            if (voteCountArray[id]){
+                return voteCountArray[id];
+            }
+            return null;
+        }
+        var htmlStringArray = [];
+        var policyStatus;
+        var colorClass;
+        if (responseArray.status == "0") {
+                colorClass = "cyanClass";
+                policyStatus = "Inactive";
+        } else if (responseArray.status == "1") {
+                colorClass = "greenClass";
+                policyStatus = "Active";
+        } else {
+                colorClass = "redClass";
+                policyStatus = "Ended";
+        }
+
+        var downVoteClass = "";
+        var upVoteClass = "";
+        if (userVotesArray){
+            if(userVotesArray[responseArray.id] != null){
+                //console.log("vote:" + userVotesArray[responseArray.id] + "policy:" + responseArray.id);
+                if(userVotesArray[responseArray.id] == "0"){
+                    downVoteClass = "pressed";
+                    upVoteClass = "";
+                }else {
+                    upVoteClass = "pressed";
+                    downVoteClass = "";
                 }
-                return null;
             }
-            var htmlStringArray = [];
-            var policyStatus;
-            var colorClass;
-            if (responseArray.status == "0") {
-                    colorClass = "cyanClass";
-                    policyStatus = "Inactive";
-            } else if (responseArray.status == "1") {
-                    colorClass = "greenClass";
-                    policyStatus = "Active";
-            } else {
-                    colorClass = "redClass";
-                    policyStatus = "Ended";
-            }
-            
-            var downVoteClass = "";
-            var upVoteClass = "";
-            if (userVotesArray){
-                if(userVotesArray[responseArray.id] != null){
-                    //console.log("vote:" + userVotesArray[responseArray.id] + "policy:" + responseArray.id);
-                    if(userVotesArray[responseArray.id] == "0"){
-                        downVoteClass = "pressed";
-                        upVoteClass = "";
-                    }else {
-                        upVoteClass = "pressed";
-                        downVoteClass = "";
-                    }
-                }
-            }
-            var votes = getVotes(responseArray.id);
-            var voteCount = (votes) ? votes : 0;
-            if (responseArray.status == "1") { //active
-              
-                htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
+        }
+        var votes = getVotes(responseArray.id);
+        var voteCount = (votes) ? votes : 0;
+        if (responseArray.status == "1") { //active
+
+            htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policy" id="policyID' + responseArray.id + '">');
+
+            htmlStringArray.push('<div class="row">');  
+            htmlStringArray.push('<div class="vote circle col-md-1">');               
+            htmlStringArray.push('<div class="increment up '+ upVoteClass+'" id="upvote'+ responseArray.id +'"></div>');
+            htmlStringArray.push('<div class="increment down '+ downVoteClass +'" id="downvote'+ responseArray.id +'"></div>');               
+            htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
+            htmlStringArray.push('<h5 class="mb-2 col-md-8" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
+            htmlStringArray.push('<div class="col-md-1">'); 
+            htmlStringArray.push('<input required type="text" class="form-control has-success has-feedback" name="rating" id="rating'+responseArray.id+'" title="1 to 5" placeholder="Rate"></div>');
+             htmlStringArray.push('<input id="rateButton'+responseArray.id+'" type="button" style="float:right;" class="btn btn-secondary" value="Rate" />');
+            htmlStringArray.push('<div class="col-md-2">');
+        } else if(responseArray.status == "0"){ //inactive
+             htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyInactive" id="policyID' + responseArray.id + '"data-toggle="tooltip" data-placement="top" title="">');
+             htmlStringArray.push('<input id="deletePolicy'+responseArray.id+'" type="button" style="float:right;margin-left:5px;" class="btn btn-danger" value="Delete" />');
+             htmlStringArray.push('<input id="editPolicy'+responseArray.id+'" type="button" style="float:right;" class="btn btn-primary" value="Edit" />');                 
+             htmlStringArray.push('<div class="row">');  
+             htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
+             htmlStringArray.push('<div class="col-md-3">');
+        } else { //ended
+            htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyEnded" id="policyID' + responseArray.id + '">');
+            htmlStringArray.push('<input id="heatMapPolicy'+responseArray.id+'" type="button" style="float:right;" class="btn btn-primary" value="HeatMap" />');
+            htmlStringArray.push('<div class="row">');  
+            htmlStringArray.push('<div class="vote chev col-md-1">');                          
+            htmlStringArray.push('<div class="count endedCount" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
+            htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
+            htmlStringArray.push('<div class="col-md-2">');
+        }               
+        htmlStringArray.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
+        htmlStringArray.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
+        htmlStringArray.push('<div class="col-md-1"></div>');
+        htmlStringArray.push('<h5 class="col-md-10" id="category-Policy"">' + responseArray.category + '</h5></div></div>');
+        htmlStringArray.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
+        htmlStringArray.push('<p id="expiration-Policy" style="float:right"><strong>' + responseArray.expires + '</strong></p></small></div></div>');
+        htmlStringArray.push('<div class="d-flex w-100 justify-content-between">');
+        htmlStringArray.push('<p class="mb-1" id="description-Policy">' + responseArray.description + '</p>');
+        htmlStringArray.push('<small class="justify-content-between"> <p style="float:left  ; margin:0;">Creator:</p>');
+        htmlStringArray.push('<p id="creator-Policy"><strong>' + responseArray.creator + '</strong></p></small>');
+        htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">Created:</p>');
+        htmlStringArray.push('<p id="created-Policy"><strong>' + responseArray.created + '</strong></p></small>');
+        htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">Modified:</p>');
+        htmlStringArray.push('<p id="modified-Policy"><strong>' + responseArray.modified + '</strong></p></small>');
+        htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">id:</p>');
+        htmlStringArray.push('<p id="id-Policy"><strong>' + responseArray.id + '</strong></p></small>');
+        htmlStringArray.push('</div></div>');
+
+        return htmlStringArray.join("");
+
+} 
+
+function setListeners(arrays){       
+        //Listeners
+    for (var i = 0; i < arrays.length; i++) {
+            let element = document.getElementById("policyID" + arrays[i].id);
+            let id = element.id;
+            if(document.getElementById("rating"+arrays[i].id)){
                 
-                htmlStringArray.push('<div class="row">');  
-                htmlStringArray.push('<div class="vote circle col-md-1">');               
-                htmlStringArray.push('<div class="increment up '+ upVoteClass+'" id="upvote'+ responseArray.id +'"></div>');
-                htmlStringArray.push('<div class="increment down '+ downVoteClass +'" id="downvote'+ responseArray.id +'"></div>');               
-                htmlStringArray.push('<div class="count" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
-                htmlStringArray.push('<h5 class="mb-2 col-md-8" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
-                htmlStringArray.push('<div class="col-md-1">'); 
-                htmlStringArray.push('<input required type="text" class="form-control has-success has-feedback" name="rating" id="rating'+responseArray.id+'" title="1 to 5" placeholder="Rate"></div>');
-                 htmlStringArray.push('<input id="rateButton'+responseArray.id+'" type="button" style="float:right;" class="btn btn-secondary" value="Rate" />');
-                htmlStringArray.push('<div class="col-md-2">');
-            } else if(responseArray.status == "0"){ //inactive
-                 htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyInactive" id="policyID' + responseArray.id + '"data-toggle="tooltip" data-placement="top" title="">');
-                 htmlStringArray.push('<input id="deletePolicy'+responseArray.id+'" type="button" style="float:right;margin-left:5px;" class="btn btn-danger" value="Delete" />');
-                 htmlStringArray.push('<input id="editPolicy'+responseArray.id+'" type="button" style="float:right;" class="btn btn-primary" value="Edit" />');                 
-                 htmlStringArray.push('<div class="row">');  
-                 htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy">' + responseArray.title + '</h5>');
-                 htmlStringArray.push('<div class="col-md-3">');
-            } else { //ended
-                htmlStringArray.push('<div class="list-group-item list-group-item-action flex-column align-items-start with-margin policyEnded" id="policyID' + responseArray.id + '">');
-                htmlStringArray.push('<input id="heatMapPolicy'+responseArray.id+'" type="button" style="float:right;" class="btn btn-primary" value="HeatMap" />');
-                htmlStringArray.push('<div class="row">');  
-                htmlStringArray.push('<div class="vote chev col-md-1">');                          
-                htmlStringArray.push('<div class="count endedCount" id="count'+ responseArray.id +'">'+voteCount+'</div></div>');
-                htmlStringArray.push('<h5 class="mb-2 col-md-9" id="title-Policy" style="text-align:center;">' + responseArray.title + '</h5>');
-                htmlStringArray.push('<div class="col-md-2">');
-            }               
-            htmlStringArray.push('<small style="float:right;text-align:right;">Status:<p id="status-Policy" class="' + colorClass + '">' + policyStatus + '</p></small></div></div>');
-            htmlStringArray.push('<div class="row"><div class="col-md-9"><div class="row"><h5 class="col-md-2">Category:</h5>');
-            htmlStringArray.push('<div class="col-md-1"></div>');
-            htmlStringArray.push('<h5 class="col-md-10" id="category-Policy"">' + responseArray.category + '</h5></div></div>');
-            htmlStringArray.push(' <div class="col-md-3"><small class="" style="float:right"> <p style="text-align:right;margin-bottom:0;">Expiration Date:</p>');
-            htmlStringArray.push('<p id="expiration-Policy" style="float:right"><strong>' + responseArray.expires + '</strong></p></small></div></div>');
-            htmlStringArray.push('<div class="d-flex w-100 justify-content-between">');
-            htmlStringArray.push('<p class="mb-1" id="description-Policy">' + responseArray.description + '</p>');
-            htmlStringArray.push('<small class="justify-content-between"> <p style="float:left  ; margin:0;">Creator:</p>');
-            htmlStringArray.push('<p id="creator-Policy"><strong>' + responseArray.creator + '</strong></p></small>');
-            htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">Created:</p>');
-            htmlStringArray.push('<p id="created-Policy"><strong>' + responseArray.created + '</strong></p></small>');
-            htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">Modified:</p>');
-            htmlStringArray.push('<p id="modified-Policy"><strong>' + responseArray.modified + '</strong></p></small>');
-            htmlStringArray.push('<small class="justify-content-between"> <p style="float:center; margin:0;">id:</p>');
-            htmlStringArray.push('<p id="id-Policy"><strong>' + responseArray.id + '</strong></p></small>');
-            htmlStringArray.push('</div></div>');
-
-            return htmlStringArray.join("");
-
-    } 
-    
-    function setListeners(arrays){       
-            //Listeners
-        for (var i = 0; i < arrays.length; i++) {
-                let element = document.getElementById("policyID" + arrays[i].id);
-                let id = element.id;
-                let rating = document.getElementById("rating"+arrays[i].id).value;
-                let idNum = arrays[i].id;
-                let status = arrays[i].status;
-                let upvote = document.getElementById("upvote" + arrays[i].id);
-                let downvote = document.getElementById("downvote" + arrays[i].id);
+                  var rating = document.getElementById("rating"+arrays[i].id).value;
+            }else {
                 
-                element.addEventListener('click', function () {
-                       console.log("Initiative More info");
-                       var data = new FormData();
-                       data.append("poll", "showInitiative");
-                       data.append("id", id);
-                       var url = 'http://localhost:8084/lq/lqInitiativeServlet';
-                       if (data) {
-                           sendToServer('POST', url, data);
-                       }
-                       
+                console.log("its null");
+            }
+          
+            let idNum = arrays[i].id;
+            let status = arrays[i].status;
+            let upvote = document.getElementById("upvote" + arrays[i].id);
+            let downvote = document.getElementById("downvote" + arrays[i].id);
 
+// Not used, would always send requests even when edit or delete was clicked because it on the initiative div
+// 
+//            element.addEventListener('click', function () {
+//                   console.log("Initiative More info");
+//                   var data = new FormData();
+//                   data.append("poll", "showInitiative");
+//                   data.append("id", id);
+//                   var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+//                   if (data) {
+//                       sendToServer('POST', url, data);
+//                   }
+
+//            });
+            var editButton = document.getElementById("editPolicy"+arrays[i].id);
+            if(editButton){
+                editButton.addEventListener('click',function(){
+                     showEditPolicy(id);
                 });
-                var editButton = document.getElementById("editPolicy"+arrays[i].id);
-                if(editButton){
-                    editButton.addEventListener('click',function(){
-                         showEditPolicy(id, value);
-                    });
-                }
-                var rateButton = document.getElementById("rateButton"+responseArray.id);
-                 if(rateButton){
-                    rateButton.addEventListener('click',function(){
-                         sendRatingRequest(id,rating);
-                    });
-                }
-                
-                var deleteButton = document.getElementById("deletePolicy"+arrays[i].id);
-                if(deleteButton){
-                    deleteButton.addEventListener('click',function(){
-                        var data = new FormData();
-                        data.append("poll", "delete");
-                        data.append("id", id);
-                        var url = 'http://localhost:8084/lq/lqInitiativeServlet';
-                        if (data) {
-                            sendToServer('POST', url, data);
-                        }
-                    });
-                }
-                
-                document.getElementById("");
-                if(upvote && downvote){
-                    let voteState = "none";// should do this logic in the server somehow
-                    upvote.addEventListener('click', function() {
-                        if(voteState != "UpVote"){
-                            voteState = "UpVote"; 
-                            sendVoteRequest(idNum, voteState);
-                        }else {
-                            console.log("UpVote already pressed!");
-                        }
-                    }); 
+            }
+            var rateButton = document.getElementById("rateButton"+arrays[i].id);
+             if(rateButton){
+                rateButton.addEventListener('click',function(){
+                     sendRatingRequest(id,rating);
+                });
+            }
 
-                    downvote.addEventListener('click', function() {
-                        if(voteState != "DownVote"){
-                            voteState = "DownVote";                          
-                            sendVoteRequest(idNum, voteState);
-                      
-                        }else {
-                            console.log("DownVote already pressed!");
-                        }
-                    });
-                }
-                
-                function showEditPolicy(id, rating){
-                    let data = new FormData();
-                    data.append("poll", "rating");
-                    data.append("sendRatingRequest", rating);
-                    data.append("id", id);                   
-                    console.log("Vote on Policy request");
+            var deleteButton = document.getElementById("deletePolicy"+arrays[i].id);
+            if(deleteButton){
+                deleteButton.addEventListener('click',function(){
+                    var data = new FormData();
+                    data.append("poll", "delete");
+                    data.append("id", id);
                     var url = 'http://localhost:8084/lq/lqInitiativeServlet';
                     if (data) {
                         sendToServer('POST', url, data);
                     }
-                }
-                
-        }
+                });
+            }
+
+            document.getElementById("");
+            if(upvote && downvote){
+                let voteState = "none";// should do this logic in the server somehow
+                upvote.addEventListener('click', function() {
+                    if(voteState != "UpVote"){
+                        voteState = "UpVote"; 
+                        sendVoteRequest(idNum, voteState);
+                    }else {
+                        console.log("UpVote already pressed!");
+                    }
+                }); 
+
+                downvote.addEventListener('click', function() {
+                    if(voteState != "DownVote"){
+                        voteState = "DownVote";                          
+                        sendVoteRequest(idNum, voteState);
+
+                    }else {
+                        console.log("DownVote already pressed!");
+                    }
+                });
+            }
+
+          function sendRatingRequest(id, rating){
+              let data = new FormData();
+              data.append("poll", "rating");
+              data.append("sendRatingRequest", rating);
+                data.append("id", id);                   
+               console.log("Vote on Policy request");
+                var url = 'http://localhost:8084/lq/lqInitiativeServlet';
+               if (data) {
+                    sendToServer('POST', url, data);
+              }
+            }
+
     }
+}
 
 
 function generatePoliciesPage(resp) {
