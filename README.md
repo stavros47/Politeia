@@ -2,12 +2,6 @@
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
-# DATABASE CREDENTIALS
-
-
-
-host: 83.212.108.176
-
 ### What is this repository for? ###
 
 * Quick summary
