@@ -4,11 +4,7 @@ This README would normally document whatever steps are necessary to get your app
 
 # DATABASE CREDENTIALS
 
-username: csd2962
 
-passwd: SVc0Zhv8Cq
-
-database: csd2962
 
 host: 83.212.108.176
 
